@@ -68,11 +68,26 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,bin)
 %ifarch amd64 sparcv9
-%{_libdir}/%{_arch64}/gtk-2.0/*/engines/*.so
+%{_libdir}/%{_arch64}/gtk-2.0/2.10.0/engines/libmurrine.so
 %endif
-%{_libdir}/gtk-2.0/*/engines/*.so
+%{_libdir}/gtk-2.0/2.10.0/engines/libmurrine.so
 
 %files themes
 %defattr(-,root,bin)
-%dir %attr(0755,root,sys) %{_datadir}
-%{_datadir}/themes/*
+%attr(755,root,sys) %dir %{_datadir}
+%{_datadir}/themes/MurrinaAquaIsh/gtk-2.0/gtkrc
+%{_datadir}/themes/MurrinaFancyCandy/gtk-2.0/gtkrc
+%{_datadir}/themes/MurrinaGilouche/gtk-2.0/gtkrc
+%{_datadir}/themes/MurrinaLoveGray/gtk-2.0/gtkrc
+%{_datadir}/themes/MurrinaVerdeOlivo/gtk-2.0/gtkrc
+%{_datadir}/themes/MurrineRounded/metacity-1/menu-mur.png
+%{_datadir}/themes/MurrineRounded/metacity-1/menu.png
+%{_datadir}/themes/MurrineRounded/metacity-1/metacity-theme-1.xml
+%{_datadir}/themes/MurrineRoundedIcon/metacity-1/metacity-theme-1.xml
+%{_datadir}/themes/MurrineRoundedLessFramed/metacity-1/menu-mur.png
+%{_datadir}/themes/MurrineRoundedLessFramed/metacity-1/menu.png
+%{_datadir}/themes/MurrineRoundedLessFramed/metacity-1/metacity-theme-1.xml
+%{_datadir}/themes/MurrineRoundedLessFramedIcon/metacity-1/menu-mur.png
+%{_datadir}/themes/MurrineRoundedLessFramedIcon/metacity-1/menu.png
+%{_datadir}/themes/MurrineRoundedLessFramedIcon/metacity-1/metacity-theme-1.xml
+

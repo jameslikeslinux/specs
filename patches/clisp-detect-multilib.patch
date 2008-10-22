@@ -1,0 +1,15 @@
+--- src/makemake.in.orig	2008-10-21 23:04:46.787788780 -0400
++++ src/makemake.in	2008-10-21 23:44:40.962831437 -0400
+@@ -1050,7 +1050,11 @@
+   cpu=mips64
+ fi
+ if [ "$host_cpu" = i386 -o "$host_cpu" = i486 -o "$host_cpu" = i586 -o "$host_cpu" = i686 -o "$host_cpu" = i786 -o $TSYS = i386 -o $TSYS = i486 -o $TSYS = i586 -o $TSYS = i686 -o $TSYS = i786 -o $TOS = win32 ] ; then
+-  cpu=i386
++  if echo "$CC $CFLAGS" | grep -- "-m64" > /dev/null ; then
++    cpu=x86_64
++  else
++    cpu=i386
++  fi
+ fi
+ case "$host_cpu" in
+   hppa*) cpu=hppa ;;

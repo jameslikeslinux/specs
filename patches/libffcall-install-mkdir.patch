@@ -1,0 +1,310 @@
+--- ./avcall/Makefile.in.orig	2008-10-21 20:00:19.617581851 -0400
++++ ./avcall/Makefile.in	2008-10-21 20:00:45.322291524 -0400
+@@ -149,34 +149,34 @@
+ # Installs the library and include files only. Typically called with only
+ # $(libdir) and $(includedir) - don't use $(prefix) and $(exec_prefix) here.
+ install-lib : all force
+-	if [ ! -d $(libdir) ] ; then mkdir $(libdir) ; fi
++	if [ ! -d $(libdir) ] ; then mkdir -p $(libdir) ; fi
+ 	$(LIBTOOL_INSTALL) $(INSTALL_DATA) libavcall.la $(libdir)/libavcall.la
+-	if [ ! -d $(includedir) ] ; then mkdir $(includedir) ; fi
++	if [ ! -d $(includedir) ] ; then mkdir -p $(includedir) ; fi
+ 	$(INSTALL_DATA) avcall.h $(includedir)/avcall.h
+ 
+ install : all force
+-	if [ ! -d $(DESTDIR)$(prefix) ] ; then mkdir $(DESTDIR)$(prefix) ; fi
+-	if [ ! -d $(DESTDIR)$(exec_prefix) ] ; then mkdir $(DESTDIR)$(exec_prefix) ; fi
+-	if [ ! -d $(DESTDIR)$(libdir) ] ; then mkdir $(DESTDIR)$(libdir) ; fi
++	if [ ! -d $(DESTDIR)$(prefix) ] ; then mkdir -p $(DESTDIR)$(prefix) ; fi
++	if [ ! -d $(DESTDIR)$(exec_prefix) ] ; then mkdir -p $(DESTDIR)$(exec_prefix) ; fi
++	if [ ! -d $(DESTDIR)$(libdir) ] ; then mkdir -p $(DESTDIR)$(libdir) ; fi
+ 	$(LIBTOOL_INSTALL) $(INSTALL_DATA) libavcall.la $(DESTDIR)$(libdir)/libavcall.la
+-	if [ ! -d $(DESTDIR)$(includedir) ] ; then mkdir $(DESTDIR)$(includedir) ; fi
++	if [ ! -d $(DESTDIR)$(includedir) ] ; then mkdir -p $(DESTDIR)$(includedir) ; fi
+ 	$(INSTALL_DATA) avcall.h $(DESTDIR)$(includedir)/avcall.h
+-	if [ ! -d $(DESTDIR)$(mandir) ] ; then mkdir $(DESTDIR)$(mandir) ; fi
+-	if [ ! -d $(DESTDIR)$(mandir)/man3 ] ; then mkdir $(DESTDIR)$(mandir)/man3 ; fi
++	if [ ! -d $(DESTDIR)$(mandir) ] ; then mkdir -p $(DESTDIR)$(mandir) ; fi
++	if [ ! -d $(DESTDIR)$(mandir)/man3 ] ; then mkdir -p $(DESTDIR)$(mandir)/man3 ; fi
+ 	$(INSTALL_DATA) $(srcdir)/avcall.3 $(DESTDIR)$(mandir)/man3/avcall.3
+-	if [ ! -d $(DESTDIR)$(datadir) ] ; then mkdir $(DESTDIR)$(datadir) ; fi
+-	if [ ! -d $(DESTDIR)$(htmldir) ] ; then mkdir $(DESTDIR)$(htmldir) ; fi
++	if [ ! -d $(DESTDIR)$(datadir) ] ; then mkdir -p $(DESTDIR)$(datadir) ; fi
++	if [ ! -d $(DESTDIR)$(htmldir) ] ; then mkdir -p $(DESTDIR)$(htmldir) ; fi
+ 	$(INSTALL_DATA) $(srcdir)/avcall.html $(DESTDIR)$(htmldir)/avcall.html
+ 
+ installdirs : force
+-	if [ ! -d $(DESTDIR)$(prefix) ] ; then mkdir $(DESTDIR)$(prefix) ; fi
+-	if [ ! -d $(DESTDIR)$(exec_prefix) ] ; then mkdir $(DESTDIR)$(exec_prefix) ; fi
+-	if [ ! -d $(DESTDIR)$(libdir) ] ; then mkdir $(DESTDIR)$(libdir) ; fi
+-	if [ ! -d $(DESTDIR)$(includedir) ] ; then mkdir $(DESTDIR)$(includedir) ; fi
+-	if [ ! -d $(DESTDIR)$(mandir) ] ; then mkdir $(DESTDIR)$(mandir) ; fi
+-	if [ ! -d $(DESTDIR)$(mandir)/man3 ] ; then mkdir $(DESTDIR)$(mandir)/man3 ; fi
+-	if [ ! -d $(DESTDIR)$(datadir) ] ; then mkdir $(DESTDIR)$(datadir) ; fi
+-	if [ ! -d $(DESTDIR)$(htmldir) ] ; then mkdir $(DESTDIR)$(htmldir) ; fi
++	if [ ! -d $(DESTDIR)$(prefix) ] ; then mkdir -p $(DESTDIR)$(prefix) ; fi
++	if [ ! -d $(DESTDIR)$(exec_prefix) ] ; then mkdir -p $(DESTDIR)$(exec_prefix) ; fi
++	if [ ! -d $(DESTDIR)$(libdir) ] ; then mkdir -p $(DESTDIR)$(libdir) ; fi
++	if [ ! -d $(DESTDIR)$(includedir) ] ; then mkdir -p $(DESTDIR)$(includedir) ; fi
++	if [ ! -d $(DESTDIR)$(mandir) ] ; then mkdir -p $(DESTDIR)$(mandir) ; fi
++	if [ ! -d $(DESTDIR)$(mandir)/man3 ] ; then mkdir -p $(DESTDIR)$(mandir)/man3 ; fi
++	if [ ! -d $(DESTDIR)$(datadir) ] ; then mkdir -p $(DESTDIR)$(datadir) ; fi
++	if [ ! -d $(DESTDIR)$(htmldir) ] ; then mkdir -p $(DESTDIR)$(htmldir) ; fi
+ 
+ uninstall : force
+ 	$(LIBTOOL_UNINSTALL) $(RM) $(DESTDIR)$(libdir)/libavcall.la
+--- ./callback/Makefile.in.orig	2008-10-21 20:00:19.621830884 -0400
++++ ./callback/Makefile.in	2008-10-21 20:00:45.324728007 -0400
+@@ -67,36 +67,36 @@
+ # $(libdir) and $(includedir) - don't use $(prefix) and $(exec_prefix) here.
+ install-lib : all force
+ 	cd @subdir@; $(MAKE) install-lib libdir='$(libdir)' includedir='$(includedir)'
+-	if [ ! -d $(libdir) ] ; then mkdir $(libdir) ; fi
++	if [ ! -d $(libdir) ] ; then mkdir -p $(libdir) ; fi
+ 	$(LIBTOOL_INSTALL) $(INSTALL_DATA) libcallback.la $(libdir)/libcallback.la
+-	if [ ! -d $(includedir) ] ; then mkdir $(includedir) ; fi
++	if [ ! -d $(includedir) ] ; then mkdir -p $(includedir) ; fi
+ 	$(INSTALL_DATA) callback.h $(includedir)/callback.h
+ 
+ install : force
+ 	cd @subdir@; $(MAKE) install
+-	if [ ! -d $(DESTDIR)$(prefix) ] ; then mkdir $(DESTDIR)$(prefix) ; fi
+-	if [ ! -d $(DESTDIR)$(exec_prefix) ] ; then mkdir $(DESTDIR)$(exec_prefix) ; fi
+-	if [ ! -d $(DESTDIR)$(libdir) ] ; then mkdir $(DESTDIR)$(libdir) ; fi
++	if [ ! -d $(DESTDIR)$(prefix) ] ; then mkdir -p $(DESTDIR)$(prefix) ; fi
++	if [ ! -d $(DESTDIR)$(exec_prefix) ] ; then mkdir -p $(DESTDIR)$(exec_prefix) ; fi
++	if [ ! -d $(DESTDIR)$(libdir) ] ; then mkdir -p $(DESTDIR)$(libdir) ; fi
+ 	$(LIBTOOL_INSTALL) $(INSTALL_DATA) libcallback.la $(DESTDIR)$(libdir)/libcallback.la
+-	if [ ! -d $(DESTDIR)$(includedir) ] ; then mkdir $(DESTDIR)$(includedir) ; fi
++	if [ ! -d $(DESTDIR)$(includedir) ] ; then mkdir -p $(DESTDIR)$(includedir) ; fi
+ 	$(INSTALL_DATA) callback.h $(DESTDIR)$(includedir)/callback.h
+-	if [ ! -d $(DESTDIR)$(mandir) ] ; then mkdir $(DESTDIR)$(mandir) ; fi
+-	if [ ! -d $(DESTDIR)$(mandir)/man3 ] ; then mkdir $(DESTDIR)$(mandir)/man3 ; fi
++	if [ ! -d $(DESTDIR)$(mandir) ] ; then mkdir -p $(DESTDIR)$(mandir) ; fi
++	if [ ! -d $(DESTDIR)$(mandir)/man3 ] ; then mkdir -p $(DESTDIR)$(mandir)/man3 ; fi
+ 	$(INSTALL_DATA) $(srcdir)/callback.3 $(DESTDIR)$(mandir)/man3/callback.3
+-	if [ ! -d $(DESTDIR)$(datadir) ] ; then mkdir $(DESTDIR)$(datadir) ; fi
+-	if [ ! -d $(DESTDIR)$(htmldir) ] ; then mkdir $(DESTDIR)$(htmldir) ; fi
++	if [ ! -d $(DESTDIR)$(datadir) ] ; then mkdir -p $(DESTDIR)$(datadir) ; fi
++	if [ ! -d $(DESTDIR)$(htmldir) ] ; then mkdir -p $(DESTDIR)$(htmldir) ; fi
+ 	$(INSTALL_DATA) $(srcdir)/callback.html $(DESTDIR)$(htmldir)/callback.html
+ 
+ installdirs : force
+ 	cd @subdir@; $(MAKE) installdirs
+-	if [ ! -d $(DESTDIR)$(prefix) ] ; then mkdir $(DESTDIR)$(prefix) ; fi
+-	if [ ! -d $(DESTDIR)$(exec_prefix) ] ; then mkdir $(DESTDIR)$(exec_prefix) ; fi
+-	if [ ! -d $(DESTDIR)$(libdir) ] ; then mkdir $(DESTDIR)$(libdir) ; fi
+-	if [ ! -d $(DESTDIR)$(includedir) ] ; then mkdir $(DESTDIR)$(includedir) ; fi
+-	if [ ! -d $(DESTDIR)$(mandir) ] ; then mkdir $(DESTDIR)$(mandir) ; fi
+-	if [ ! -d $(DESTDIR)$(mandir)/man3 ] ; then mkdir $(DESTDIR)$(mandir)/man3 ; fi
+-	if [ ! -d $(DESTDIR)$(datadir) ] ; then mkdir $(DESTDIR)$(datadir) ; fi
+-	if [ ! -d $(DESTDIR)$(htmldir) ] ; then mkdir $(DESTDIR)$(htmldir) ; fi
++	if [ ! -d $(DESTDIR)$(prefix) ] ; then mkdir -p $(DESTDIR)$(prefix) ; fi
++	if [ ! -d $(DESTDIR)$(exec_prefix) ] ; then mkdir -p $(DESTDIR)$(exec_prefix) ; fi
++	if [ ! -d $(DESTDIR)$(libdir) ] ; then mkdir -p $(DESTDIR)$(libdir) ; fi
++	if [ ! -d $(DESTDIR)$(includedir) ] ; then mkdir -p $(DESTDIR)$(includedir) ; fi
++	if [ ! -d $(DESTDIR)$(mandir) ] ; then mkdir -p $(DESTDIR)$(mandir) ; fi
++	if [ ! -d $(DESTDIR)$(mandir)/man3 ] ; then mkdir -p $(DESTDIR)$(mandir)/man3 ; fi
++	if [ ! -d $(DESTDIR)$(datadir) ] ; then mkdir -p $(DESTDIR)$(datadir) ; fi
++	if [ ! -d $(DESTDIR)$(htmldir) ] ; then mkdir -p $(DESTDIR)$(htmldir) ; fi
+ 
+ uninstall : force
+ 	cd @subdir@; $(MAKE) uninstall
+--- ./callback/trampoline_r/Makefile.in.orig	2008-10-21 20:00:19.624296233 -0400
++++ ./callback/trampoline_r/Makefile.in	2008-10-21 20:00:45.327166569 -0400
+@@ -112,32 +112,32 @@
+ # Installs the library and include files only. Typically called with only
+ # $(libdir) and $(includedir) - don't use $(prefix) and $(exec_prefix) here.
+ install-lib : all force
+-	if [ ! -d $(includedir) ] ; then mkdir $(includedir) ; fi
++	if [ ! -d $(includedir) ] ; then mkdir -p $(includedir) ; fi
+ 	$(INSTALL_DATA) trampoline_r.h $(includedir)/trampoline_r.h
+ 
+ install : all force
+-	if [ ! -d $(DESTDIR)$(prefix) ] ; then mkdir $(DESTDIR)$(prefix) ; fi
+-	if [ ! -d $(DESTDIR)$(exec_prefix) ] ; then mkdir $(DESTDIR)$(exec_prefix) ; fi
+-#	if [ ! -d $(DESTDIR)$(libdir) ] ; then mkdir $(DESTDIR)$(libdir) ; fi
++	if [ ! -d $(DESTDIR)$(prefix) ] ; then mkdir -p $(DESTDIR)$(prefix) ; fi
++	if [ ! -d $(DESTDIR)$(exec_prefix) ] ; then mkdir -p $(DESTDIR)$(exec_prefix) ; fi
++#	if [ ! -d $(DESTDIR)$(libdir) ] ; then mkdir -p $(DESTDIR)$(libdir) ; fi
+ #	$(LIBTOOL_INSTALL) $(INSTALL_DATA) libtrampoline.la $(DESTDIR)$(libdir)/libtrampoline.la
+-	if [ ! -d $(DESTDIR)$(includedir) ] ; then mkdir $(DESTDIR)$(includedir) ; fi
++	if [ ! -d $(DESTDIR)$(includedir) ] ; then mkdir -p $(DESTDIR)$(includedir) ; fi
+ 	$(INSTALL_DATA) trampoline_r.h $(DESTDIR)$(includedir)/trampoline_r.h
+-	if [ ! -d $(DESTDIR)$(mandir) ] ; then mkdir $(DESTDIR)$(mandir) ; fi
+-	if [ ! -d $(DESTDIR)$(mandir)/man3 ] ; then mkdir $(DESTDIR)$(mandir)/man3 ; fi
++	if [ ! -d $(DESTDIR)$(mandir) ] ; then mkdir -p $(DESTDIR)$(mandir) ; fi
++	if [ ! -d $(DESTDIR)$(mandir)/man3 ] ; then mkdir -p $(DESTDIR)$(mandir)/man3 ; fi
+ 	$(INSTALL_DATA) $(srcdir)/trampoline_r.3 $(DESTDIR)$(mandir)/man3/trampoline_r.3
+-	if [ ! -d $(DESTDIR)$(datadir) ] ; then mkdir $(DESTDIR)$(datadir) ; fi
+-	if [ ! -d $(DESTDIR)$(htmldir) ] ; then mkdir $(DESTDIR)$(htmldir) ; fi
++	if [ ! -d $(DESTDIR)$(datadir) ] ; then mkdir -p $(DESTDIR)$(datadir) ; fi
++	if [ ! -d $(DESTDIR)$(htmldir) ] ; then mkdir -p $(DESTDIR)$(htmldir) ; fi
+ 	$(INSTALL_DATA) $(srcdir)/trampoline_r.html $(DESTDIR)$(htmldir)/trampoline_r.html
+ 
+ installdirs : force
+-	if [ ! -d $(DESTDIR)$(prefix) ] ; then mkdir $(DESTDIR)$(prefix) ; fi
+-	if [ ! -d $(DESTDIR)$(exec_prefix) ] ; then mkdir $(DESTDIR)$(exec_prefix) ; fi
+-#	if [ ! -d $(DESTDIR)$(libdir) ] ; then mkdir $(DESTDIR)$(libdir) ; fi
+-	if [ ! -d $(DESTDIR)$(includedir) ] ; then mkdir $(DESTDIR)$(includedir) ; fi
+-	if [ ! -d $(DESTDIR)$(mandir) ] ; then mkdir $(DESTDIR)$(mandir) ; fi
+-	if [ ! -d $(DESTDIR)$(mandir)/man3 ] ; then mkdir $(DESTDIR)$(mandir)/man3 ; fi
+-	if [ ! -d $(DESTDIR)$(datadir) ] ; then mkdir $(DESTDIR)$(datadir) ; fi
+-	if [ ! -d $(DESTDIR)$(htmldir) ] ; then mkdir $(DESTDIR)$(htmldir) ; fi
++	if [ ! -d $(DESTDIR)$(prefix) ] ; then mkdir -p $(DESTDIR)$(prefix) ; fi
++	if [ ! -d $(DESTDIR)$(exec_prefix) ] ; then mkdir -p $(DESTDIR)$(exec_prefix) ; fi
++#	if [ ! -d $(DESTDIR)$(libdir) ] ; then mkdir -p $(DESTDIR)$(libdir) ; fi
++	if [ ! -d $(DESTDIR)$(includedir) ] ; then mkdir -p $(DESTDIR)$(includedir) ; fi
++	if [ ! -d $(DESTDIR)$(mandir) ] ; then mkdir -p $(DESTDIR)$(mandir) ; fi
++	if [ ! -d $(DESTDIR)$(mandir)/man3 ] ; then mkdir -p $(DESTDIR)$(mandir)/man3 ; fi
++	if [ ! -d $(DESTDIR)$(datadir) ] ; then mkdir -p $(DESTDIR)$(datadir) ; fi
++	if [ ! -d $(DESTDIR)$(htmldir) ] ; then mkdir -p $(DESTDIR)$(htmldir) ; fi
+ 
+ uninstall : force
+ #	$(LIBTOOL_UNINSTALL) $(RM) $(DESTDIR)$(libdir)/libtrampoline.la
+--- ./callback/vacall_r/Makefile.in.orig	2008-10-21 20:00:19.626375141 -0400
++++ ./callback/vacall_r/Makefile.in	2008-10-21 20:00:45.329581841 -0400
+@@ -152,32 +152,32 @@
+ # Installs the library and include files only. Typically called with only
+ # $(libdir) and $(includedir) - don't use $(prefix) and $(exec_prefix) here.
+ install-lib : all force
+-	if [ ! -d $(includedir) ] ; then mkdir $(includedir) ; fi
++	if [ ! -d $(includedir) ] ; then mkdir -p $(includedir) ; fi
+ 	$(INSTALL_DATA) vacall_r.h $(includedir)/vacall_r.h
+ 
+ install : all force
+-	if [ ! -d $(DESTDIR)$(prefix) ] ; then mkdir $(DESTDIR)$(prefix) ; fi
+-#	if [ ! -d $(DESTDIR)$(exec_prefix) ] ; then mkdir $(DESTDIR)$(exec_prefix) ; fi
+-#	if [ ! -d $(DESTDIR)$(libdir) ] ; then mkdir $(DESTDIR)$(libdir) ; fi
++	if [ ! -d $(DESTDIR)$(prefix) ] ; then mkdir -p $(DESTDIR)$(prefix) ; fi
++#	if [ ! -d $(DESTDIR)$(exec_prefix) ] ; then mkdir -p $(DESTDIR)$(exec_prefix) ; fi
++#	if [ ! -d $(DESTDIR)$(libdir) ] ; then mkdir -p $(DESTDIR)$(libdir) ; fi
+ #	$(LIBTOOL_INSTALL) $(INSTALL_DATA) libvacall.la $(DESTDIR)$(libdir)/libvacall.la
+-	if [ ! -d $(DESTDIR)$(includedir) ] ; then mkdir $(DESTDIR)$(includedir) ; fi
++	if [ ! -d $(DESTDIR)$(includedir) ] ; then mkdir -p $(DESTDIR)$(includedir) ; fi
+ 	$(INSTALL_DATA) vacall_r.h $(DESTDIR)$(includedir)/vacall_r.h
+-#	if [ ! -d $(DESTDIR)$(mandir) ] ; then mkdir $(DESTDIR)$(mandir) ; fi
+-#	if [ ! -d $(DESTDIR)$(mandir)/man3 ] ; then mkdir $(DESTDIR)$(mandir)/man3 ; fi
++#	if [ ! -d $(DESTDIR)$(mandir) ] ; then mkdir -p $(DESTDIR)$(mandir) ; fi
++#	if [ ! -d $(DESTDIR)$(mandir)/man3 ] ; then mkdir -p $(DESTDIR)$(mandir)/man3 ; fi
+ #	$(INSTALL_DATA) $(srcdir)/vacall_r.3 $(DESTDIR)$(mandir)/man3/vacall_r.3
+-#	if [ ! -d $(DESTDIR)$(datadir) ] ; then mkdir $(DESTDIR)$(datadir) ; fi
+-#	if [ ! -d $(DESTDIR)$(htmldir) ] ; then mkdir $(DESTDIR)$(htmldir) ; fi
++#	if [ ! -d $(DESTDIR)$(datadir) ] ; then mkdir -p $(DESTDIR)$(datadir) ; fi
++#	if [ ! -d $(DESTDIR)$(htmldir) ] ; then mkdir -p $(DESTDIR)$(htmldir) ; fi
+ #	$(INSTALL_DATA) $(srcdir)/vacall_r.html $(DESTDIR)$(htmldir)/vacall_r.html
+ 
+ installdirs : force
+-	if [ ! -d $(DESTDIR)$(prefix) ] ; then mkdir $(DESTDIR)$(prefix) ; fi
+-#	if [ ! -d $(DESTDIR)$(exec_prefix) ] ; then mkdir $(DESTDIR)$(exec_prefix) ; fi
+-#	if [ ! -d $(DESTDIR)$(libdir) ] ; then mkdir $(DESTDIR)$(libdir) ; fi
+-	if [ ! -d $(DESTDIR)$(includedir) ] ; then mkdir $(DESTDIR)$(includedir) ; fi
+-#	if [ ! -d $(DESTDIR)$(mandir) ] ; then mkdir $(DESTDIR)$(mandir) ; fi
+-#	if [ ! -d $(DESTDIR)$(mandir)/man3 ] ; then mkdir $(DESTDIR)$(mandir)/man3 ; fi
+-#	if [ ! -d $(DESTDIR)$(datadir) ] ; then mkdir $(DESTDIR)$(datadir) ; fi
+-#	if [ ! -d $(DESTDIR)$(htmldir) ] ; then mkdir $(DESTDIR)$(htmldir) ; fi
++	if [ ! -d $(DESTDIR)$(prefix) ] ; then mkdir -p $(DESTDIR)$(prefix) ; fi
++#	if [ ! -d $(DESTDIR)$(exec_prefix) ] ; then mkdir -p $(DESTDIR)$(exec_prefix) ; fi
++#	if [ ! -d $(DESTDIR)$(libdir) ] ; then mkdir -p $(DESTDIR)$(libdir) ; fi
++	if [ ! -d $(DESTDIR)$(includedir) ] ; then mkdir -p $(DESTDIR)$(includedir) ; fi
++#	if [ ! -d $(DESTDIR)$(mandir) ] ; then mkdir -p $(DESTDIR)$(mandir) ; fi
++#	if [ ! -d $(DESTDIR)$(mandir)/man3 ] ; then mkdir -p $(DESTDIR)$(mandir)/man3 ; fi
++#	if [ ! -d $(DESTDIR)$(datadir) ] ; then mkdir -p $(DESTDIR)$(datadir) ; fi
++#	if [ ! -d $(DESTDIR)$(htmldir) ] ; then mkdir -p $(DESTDIR)$(htmldir) ; fi
+ 
+ uninstall : force
+ #	$(LIBTOOL_UNINSTALL) $(RM) $(DESTDIR)$(libdir)/libvacall.la
+--- ./trampoline/Makefile.in.orig	2008-10-21 20:00:19.628935999 -0400
++++ ./trampoline/Makefile.in	2008-10-21 20:00:45.331949101 -0400
+@@ -104,28 +104,28 @@
+ 	$(RANLIB) libtrampoline.a
+ 
+ install : all force
+-	if [ ! -d $(DESTDIR)$(prefix) ] ; then mkdir $(DESTDIR)$(prefix) ; fi
+-	if [ ! -d $(DESTDIR)$(exec_prefix) ] ; then mkdir $(DESTDIR)$(exec_prefix) ; fi
+-	if [ ! -d $(DESTDIR)$(libdir) ] ; then mkdir $(DESTDIR)$(libdir) ; fi
++	if [ ! -d $(DESTDIR)$(prefix) ] ; then mkdir -p $(DESTDIR)$(prefix) ; fi
++	if [ ! -d $(DESTDIR)$(exec_prefix) ] ; then mkdir -p $(DESTDIR)$(exec_prefix) ; fi
++	if [ ! -d $(DESTDIR)$(libdir) ] ; then mkdir -p $(DESTDIR)$(libdir) ; fi
+ 	$(INSTALL_DATA) libtrampoline.a $(DESTDIR)$(libdir)/libtrampoline.a
+-	if [ ! -d $(DESTDIR)$(includedir) ] ; then mkdir $(DESTDIR)$(includedir) ; fi
++	if [ ! -d $(DESTDIR)$(includedir) ] ; then mkdir -p $(DESTDIR)$(includedir) ; fi
+ 	$(INSTALL_DATA) trampoline.h $(DESTDIR)$(includedir)/trampoline.h
+-	if [ ! -d $(DESTDIR)$(mandir) ] ; then mkdir $(DESTDIR)$(mandir) ; fi
+-	if [ ! -d $(DESTDIR)$(mandir)/man3 ] ; then mkdir $(DESTDIR)$(mandir)/man3 ; fi
++	if [ ! -d $(DESTDIR)$(mandir) ] ; then mkdir -p $(DESTDIR)$(mandir) ; fi
++	if [ ! -d $(DESTDIR)$(mandir)/man3 ] ; then mkdir -p $(DESTDIR)$(mandir)/man3 ; fi
+ 	$(INSTALL_DATA) $(srcdir)/trampoline.3 $(DESTDIR)$(mandir)/man3/trampoline.3
+-	if [ ! -d $(DESTDIR)$(datadir) ] ; then mkdir $(DESTDIR)$(datadir) ; fi
+-	if [ ! -d $(DESTDIR)$(htmldir) ] ; then mkdir $(DESTDIR)$(htmldir) ; fi
++	if [ ! -d $(DESTDIR)$(datadir) ] ; then mkdir -p $(DESTDIR)$(datadir) ; fi
++	if [ ! -d $(DESTDIR)$(htmldir) ] ; then mkdir -p $(DESTDIR)$(htmldir) ; fi
+ 	$(INSTALL_DATA) $(srcdir)/trampoline.html $(DESTDIR)$(htmldir)/trampoline.html
+ 
+ installdirs : force
+-	if [ ! -d $(DESTDIR)$(prefix) ] ; then mkdir $(DESTDIR)$(prefix) ; fi
+-	if [ ! -d $(DESTDIR)$(exec_prefix) ] ; then mkdir $(DESTDIR)$(exec_prefix) ; fi
+-	if [ ! -d $(DESTDIR)$(libdir) ] ; then mkdir $(DESTDIR)$(libdir) ; fi
+-	if [ ! -d $(DESTDIR)$(includedir) ] ; then mkdir $(DESTDIR)$(includedir) ; fi
+-	if [ ! -d $(DESTDIR)$(mandir) ] ; then mkdir $(DESTDIR)$(mandir) ; fi
+-	if [ ! -d $(DESTDIR)$(mandir)/man3 ] ; then mkdir $(DESTDIR)$(mandir)/man3 ; fi
+-	if [ ! -d $(DESTDIR)$(datadir) ] ; then mkdir $(DESTDIR)$(datadir) ; fi
+-	if [ ! -d $(DESTDIR)$(htmldir) ] ; then mkdir $(DESTDIR)$(htmldir) ; fi
++	if [ ! -d $(DESTDIR)$(prefix) ] ; then mkdir -p $(DESTDIR)$(prefix) ; fi
++	if [ ! -d $(DESTDIR)$(exec_prefix) ] ; then mkdir -p $(DESTDIR)$(exec_prefix) ; fi
++	if [ ! -d $(DESTDIR)$(libdir) ] ; then mkdir -p $(DESTDIR)$(libdir) ; fi
++	if [ ! -d $(DESTDIR)$(includedir) ] ; then mkdir -p $(DESTDIR)$(includedir) ; fi
++	if [ ! -d $(DESTDIR)$(mandir) ] ; then mkdir -p $(DESTDIR)$(mandir) ; fi
++	if [ ! -d $(DESTDIR)$(mandir)/man3 ] ; then mkdir -p $(DESTDIR)$(mandir)/man3 ; fi
++	if [ ! -d $(DESTDIR)$(datadir) ] ; then mkdir -p $(DESTDIR)$(datadir) ; fi
++	if [ ! -d $(DESTDIR)$(htmldir) ] ; then mkdir -p $(DESTDIR)$(htmldir) ; fi
+ 
+ uninstall : force
+ 	$(RM) $(DESTDIR)$(libdir)/libtrampoline.a
+--- ./vacall/Makefile.in.orig	2008-10-21 20:00:19.631058809 -0400
++++ ./vacall/Makefile.in	2008-10-21 20:00:45.334389050 -0400
+@@ -142,28 +142,28 @@
+ 	$(RANLIB) libvacall.a
+ 
+ install : all force
+-	if [ ! -d $(DESTDIR)$(prefix) ] ; then mkdir $(DESTDIR)$(prefix) ; fi
+-	if [ ! -d $(DESTDIR)$(exec_prefix) ] ; then mkdir $(DESTDIR)$(exec_prefix) ; fi
+-	if [ ! -d $(DESTDIR)$(libdir) ] ; then mkdir $(DESTDIR)$(libdir) ; fi
++	if [ ! -d $(DESTDIR)$(prefix) ] ; then mkdir -p $(DESTDIR)$(prefix) ; fi
++	if [ ! -d $(DESTDIR)$(exec_prefix) ] ; then mkdir -p $(DESTDIR)$(exec_prefix) ; fi
++	if [ ! -d $(DESTDIR)$(libdir) ] ; then mkdir -p $(DESTDIR)$(libdir) ; fi
+ 	$(INSTALL_DATA) libvacall.a $(DESTDIR)$(libdir)/libvacall.a
+-	if [ ! -d $(DESTDIR)$(includedir) ] ; then mkdir $(DESTDIR)$(includedir) ; fi
++	if [ ! -d $(DESTDIR)$(includedir) ] ; then mkdir -p $(DESTDIR)$(includedir) ; fi
+ 	$(INSTALL_DATA) vacall.h $(DESTDIR)$(includedir)/vacall.h
+-	if [ ! -d $(DESTDIR)$(mandir) ] ; then mkdir $(DESTDIR)$(mandir) ; fi
+-	if [ ! -d $(DESTDIR)$(mandir)/man3 ] ; then mkdir $(DESTDIR)$(mandir)/man3 ; fi
++	if [ ! -d $(DESTDIR)$(mandir) ] ; then mkdir -p $(DESTDIR)$(mandir) ; fi
++	if [ ! -d $(DESTDIR)$(mandir)/man3 ] ; then mkdir -p $(DESTDIR)$(mandir)/man3 ; fi
+ 	$(INSTALL_DATA) $(srcdir)/vacall.3 $(DESTDIR)$(mandir)/man3/vacall.3
+-	if [ ! -d $(DESTDIR)$(datadir) ] ; then mkdir $(DESTDIR)$(datadir) ; fi
+-	if [ ! -d $(DESTDIR)$(htmldir) ] ; then mkdir $(DESTDIR)$(htmldir) ; fi
++	if [ ! -d $(DESTDIR)$(datadir) ] ; then mkdir -p $(DESTDIR)$(datadir) ; fi
++	if [ ! -d $(DESTDIR)$(htmldir) ] ; then mkdir -p $(DESTDIR)$(htmldir) ; fi
+ 	$(INSTALL_DATA) $(srcdir)/vacall.html $(DESTDIR)$(htmldir)/vacall.html
+ 
+ installdirs : force
+-	if [ ! -d $(DESTDIR)$(prefix) ] ; then mkdir $(DESTDIR)$(prefix) ; fi
+-	if [ ! -d $(DESTDIR)$(exec_prefix) ] ; then mkdir $(DESTDIR)$(exec_prefix) ; fi
+-	if [ ! -d $(DESTDIR)$(libdir) ] ; then mkdir $(DESTDIR)$(libdir) ; fi
+-	if [ ! -d $(DESTDIR)$(includedir) ] ; then mkdir $(DESTDIR)$(includedir) ; fi
+-	if [ ! -d $(DESTDIR)$(mandir) ] ; then mkdir $(DESTDIR)$(mandir) ; fi
+-	if [ ! -d $(DESTDIR)$(mandir)/man3 ] ; then mkdir $(DESTDIR)$(mandir)/man3 ; fi
+-	if [ ! -d $(DESTDIR)$(datadir) ] ; then mkdir $(DESTDIR)$(datadir) ; fi
+-	if [ ! -d $(DESTDIR)$(htmldir) ] ; then mkdir $(DESTDIR)$(htmldir) ; fi
++	if [ ! -d $(DESTDIR)$(prefix) ] ; then mkdir -p $(DESTDIR)$(prefix) ; fi
++	if [ ! -d $(DESTDIR)$(exec_prefix) ] ; then mkdir -p $(DESTDIR)$(exec_prefix) ; fi
++	if [ ! -d $(DESTDIR)$(libdir) ] ; then mkdir -p $(DESTDIR)$(libdir) ; fi
++	if [ ! -d $(DESTDIR)$(includedir) ] ; then mkdir -p $(DESTDIR)$(includedir) ; fi
++	if [ ! -d $(DESTDIR)$(mandir) ] ; then mkdir -p $(DESTDIR)$(mandir) ; fi
++	if [ ! -d $(DESTDIR)$(mandir)/man3 ] ; then mkdir -p $(DESTDIR)$(mandir)/man3 ; fi
++	if [ ! -d $(DESTDIR)$(datadir) ] ; then mkdir -p $(DESTDIR)$(datadir) ; fi
++	if [ ! -d $(DESTDIR)$(htmldir) ] ; then mkdir -p $(DESTDIR)$(htmldir) ; fi
+ 
+ uninstall : force
+ 	$(RM) $(DESTDIR)$(libdir)/libvacall.a
