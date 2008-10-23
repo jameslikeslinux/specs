@@ -21,8 +21,10 @@ SUNW_Copyright:	%{name}.copyright
 %include default-depend.inc
 BuildRequires:	TSVlibsigsegv-devel
 BuildRequires:	TSVlibffcall-devel
+BuildRequires:	TSVreadline-devel
 Requires:	TSVlibsigsegv
 Requires:	TSVlibffcall
+Requires:	TSVreadline
 Requires:	SUNWlibms
 
 %description
@@ -84,6 +86,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{_arch64}/clisp-%{version}/full/width.o
 %{_libdir}/%{_arch64}/clisp-%{version}/full/lispinit.mem
 %{_libdir}/%{_arch64}/clisp-%{version}/full/uniname.o
+%{_libdir}/%{_arch64}/clisp-%{version}/full/readline.o
 %{_libdir}/%{_arch64}/clisp-%{version}/full/regexi.o
 %{_libdir}/%{_arch64}/clisp-%{version}/full/regex.o
 %{_libdir}/%{_arch64}/clisp-%{version}/full/modules.h
@@ -106,6 +109,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{_arch64}/clisp-%{version}/base/uniname.o
 %{_libdir}/%{_arch64}/clisp-%{version}/base/libnoreadline.a
 %{_libdir}/%{_arch64}/clisp-%{version}/base/modules.h
+%{_libdir}/%{_arch64}/clisp-%{version}/base/readline.o
 %{_libdir}/%{_arch64}/clisp-%{version}/base/regex.o
 %{_libdir}/%{_arch64}/clisp-%{version}/base/makevars
 %{_libdir}/%{_arch64}/clisp-%{version}/base/lisp.a
@@ -128,6 +132,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/clisp-%{version}/full/regexp.dvi
 %{_libdir}/clisp-%{version}/full/gettext.o
 %{_libdir}/clisp-%{version}/full/width.o
+%{_libdir}/clisp-%{version}/full/readline.o
 %{_libdir}/clisp-%{version}/full/regex.o
 %{_libdir}/clisp-%{version}/full/regexi.o
 %{_libdir}/clisp-%{version}/full/modules.o
@@ -141,6 +146,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/clisp-%{version}/base/libnoreadline.a
 %{_libdir}/clisp-%{version}/base/lispinit.mem
 %{_libdir}/clisp-%{version}/base/lisp.run
+%{_libdir}/clisp-%{version}/base/readline.o
 %{_libdir}/clisp-%{version}/base/regex.o
 %{_libdir}/clisp-%{version}/base/makevars
 %{_libdir}/clisp-%{version}/base/width.o
