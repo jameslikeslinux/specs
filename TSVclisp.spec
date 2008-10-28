@@ -25,7 +25,6 @@ BuildRequires:	TSVreadline-devel
 Requires:	TSVlibsigsegv
 Requires:	TSVlibffcall
 Requires:	TSVreadline
-Requires:	SUNWlibms
 
 %description
 ANSI Common Lisp is a high-level, general-purpose programming language. GNU

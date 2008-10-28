@@ -13,7 +13,6 @@ SUNW_BaseDir:	%{_basedir}
 SUNW_Copyright:	%{name}.copyright
 
 %include default-depend.inc
-Requires:	SUNWlibms
 
 %description
 GNU libsigsegv is a library that allows handling page faults in a portable

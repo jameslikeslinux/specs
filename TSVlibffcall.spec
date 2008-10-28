@@ -22,7 +22,6 @@ SUNW_BaseDir:	%{_basedir}
 SUNW_Copyright:	%{name}.copyright
 
 %include default-depend.inc
-Requires:	SUNWlibms
 
 %description
 A collection of four libraries which can be used to build foreign function call

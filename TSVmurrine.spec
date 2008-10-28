@@ -18,7 +18,6 @@ Requires:	SUNWfontconfig
 Requires:	SUNWfreetype2
 Requires:	SUNWgnome-base-libs
 Requires:	SUNWlexpt
-Requires:	SUNWlibms
 Requires:	SUNWmlib
 Requires:	SUNWpng
 Requires:	SUNWxorg-clientlibs

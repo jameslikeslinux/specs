@@ -13,7 +13,6 @@ SUNW_BaseDir:	%{_basedir}
 SUNW_Copyright:	%{name}.copyright
 
 %include default-depend.inc
-Requires:	SUNWlibms
 Requires:	SUNWlibsasl
 Requires:	SUNWopenssl-libraries
 Requires:	SUNWpr

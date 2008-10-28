@@ -13,7 +13,6 @@ SUNW_BaseDir:	%{_basedir}
 SUNW_Copyright:	%{name}.copyright
 
 %include default-depend.inc
-Requires:	SUNWlibms
 
 %description
 Libao is a cross-platform audio library that allows programs to output audio
