@@ -1,9 +1,12 @@
 Name:		curl
 Version:	7.19.0
 Source0:	http://curl.haxx.se/download/%{name}-%{version}.tar.bz2
+Patch0:		curl-sizeof-long.patch
 
 %prep
 %setup -q
+%patch0
+/usr/bin/autoconf
 
 %build
 export CFLAGS="%{optflags}"
