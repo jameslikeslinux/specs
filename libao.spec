@@ -1,12 +1,12 @@
 %include Solaris.inc
 %ifarch amd64 sparcv9
 %include arch64.inc
-%use libao_64 = libao.spec
+%use libao_64 = libao-base.spec
 %endif
 %include base.inc
-%use libao = libao.spec
+%use libao = libao-base.spec
 
-Name:		TSVlibao
+Name:		libao
 Version:	%{libao.version}
 Summary:	Cross Platform Audio Library
 SUNW_BaseDir:	%{_basedir}

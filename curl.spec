@@ -1,12 +1,12 @@
 %include Solaris.inc
 %ifarch amd64 sparcv9
 %include arch64.inc
-%use curl_64 = curl.spec
+%use curl_64 = curl-base.spec
 %endif
 %include base.inc
-%use curl = curl.spec
+%use curl = curl-base.spec
 
-Name:		TSVcurl
+Name:		curl
 Version:	%{curl.version}
 Summary:	Command Line Tool for Transferring Files
 SUNW_BaseDir:	%{_basedir}

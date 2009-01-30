@@ -1,12 +1,12 @@
 %include Solaris.inc
 %ifarch amd64 sparcv9
 %include arch64.inc
-%use readline_64 = readline.spec
+%use readline_64 = readline-base.spec
 %endif
 %include base.inc
-%use readline = readline.spec
+%use readline = readline-base.spec
 
-Name:		TSVreadline
+Name:		readline
 Version:	%{readline.version}
 Summary:	Library for Editing Typed Command Lines
 SUNW_BaseDir:	%{_basedir}

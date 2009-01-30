@@ -5,26 +5,26 @@
 %include arch64.inc
 %define cc %{_cc} -m64
 %define confargs --disable-mmap
-%use clisp_64 = clisp.spec
+%use clisp_64 = clisp-base.spec
 %endif
 %include base.inc
 %define cc %{_cc}
 %define confargs
-%use clisp = clisp.spec
+%use clisp = clisp-base.spec
 
-Name:		TSVclisp
+Name:		clisp
 Version:	%{clisp.version}
 Summary:	A Common Lisp Implementation
 SUNW_BaseDir:	%{_basedir}
 SUNW_Copyright:	%{name}.copyright
 
 %include default-depend.inc
-BuildRequires:	TSVlibsigsegv-devel
-BuildRequires:	TSVlibffcall-devel
-BuildRequires:	TSVreadline-devel
-Requires:	TSVlibsigsegv
-Requires:	TSVlibffcall
-Requires:	TSVreadline
+BuildRequires:	libsigsegv-devel
+BuildRequires:	libffcall-devel
+BuildRequires:	readline-devel
+Requires:	libsigsegv
+Requires:	libffcall
+Requires:	readline
 
 %description
 ANSI Common Lisp is a high-level, general-purpose programming language. GNU

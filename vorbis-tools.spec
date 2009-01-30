@@ -1,22 +1,22 @@
 %include Solaris.inc
 %ifarch amd64 sparcv9
 %include arch64.inc
-%use vorbis_tools_64 = vorbis-tools.spec
+%use vorbis_tools_64 = vorbis-tools-base.spec
 %endif
 %include base.inc
-%use vorbis_tools = vorbis-tools.spec
+%use vorbis_tools = vorbis-tools-base.spec
 
-Name:		TSVvorbis-tools
+Name:		vorbis-tools
 Version:	%{vorbis_tools.version}
 Summary:	Vorbis Audio Encoder and Utilities
 SUNW_BaseDir:	%{_basedir}
 SUNW_Copyright:	%{name}.copyright
 
 %include default-depend.inc
-BuildRequires:	TSVcurl-devel
-BuildRequires:	TSVlibao-devel
-Requires:	TSVcurl
-Requires:	TSVlibao
+BuildRequires:	curl-devel
+BuildRequires:	libao-devel
+Requires:	curl
+Requires:	libao
 Requires:	SUNWflac
 Requires:	SUNWogg-vorbis
 Requires:	SUNWspeex

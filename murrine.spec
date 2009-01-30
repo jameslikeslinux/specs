@@ -1,12 +1,12 @@
 %include Solaris.inc
 %ifarch amd64 sparcv9
 %include arch64.inc
-%use murrine_64 = murrine.spec
+%use murrine_64 = murrine-base.spec
 %endif
 %include base.inc
-%use murrine = murrine.spec
+%use murrine = murrine-base.spec
 
-Name:		TSVmurrine
+Name:		murrine
 Version:	%{murrine.version}
 Summary:	Gtk2 Engine Featuring a Modern Glassy Look
 SUNW_BaseDir:	%{_basedir}

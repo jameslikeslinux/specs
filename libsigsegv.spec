@@ -1,12 +1,12 @@
 %include Solaris.inc
 %ifarch amd64 sparcv9
 %include arch64.inc
-%use libsigsegv_64 = libsigsegv.spec
+%use libsigsegv_64 = libsigsegv-base.spec
 %endif
 %include base.inc
-%use libsigsegv = libsigsegv.spec
+%use libsigsegv = libsigsegv-base.spec
 
-Name:		TSVlibsigsegv
+Name:		libsigsegv
 Version:	%{libsigsegv.version}
 Summary:	Library for Handling Page Faults and Stack Overflows
 SUNW_BaseDir:	%{_basedir}

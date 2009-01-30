@@ -8,14 +8,14 @@
 %else
 %define makeargs CPU=sparc64
 %endif
-%use libffcall_64 = libffcall.spec
+%use libffcall_64 = libffcall-base.spec
 %endif
 %include base.inc
 %define cc %{_cc}
 %define makeargs
-%use libffcall = libffcall.spec
+%use libffcall = libffcall-base.spec
 
-Name:		TSVlibffcall
+Name:		libffcall
 Version:	%{libffcall.version}
 Summary:	Foreign Function Call Libraries
 SUNW_BaseDir:	%{_basedir}
