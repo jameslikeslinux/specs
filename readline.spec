@@ -34,6 +34,7 @@ This package contains the shared library.
 
 %package devel
 Summary:	Headers for readline
+Group:		System/Libraries
 Requires:	%{name}
 
 %description devel

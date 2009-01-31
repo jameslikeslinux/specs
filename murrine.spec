@@ -39,6 +39,7 @@ and clean on the eyes. It is also extremely customizable.
 
 %package themes
 Summary:	Themes for the Murrine engine by Cimi
+Group:		Desktop (GNOME)/Theming
 Requires:	%{name}
 
 %description themes

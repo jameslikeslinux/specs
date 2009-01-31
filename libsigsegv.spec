@@ -31,6 +31,7 @@ This package contains the shared library.
 
 %package devel
 Summary:	Headers for libsigsegv
+Group:		System/Libraries
 Requires:	%{name}
 
 %description devel
