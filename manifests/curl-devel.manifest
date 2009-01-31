@@ -1,0 +1,12 @@
+# pkg:/curl-devel@7.19.0-1
+set name=pkg.name            value="cURL Development"
+set name=description         value="Headers for curl"
+set name=pkg.description     value="curl is a client to get documents/files from servers, using any of the supported protocols. The command is designed to work without user interaction or any kind of interactivity. curl offers a busload of useful tricks like proxy support, user authentication, ftp upload, HTTP post, file transfer resume and more. This package contains the curl development files."
+set name=info.maintainer     value="James Lee <jlee@thestaticvoid.org>"
+set name=info.upsteram_url   value="http://curl.haxx.se/"
+set name=info.source_url     value="http://curl.haxx.se/download/curl-7.19.0.tar.bz2"
+set name=info.classification value="org.opensolaris.category.2008:System/Libraries"
+
+depend fmri=pkg:/curl@7.19.0-1 type=require
+
+legacy category=system desc="Headers for curl" hotline="http://curl.haxx.se/" name="cURL Development" pkg="curl-devel" vendor="http://curl.haxx.se/download/curl-7.19.0.tar.bz2"

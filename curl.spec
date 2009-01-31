@@ -35,7 +35,7 @@ interaction or any kind of interactivity.
 curl offers a busload of useful tricks like proxy support, user
 authentication, ftp upload, HTTP post, file transfer resume and more.
 
-This package contains the shared library.
+This package contains the client and shared library.
 
 %package devel
 Summary:	Headers for curl

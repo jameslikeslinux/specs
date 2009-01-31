@@ -1,0 +1,16 @@
+# pkg:/readline@5.2-1
+set name=pkg.name            value="GNU Readline"
+set name=description         value="Library for Editing Typed Command Lines"
+set name=pkg.description     value="The GNU Readline library provides a set of functions for use by applications that allow users to edit command lines as they are typed in. Both Emacs and vi editing modes are available. The Readline library includes additional functions to maintain a list of previously-entered command lines, to recall and perhaps reedit those lines, and perform csh-like history expansion on previous commands. This package contains the shared library."
+set name=info.maintainer     value="James Lee <jlee@thestaticvoid.org>"
+set name=info.upsteram_url   value="http://tiswww.case.edu/php/chet/readline/rltop.html"
+set name=info.source_url     value="ftp://ftp.gnu.org/gnu/readline/readline-5.2.tar.gz"
+set name=info.classification value="org.opensolaris.category.2008:System/Libraries"
+
+depend fmri=pkg:/SUNWcar type=require
+depend fmri=pkg:/SUNWcs type=require
+depend fmri=pkg:/SUNWcsd type=require
+depend fmri=pkg:/SUNWcsl type=require
+depend fmri=pkg:/SUNWkvm type=require
+
+legacy category=system desc="Library for Editing Typed Command Lines" hotline="http://tiswww.case.edu/php/chet/readline/rltop.html" name="GNU Readline" pkg="readline" vendor="ftp://ftp.gnu.org/gnu/readline/readline-5.2.tar.gz"

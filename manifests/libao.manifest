@@ -1,0 +1,16 @@
+# pkg:/libao@0.8.8-1
+set name=pkg.name            value="libao"
+set name=description         value="Cross Platform Audio Library"
+set name=pkg.description     value="Libao is a cross-platform audio library that allows programs to output audio using a simple API on a wide variety of platforms.  This package contains the shared library."
+set name=info.maintainer     value="James Lee <jlee@thestaticvoid.org>"
+set name=info.upsteram_url   value="http://www.xiph.org/ao/"
+set name=info.source_url     value="http://downloads.xiph.org/releases/ao/libao-0.8.8.tar.gz"
+set name=info.classification value="org.opensolaris.category.2008:System/Libraries"
+
+depend fmri=pkg:/SUNWcar type=require
+depend fmri=pkg:/SUNWcs type=require
+depend fmri=pkg:/SUNWcsd type=require
+depend fmri=pkg:/SUNWcsl type=require
+depend fmri=pkg:/SUNWkvm type=require
+
+legacy category=system desc="Cross Platform Audio Library" hotline="http://www.xiph.org/ao/" name="libao" pkg="libao" vendor="http://downloads.xiph.org/releases/ao/libao-0.8.8.tar.gz"

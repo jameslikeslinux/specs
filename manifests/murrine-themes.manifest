@@ -1,0 +1,12 @@
+# pkg:/murrine-themes@0.53.1-1
+set name=pkg.name            value="Murrine Themes"
+set name=description         value="Themes for the Murrine engine by Cimi"
+set name=pkg.description     value="This package includes themes by Cimi for the Murrine Gtk2 engine.  The themes include: MurrinaGilouche, MurrinaAquaish, MurrinaVerdeOlivo, MurrinaBlue, MurrinaFancyCandy, MurrinaLoveGray, and MurrineRounded."
+set name=info.maintainer     value="James Lee <jlee@thestaticvoid.org>"
+set name=info.upsteram_url   value="http://www.cimitan.com/murrine/"
+set name=info.source_url     value="http://www.cimitan.com/murrine/files/murrine-0.53.1.tar.bz2"
+set name=info.classification value="org.opensolaris.category.2008:Desktop (GNOME)/Theming"
+
+depend fmri=pkg:/murrine type=require
+
+legacy category=system desc="Themes for the Murrine engine by Cimi" hotline="http://www.cimitan.com/murrine/" name="Murrine Themes" pkg="murrine-themes" vendor="http://www.cimitan.com/murrine/files/murrine-0.53.1.tar.bz2"

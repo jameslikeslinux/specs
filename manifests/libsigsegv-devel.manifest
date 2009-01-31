@@ -1,0 +1,12 @@
+# pkg:/libsigsegv-devel@2.6-1
+set name=pkg.name            value="GNU libsigsegv Development"
+set name=description         value="Headers for libsigsegv"
+set name=pkg.description     value="GNU libsigsegv is a library that allows handling page faults in a portable way. It is used e.g. for generational garbage collectors and stack overflow handlers. This package contains the libsigsegv development files."
+set name=info.maintainer     value="James Lee <jlee@thestaticvoid.org>"
+set name=info.upsteram_url   value="http://libsigsegv.sourceforge.net/"
+set name=info.source_url     value="http://ftp.gnu.org/gnu/libsigsegv/libsigsegv-2.6.tar.gz"
+set name=info.classification value="org.opensolaris.category.2008:System/Libraries"
+
+depend fmri=pkg:/libsigsegv@2.6-1 type=require
+
+legacy category=system desc="Headers for libsigsegv" hotline="http://libsigsegv.sourceforge.net/" name="GNU libsigsegv Development" pkg="libsigsegv-devel" vendor="http://ftp.gnu.org/gnu/libsigsegv/libsigsegv-2.6.tar.gz"

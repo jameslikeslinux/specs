@@ -1,0 +1,21 @@
+# pkg:/curl@7.19.0-1
+set name=pkg.name            value="cURL"
+set name=description         value="Command Line Tool for Transferring Files"
+set name=pkg.description     value="curl is a client to get documents/files from servers, using any of the supported protocols. The command is designed to work without user interaction or any kind of interactivity. curl offers a busload of useful tricks like proxy support, user authentication, ftp upload, HTTP post, file transfer resume and more. This package contains the client and shared library."
+set name=info.maintainer     value="James Lee <jlee@thestaticvoid.org>"
+set name=info.upsteram_url   value="http://curl.haxx.se/"
+set name=info.source_url     value="http://curl.haxx.se/download/curl-7.19.0.tar.bz2"
+set name=info.classification value="org.opensolaris.category.2008:System/Libraries"
+
+depend fmri=pkg:/SUNWcar type=require
+depend fmri=pkg:/SUNWcs type=require
+depend fmri=pkg:/SUNWcsd type=require
+depend fmri=pkg:/SUNWcsl type=require
+depend fmri=pkg:/SUNWkvm type=require
+depend fmri=pkg:/SUNWlibsasl type=require
+depend fmri=pkg:/SUNWopenssl type=require
+depend fmri=pkg:/SUNWpr type=require
+depend fmri=pkg:/SUNWtls type=require
+depend fmri=pkg:/SUNWzlib type=require
+
+legacy category=system desc="Command Line Tool for Transferring Files" hotline="http://curl.haxx.se/" name="cURL" pkg="curl" vendor="http://curl.haxx.se/download/curl-7.19.0.tar.bz2"

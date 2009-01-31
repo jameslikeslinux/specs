@@ -1,0 +1,12 @@
+# pkg:/libffcall-devel@1.10-1
+set name=pkg.name            value="GNU ffcall Development"
+set name=description         value="Headers for libffcall"
+set name=pkg.description     value="A collection of four libraries which can be used to build foreign function call interfaces in embedded interpreters.  This package contains the libffcall development files."
+set name=info.maintainer     value="James Lee <jlee@thestaticvoid.org>"
+set name=info.upsteram_url   value="http://www.gnu.org/software/libffcall/"
+set name=info.source_url     value="http://www.haible.de/bruno/gnu/ffcall-1.10.tar.gz"
+set name=info.classification value="org.opensolaris.category.2008:System/Libraries"
+
+depend fmri=pkg:/libffcall@1.10-1 type=require
+
+legacy category=system desc="Headers for libffcall" hotline="http://www.gnu.org/software/libffcall/" name="GNU ffcall Development" pkg="libffcall-devel" vendor="http://www.haible.de/bruno/gnu/ffcall-1.10.tar.gz"
