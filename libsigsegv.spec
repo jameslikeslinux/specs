@@ -9,8 +9,15 @@
 Name:		libsigsegv
 Version:	%{libsigsegv.version}
 Summary:	Library for Handling Page Faults and Stack Overflows
+License:	GPL
+Group:		System/Libraries
+Packager:	James Lee <jlee@thestaticvoid.org>
+Vendor:		http://ftp.gnu.org/gnu/%{name}/%{name}-%{version}.tar.gz
+Url:		http://libsigsegv.sourceforge.net/
+SUNW_Hotline:   %{url}
 SUNW_BaseDir:	%{_basedir}
 SUNW_Copyright:	%{name}.copyright
+SUNW_Category:  system
 
 %include default-depend.inc
 

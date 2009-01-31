@@ -9,8 +9,15 @@
 Name:		murrine
 Version:	%{murrine.version}
 Summary:	Gtk2 Engine Featuring a Modern Glassy Look
+License:	GPL
+Group:		Desktop (GNOME)/Theming
+Packager:       James Lee <jlee@thestaticvoid.org>
+Vendor:		http://www.cimitan.com/murrine/files/%{name}-%{version}.tar.bz2
+Url:		http://www.cimitan.com/murrine/
+SUNW_Hotline:   %{url}
 SUNW_BaseDir:	%{_basedir}
 SUNW_Copyright:	%{name}.copyright
+SUNW_Category:  system
 
 %include default-depend.inc
 BuildRequires:	SUNWgnome-common-devel

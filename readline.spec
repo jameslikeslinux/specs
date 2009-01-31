@@ -9,8 +9,15 @@
 Name:		readline
 Version:	%{readline.version}
 Summary:	Library for Editing Typed Command Lines
+License:	GPL
+Group:		System/Libraries
+Packager:       James Lee <jlee@thestaticvoid.org>
+Vendor:		ftp://ftp.gnu.org/gnu/%{name}/%{name}-%{version}.tar.gz
+Url:		http://tiswww.case.edu/php/chet/readline/rltop.html
+SUNW_Hotline:   %{url}
 SUNW_BaseDir:	%{_basedir}
 SUNW_Copyright:	%{name}.copyright
+SUNW_Category:  system
 
 %include default-depend.inc
 

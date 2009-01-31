@@ -15,8 +15,15 @@
 Name:		clisp
 Version:	%{clisp.version}
 Summary:	A Common Lisp Implementation
+License:	GPL
+Group:		Development/Other Languages
+Packager:       James Lee <jlee@thestaticvoid.org>
+Vendor:		http://ftp.gnu.org/pub/gnu/%{name}/release/%{version}/%{name}-%{version}.tar.bz2
+Url:		http://www.gnu.org/software/clisp/
+SUNW_Hotline:   %{url}
 SUNW_BaseDir:	%{_basedir}
 SUNW_Copyright:	%{name}.copyright
+SUNW_Category:	application
 
 %include default-depend.inc
 BuildRequires:	libsigsegv-devel

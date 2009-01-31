@@ -9,8 +9,15 @@
 Name:		curl
 Version:	%{curl.version}
 Summary:	Command Line Tool for Transferring Files
+License:	MIT
+Group:		System/Libraries
+Packager:       James Lee <jlee@thestaticvoid.org>
+Vendor:		http://curl.haxx.se/download/%{name}-%{version}.tar.bz2
+Url:		http://curl.haxx.se/
+SUNW_Hotline:   %{url}
 SUNW_BaseDir:	%{_basedir}
 SUNW_Copyright:	%{name}.copyright
+SUNW_Category:  system
 
 %include default-depend.inc
 Requires:	SUNWlibsasl

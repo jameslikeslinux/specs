@@ -9,8 +9,15 @@
 Name:		vorbis-tools
 Version:	%{vorbis_tools.version}
 Summary:	Vorbis Audio Encoder and Utilities
+License:	GPL
+Group:		Applications/Sound and Video
+Packager:       James Lee <jlee@thestaticvoid.org>
+Vendor:		http://downloads.xiph.org/releases/vorbis/vorbis-tools-1.2.0.tar.gz
+Url:		http://www.vorbis.com/
+SUNW_Hotline:   %{url}
 SUNW_BaseDir:	%{_basedir}
 SUNW_Copyright:	%{name}.copyright
+SUNW_Category:  application
 
 %include default-depend.inc
 BuildRequires:	curl-devel

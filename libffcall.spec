@@ -18,8 +18,15 @@
 Name:		libffcall
 Version:	%{libffcall.version}
 Summary:	Foreign Function Call Libraries
+License:	GPL
+Group:		System/Libraries
+Packager:       James Lee <jlee@thestaticvoid.org>
+Vendor:		http://www.haible.de/bruno/gnu/ffcall-%{version}.tar.gz
+Url:		http://www.gnu.org/software/libffcall/
+SUNW_Hotline:   %{url}
 SUNW_BaseDir:	%{_basedir}
 SUNW_Copyright:	%{name}.copyright
+SUNW_Category:  system
 
 %include default-depend.inc
 

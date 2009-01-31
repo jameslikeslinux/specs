@@ -9,8 +9,15 @@
 Name:		libao
 Version:	%{libao.version}
 Summary:	Cross Platform Audio Library
+License:	GPL
+Group:		System/Libraries
+Packager:	James Lee <jlee@thestaticvoid.org>
+Vendor:		http://downloads.xiph.org/releases/ao/libao-0.8.8.tar.gz
+Url:		http://www.xiph.org/ao/
+SUNW_Hotline:	%{url}
 SUNW_BaseDir:	%{_basedir}
 SUNW_Copyright:	%{name}.copyright
+SUNW_Category:	system
 
 %include default-depend.inc
 
