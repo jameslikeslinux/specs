@@ -8,6 +8,7 @@
 
 Name:		curl
 Version:	%{curl.version}
+Release:	1
 Summary:	Command Line Tool for Transferring Files
 License:	MIT
 Group:		System/Libraries

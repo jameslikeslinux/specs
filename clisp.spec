@@ -14,6 +14,7 @@
 
 Name:		clisp
 Version:	%{clisp.version}
+Release:	1
 Summary:	A Common Lisp Implementation
 License:	GPL
 Group:		Development/Other Languages

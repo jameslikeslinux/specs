@@ -17,6 +17,7 @@
 
 Name:		libffcall
 Version:	%{libffcall.version}
+Release:	1
 Summary:	Foreign Function Call Libraries
 License:	GPL
 Group:		System/Libraries

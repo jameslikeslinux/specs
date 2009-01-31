@@ -8,6 +8,7 @@
 
 Name:		readline
 Version:	%{readline.version}
+Release:	1
 Summary:	Library for Editing Typed Command Lines
 License:	GPL
 Group:		System/Libraries

@@ -8,6 +8,7 @@
 
 Name:		libao
 Version:	%{libao.version}
+Release:	1
 Summary:	Cross Platform Audio Library
 License:	GPL
 Group:		System/Libraries
@@ -35,7 +36,7 @@ Requires:	%{name}
 Libao is a cross-platform audio library that allows programs to output audio
 using a simple API on a wide variety of platforms.
 
-This package contains the libao development files. 
+This package contains the libao development files.
 
 %prep
 rm -rf %{name}-%{version}

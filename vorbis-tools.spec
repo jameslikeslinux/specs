@@ -8,6 +8,7 @@
 
 Name:		vorbis-tools
 Version:	%{vorbis_tools.version}
+Release:	1
 Summary:	Vorbis Audio Encoder and Utilities
 License:	GPL
 Group:		Applications/Sound and Video

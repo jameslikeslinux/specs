@@ -8,6 +8,7 @@
 
 Name:		murrine
 Version:	%{murrine.version}
+Release:	1
 Summary:	Gtk2 Engine Featuring a Modern Glassy Look
 License:	GPL
 Group:		Desktop (GNOME)/Theming
