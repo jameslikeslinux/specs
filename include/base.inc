@@ -76,6 +76,7 @@
 %endif
 
 %define _bindir		 %{_prefix}/bin
+%define _sbindir	 %{_prefix}/sbin
 %define _libdir		 %{_prefix}/lib
 %define _libexecdir	 %{_prefix}/lib
 %define _pkg_config_path %{_libdir}/pkgconfig

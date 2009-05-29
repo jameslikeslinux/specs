@@ -91,6 +91,7 @@
 %define cxx_optflags %cxx_optflags64 ${EXTRA_CXXFLAGS}
 
 %define _bindir		 %{_prefix}/bin/%{bld_arch}
+%define _sbindir	 %{_prefix}/sbin/%{bld_arch}
 %define _libdir		 %{_prefix}/lib/%{bld_arch}
 %define _libexecdir	 %{_prefix}/lib/%{bld_arch}
 %define _pkg_config_path %{_libdir}/pkgconfig
