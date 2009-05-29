@@ -10,17 +10,19 @@ Name:		libsigsegv
 Version:	%{libsigsegv.version}
 Release:	1
 Summary:	Library for Handling Page Faults and Stack Overflows
-License:	GPL
-Group:		System/Libraries
-Packager:	James Lee <jlee@thestaticvoid.org>
-Vendor:		http://ftp.gnu.org/gnu/%{name}/%{name}-%{version}.tar.gz
-Url:		http://libsigsegv.sourceforge.net/
-SUNW_Hotline:   %{url}
+License:	GPLv2
+Group:		Libraries
+Distribution:   OpenSolaris
+Vendor:         OpenSolaris Community
+BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 SUNW_BaseDir:	%{_basedir}
 SUNW_Copyright:	%{name}.copyright
-SUNW_Category:  system
 
 %include default-depend.inc
+
+Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
+Meta(info.upstream):		Bruno Haible <bruno@clisp.org>
+Meta(info.upstream_url):	http://libsigsegv.sourceforge.net/
 
 %description
 GNU libsigsegv is a library that allows handling page faults in a portable
@@ -31,7 +33,7 @@ This package contains the shared library.
 
 %package devel
 Summary:	Headers for libsigsegv
-Group:		System/Libraries
+Group:		Libraries
 Requires:	%{name}
 
 %description devel
@@ -87,3 +89,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libsigsegv.la
 %{_libdir}/libsigsegv.so
 %{_includedir}/sigsegv.h
+
+%changelog
+* Fri May 29 2009 - jlee@thestaticvoid.com
+- Initial version
