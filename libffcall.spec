@@ -17,19 +17,20 @@
 
 Name:		libffcall
 Version:	%{libffcall.version}
-Release:	1
 Summary:	Foreign Function Call Libraries
-License:	GPL
-Group:		System/Libraries
-Packager:       James Lee <jlee@thestaticvoid.org>
-Vendor:		http://www.haible.de/bruno/gnu/ffcall-%{version}.tar.gz
+License:	GPLv2
+Group:		Libraries
+Distribution:   OpenSolaris
+Vendor:         OpenSolaris Community
 Url:		http://www.gnu.org/software/libffcall/
-SUNW_Hotline:   %{url}
 SUNW_BaseDir:	%{_basedir}
 SUNW_Copyright:	%{name}.copyright
-SUNW_Category:  system
 
 %include default-depend.inc
+
+Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
+Meta(info.upstream):		Bruno Haible <bruno@clisp.org>
+Meta(info.upstream_url):	http://www.gnu.org/software/libffcall/
 
 %description
 A collection of four libraries which can be used to build foreign function call
@@ -39,7 +40,7 @@ This package contains the shared library.
 
 %package devel
 Summary:	Headers for libffcall
-Group:		System/Libraries
+Group:		Libraries
 Requires:	%{name}
 
 %description devel
@@ -129,3 +130,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/libffcall/html/trampoline.html
 %{_datadir}/doc/libffcall/html/avcall.html
 
+%changelog
+* Fri May 29 2009 - jlee@thestaticvoid.com
+- Initial version
