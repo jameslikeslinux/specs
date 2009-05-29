@@ -1,7 +1,7 @@
 Name:		libffcall
 Version:	1.10
 Source0:	http://www.haible.de/bruno/gnu/ffcall-%{version}.tar.gz
-Patch0:		libffcall-install-mkdir.patch
+Patch0:		libffcall-00-install-mkdir.diff
 
 %prep
 %setup -q -n ffcall-%{version}
