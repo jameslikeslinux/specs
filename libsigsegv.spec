@@ -14,6 +14,7 @@ License:	GPLv2
 Group:		Libraries
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
+URL:		http://libsigsegv.sourceforge.net/
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 SUNW_BaseDir:	%{_basedir}
 SUNW_Copyright:	%{name}.copyright
