@@ -8,27 +8,27 @@
 
 Name:		vorbis-tools
 Version:	%{vorbis_tools.version}
-Release:	1
 Summary:	Vorbis Audio Encoder and Utilities
-License:	GPL
-Group:		Applications/Sound and Video
-Packager:       James Lee <jlee@thestaticvoid.org>
-Vendor:		http://downloads.xiph.org/releases/vorbis/vorbis-tools-1.2.0.tar.gz
+License:	GPLv2
+Group:		Sound and Video
+Distribution:   OpenSolaris
+Vendor:         OpenSolaris Community
 Url:		http://www.vorbis.com/
-SUNW_Hotline:   %{url}
 SUNW_BaseDir:	%{_basedir}
 SUNW_Copyright:	%{name}.copyright
-SUNW_Category:  application
 
 %include default-depend.inc
-BuildRequires:	curl-devel
 BuildRequires:	libao-devel
-Requires:	curl
+BuildRequires:	SUNWcurl
 Requires:	libao
+Requires:	SUNWcurl
 Requires:	SUNWflac
 Requires:	SUNWogg-vorbis
 Requires:	SUNWspeex
 
+Meta(info.maintainer):		James Lee <jlee@thestaticvoid.org>
+Meta(info.upstream):		Xiph.org <vorbis@xiph.org>
+Meta(info.upstream_url):	http://xiph.org/vorbis/
 
 %description
 vorbis-tools contains oggenc (an encoder) and ogg123 (a playback tool).
@@ -147,3 +147,7 @@ ln -s ../lib/isaexec oggdec
 %attr(755,root,other) %dir %{_datadir}/locale/sv
 %attr(755,root,other) %dir %{_datadir}/locale/sv/LC_MESSAGES
 %{_datadir}/locale/sv/LC_MESSAGES/vorbis-tools.mo
+
+%changelog
+* Fri May 29 2009 - jlee@thestaticvoid.com
+- Initial version

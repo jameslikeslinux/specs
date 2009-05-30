@@ -8,19 +8,20 @@
 
 Name:		libao
 Version:	%{libao.version}
-Release:	1
 Summary:	Cross Platform Audio Library
-License:	GPL
-Group:		System/Libraries
-Packager:	James Lee <jlee@thestaticvoid.org>
-Vendor:		http://downloads.xiph.org/releases/ao/libao-0.8.8.tar.gz
+License:	GPLv2
+Group:		Libraries
+Distribution:   OpenSolaris
+Vendor:         OpenSolaris Community
 Url:		http://www.xiph.org/ao/
-SUNW_Hotline:	%{url}
 SUNW_BaseDir:	%{_basedir}
 SUNW_Copyright:	%{name}.copyright
-SUNW_Category:	system
 
 %include default-depend.inc
+
+Meta(info.maintainer):		James Lee <jlee@thestaticvoid.org>
+Meta(info.upstream):		Stan Seibert <volsung@xiph.org>
+Meta(info.upstream_url):	http://www.xiph.org/ao/
 
 %description
 Libao is a cross-platform audio library that allows programs to output audio
@@ -132,3 +133,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man5/libao.conf.5
 %attr(755,root,other) %dir %{_datadir}/aclocal
 %{_datadir}/aclocal/ao.m4
+
+%changelog
+* Fri May 29 2009 - jlee@thestaticvoid.com
+- Initial version

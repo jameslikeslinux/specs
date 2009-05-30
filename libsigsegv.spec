@@ -8,7 +8,6 @@
 
 Name:		libsigsegv
 Version:	%{libsigsegv.version}
-Release:	1
 Summary:	Library for Handling Page Faults and Stack Overflows
 License:	GPLv2
 Group:		Libraries
