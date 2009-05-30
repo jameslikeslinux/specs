@@ -25,7 +25,7 @@ BuildRequires:	libffcall-devel
 Requires:	libsigsegv
 Requires:	libffcall
 
-Meta(info.maintainer):		James Lee <jlee@thestaticvoid.org>
+Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):		Bruno Haible <bruno@clisp.org>
 Meta(info.upstream_url):	http://www.gnu.org/software/clisp/
 

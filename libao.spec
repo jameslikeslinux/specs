@@ -19,7 +19,7 @@ SUNW_Copyright:	%{name}.copyright
 
 %include default-depend.inc
 
-Meta(info.maintainer):		James Lee <jlee@thestaticvoid.org>
+Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):		Stan Seibert <volsung@xiph.org>
 Meta(info.upstream_url):	http://www.xiph.org/ao/
 

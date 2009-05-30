@@ -30,7 +30,7 @@ Requires:	SUNWxorg-clientlibs
 Requires:	SUNWxwplt
 Requires:	SUNWzlib
 
-Meta(info.maintainer):		James Lee <jlee@thestaticvoid.org>
+Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):		Andrea Cimitan <andrea.cimitan@gmail.com>
 Meta(info.upstream_url):	http://www.cimitan.com/murrine/
 

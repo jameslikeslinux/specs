@@ -26,7 +26,7 @@ Requires:	SUNWflac
 Requires:	SUNWogg-vorbis
 Requires:	SUNWspeex
 
-Meta(info.maintainer):		James Lee <jlee@thestaticvoid.org>
+Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):		Xiph.org <vorbis@xiph.org>
 Meta(info.upstream_url):	http://xiph.org/vorbis/
 

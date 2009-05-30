@@ -15,7 +15,7 @@ Release:	1
 Summary:	openafs
 License:	GPL
 Group:		Applications/Sound and Video
-Packager:       James Lee <jlee@thestaticvoid.org>
+Packager:       James Lee <jlee@thestaticvoid.com>
 Vendor:		http://openafs.org/dl/openafs/%{version}/openafs-%{version}-src.tar.bz2
 Url:		http://www.openafs.org/
 SUNW_Hotline:   %{url}
