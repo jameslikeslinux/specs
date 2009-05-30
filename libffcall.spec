@@ -1,8 +1,6 @@
 %include Solaris.inc
-%define _cc %(echo $CC)
 %ifarch amd64 sparcv9
 %include arch64.inc
-%define cc %{_cc} -m64
 %ifarch amd64
 %define makeargs CPU=x86_64
 %else
@@ -11,7 +9,6 @@
 %use libffcall_64 = libffcall-base.spec
 %endif
 %include base.inc
-%define cc %{_cc}
 %define makeargs
 %use libffcall = libffcall-base.spec
 
@@ -19,7 +16,7 @@ Name:		libffcall
 Version:	%{libffcall.version}
 Summary:	Foreign Function Call Libraries
 License:	GPLv2
-Group:		Libraries
+Group:		System/Libraries
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
 Url:		http://www.gnu.org/software/libffcall/
@@ -61,8 +58,10 @@ mkdir %{name}-%{version}/%{base_arch}
 
 %build
 %ifarch amd64 sparcv9
+export CC="gcc -m64"
 %libffcall_64.build -d %{name}-%{version}/%{_arch64}
 %endif
+export CC="gcc"
 %libffcall.build -d %{name}-%{version}/%{base_arch}
 
 %install
@@ -131,5 +130,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/libffcall/html/avcall.html
 
 %changelog
+* Fri May 30 2009 - jlee@thestaticvoid.com
+- export CC=gcc
 * Fri May 29 2009 - jlee@thestaticvoid.com
 - Initial version

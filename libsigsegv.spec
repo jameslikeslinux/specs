@@ -10,7 +10,7 @@ Name:		libsigsegv
 Version:	%{libsigsegv.version}
 Summary:	Library for Handling Page Faults and Stack Overflows
 License:	GPLv2
-Group:		Libraries
+Group:		System/Libraries
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
 URL:		http://libsigsegv.sourceforge.net/

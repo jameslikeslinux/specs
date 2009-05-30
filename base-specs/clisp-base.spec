@@ -8,8 +8,6 @@ Patch0:		clisp-00-detect-multilib.diff
 %patch0
 
 %build
-export CC="%{cc}"
-export CFLAGS="%{optflags}"
 export LDFLAGS="%{_ldflags}"
 ./configure --prefix=%{_prefix} --bindir=%{_bindir} --libdir=%{_libdir} %{confargs}
 cd src

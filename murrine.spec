@@ -10,7 +10,7 @@ Name:		murrine
 Version:	%{murrine.version}
 Summary:	Gtk2 Engine Featuring a Modern Glassy Look
 License:	GPLv2
-Group:		Theming
+Group:		Desktop (GNOME)/Theming
 Distribution:	OpenSolaris
 Vendor:		OpenSolaris Community
 Url:		http://www.cimitan.com/murrine/

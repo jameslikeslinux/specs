@@ -8,14 +8,12 @@ Patch0:		libffcall-00-install-mkdir.diff
 %patch0
 
 %build
-export CC="%{cc}"
-export CFLAGS="%{optflags}"
 export LDFLAGS="%{_ldflags}"
 ./configure --prefix=%{_prefix} --libdir=%{_libdir} --mandir=%{_mandir} --enable-shared
-make %{makeargs}
+gmake %{makeargs}
 
 %install
-make DESTDIR=$RPM_BUILD_ROOT %{makeargs} install
+gmake DESTDIR=$RPM_BUILD_ROOT %{makeargs} install
 
 %clean
 rm -rf $RPM_BUILD_ROOT

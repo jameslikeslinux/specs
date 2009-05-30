@@ -1,14 +1,10 @@
 %include Solaris.inc
-%define gcc_picflags
-%define _cc %(echo $CC)
 %ifarch amd64 sparcv9
 %include arch64.inc
-%define cc %{_cc} -m64
 %define confargs --disable-mmap
 %use clisp_64 = clisp-base.spec
 %endif
 %include base.inc
-%define cc %{_cc}
 %define confargs
 %use clisp = clisp-base.spec
 
@@ -16,7 +12,7 @@ Name:		clisp
 Version:	%{clisp.version}
 Summary:	A Common Lisp Implementation
 License:	GPLv2
-Group:		Other Languages
+Group:		Development/Other Languages
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
 Url:		http://www.gnu.org/software/clisp/
@@ -55,8 +51,10 @@ mkdir %{name}-%{version}/%{base_arch}
 
 %build
 %ifarch amd64 sparcv9
+export CC="gcc -m64"
 %clisp_64.build -d %{name}-%{version}/%{_arch64}
 %endif
+export CC="gcc"
 %clisp.build -d %{name}-%{version}/%{base_arch}
 
 %install
@@ -217,5 +215,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/clisp.1
 
 %changelog
+* Fri May 30 2009 - jlee@thestaticvoid.com
+- export CC=gcc
 * Fri May 29 2009 - jlee@thestaticvoid.com
 - Initial version

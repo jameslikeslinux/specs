@@ -10,7 +10,7 @@ Name:		vorbis-tools
 Version:	%{vorbis_tools.version}
 Summary:	Vorbis Audio Encoder and Utilities
 License:	GPLv2
-Group:		Sound and Video
+Group:		Applications/Sound and Video
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
 Url:		http://www.vorbis.com/

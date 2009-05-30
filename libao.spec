@@ -10,7 +10,7 @@ Name:		libao
 Version:	%{libao.version}
 Summary:	Cross Platform Audio Library
 License:	GPLv2
-Group:		Libraries
+Group:		System/Libraries
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
 Url:		http://www.xiph.org/ao/
