@@ -1,6 +1,6 @@
 Name:		murrine
-Version:	0.53.1
-Source0:	http://www.cimitan.com/murrine/files/%{name}-%{version}.tar.bz2
+Version:	0.90.3
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/%{name}/0.90/%{name}-%{version}.tar.bz2
 Source1:	http://www.cimitan.com/murrine/files/MurrinaGilouche.tar.bz2
 Source2:	http://www.cimitan.com/murrine/files/MurrinaAquaIsh.tar.bz2
 Source3:	http://www.cimitan.com/murrine/files/MurrinaVerdeOlivo.tar.bz2

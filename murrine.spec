@@ -8,20 +8,18 @@
 
 Name:		murrine
 Version:	%{murrine.version}
-Release:	1
 Summary:	Gtk2 Engine Featuring a Modern Glassy Look
-License:	GPL
-Group:		Desktop (GNOME)/Theming
-Packager:       James Lee <jlee@thestaticvoid.org>
-Vendor:		http://www.cimitan.com/murrine/files/%{name}-%{version}.tar.bz2
+License:	GPLv2
+Group:		Theming
+Distribution:	OpenSolaris
+Vendor:		OpenSolaris Community
 Url:		http://www.cimitan.com/murrine/
-SUNW_Hotline:   %{url}
 SUNW_BaseDir:	%{_basedir}
 SUNW_Copyright:	%{name}.copyright
-SUNW_Category:  system
 
 %include default-depend.inc
 BuildRequires:	SUNWgnome-common-devel
+BuildRequires:	SUNWgnu-gettext
 Requires:	SUNWfontconfig
 Requires:	SUNWfreetype2
 Requires:	SUNWgnome-base-libs
@@ -31,6 +29,10 @@ Requires:	SUNWpng
 Requires:	SUNWxorg-clientlibs
 Requires:	SUNWxwplt
 Requires:	SUNWzlib
+
+Meta(info.maintainer):		James Lee <jlee@thestaticvoid.org>
+Meta(info.upstream):		Andrea Cimitan <andrea.cimitan@gmail.com>
+Meta(info.upstream_url):	http://www.cimitan.com/murrine/
 
 %description
 Murrine is a Gtk2 engine, written in C language, using cairo vectorial drawing
@@ -79,6 +81,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{_arch64}/gtk-2.0/2.10.0/engines/libmurrine.so
 %endif
 %{_libdir}/gtk-2.0/2.10.0/engines/libmurrine.so
+%attr(755,root,sys) %dir %{_datadir}
+%{_datadir}/gtk-engines/murrine.xml
 
 %files themes
 %defattr(-,root,bin)
@@ -99,3 +103,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/themes/MurrineRoundedLessFramedIcon/metacity-1/menu.png
 %{_datadir}/themes/MurrineRoundedLessFramedIcon/metacity-1/metacity-theme-1.xml
 
+
+%changelog
+* Fri May 29 2009 - jlee@thestaticvoid.com
+- Initial version
