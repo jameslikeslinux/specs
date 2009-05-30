@@ -14,25 +14,25 @@
 
 Name:		clisp
 Version:	%{clisp.version}
-Release:	1
 Summary:	A Common Lisp Implementation
-License:	GPL
-Group:		Development/Other Languages
-Packager:       James Lee <jlee@thestaticvoid.org>
-Vendor:		http://ftp.gnu.org/pub/gnu/%{name}/release/%{version}/%{name}-%{version}.tar.bz2
+License:	GPLv2
+Group:		Other Languages
+Distribution:   OpenSolaris
+Vendor:         OpenSolaris Community
 Url:		http://www.gnu.org/software/clisp/
-SUNW_Hotline:   %{url}
 SUNW_BaseDir:	%{_basedir}
 SUNW_Copyright:	%{name}.copyright
-SUNW_Category:	application
 
 %include default-depend.inc
 BuildRequires:	libsigsegv-devel
 BuildRequires:	libffcall-devel
-BuildRequires:	readline-devel
 Requires:	libsigsegv
 Requires:	libffcall
-Requires:	readline
+
+Meta(info.maintainer):		James Lee <jlee@thestaticvoid.org>
+Meta(info.upstream):		Bruno Haible <bruno@clisp.org>
+Meta(info.upstream_url):	http://www.gnu.org/software/clisp/
+
 
 %description
 ANSI Common Lisp is a high-level, general-purpose programming language. GNU
@@ -73,10 +73,6 @@ cd $RPM_BUILD_ROOT%{_bindir}
 ln -s ../lib/isaexec clisp
 %endif
 
-mv $RPM_BUILD_ROOT%{_datadir}/doc $RPM_BUILD_ROOT%{_datadir}/foo
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/doc
-mv $RPM_BUILD_ROOT%{_datadir}/foo $RPM_BUILD_ROOT%{_datadir}/doc/clisp
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -93,7 +89,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{_arch64}/clisp-%{version}/full/width.o
 %{_libdir}/%{_arch64}/clisp-%{version}/full/lispinit.mem
 %{_libdir}/%{_arch64}/clisp-%{version}/full/uniname.o
-%{_libdir}/%{_arch64}/clisp-%{version}/full/readline.o
 %{_libdir}/%{_arch64}/clisp-%{version}/full/regexi.o
 %{_libdir}/%{_arch64}/clisp-%{version}/full/regex.o
 %{_libdir}/%{_arch64}/clisp-%{version}/full/modules.h
@@ -116,7 +111,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{_arch64}/clisp-%{version}/base/uniname.o
 %{_libdir}/%{_arch64}/clisp-%{version}/base/libnoreadline.a
 %{_libdir}/%{_arch64}/clisp-%{version}/base/modules.h
-%{_libdir}/%{_arch64}/clisp-%{version}/base/readline.o
 %{_libdir}/%{_arch64}/clisp-%{version}/base/regex.o
 %{_libdir}/%{_arch64}/clisp-%{version}/base/makevars
 %{_libdir}/%{_arch64}/clisp-%{version}/base/lisp.a
@@ -139,7 +133,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/clisp-%{version}/full/regexp.dvi
 %{_libdir}/clisp-%{version}/full/gettext.o
 %{_libdir}/clisp-%{version}/full/width.o
-%{_libdir}/clisp-%{version}/full/readline.o
 %{_libdir}/clisp-%{version}/full/regex.o
 %{_libdir}/clisp-%{version}/full/regexi.o
 %{_libdir}/clisp-%{version}/full/modules.o
@@ -153,7 +146,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/clisp-%{version}/base/libnoreadline.a
 %{_libdir}/clisp-%{version}/base/lispinit.mem
 %{_libdir}/clisp-%{version}/base/lisp.run
-%{_libdir}/clisp-%{version}/base/readline.o
 %{_libdir}/clisp-%{version}/base/regex.o
 %{_libdir}/clisp-%{version}/base/makevars
 %{_libdir}/clisp-%{version}/base/width.o
@@ -223,3 +215,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/clisp/doc/impnotes.html
 %{_datadir}/doc/clisp/doc/impnotes.css
 %{_mandir}/man1/clisp.1
+
+%changelog
+* Fri May 29 2009 - jlee@thestaticvoid.com
+- Initial version
