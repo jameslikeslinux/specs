@@ -20,8 +20,9 @@ Source1:	tracd.xml
 BuildRequires:	SUNWpython-setuptools
 Requires:	SUNWpython-setuptools
 Requires:	SUNWsvn-python 
-Requires:	Genshi
 Requires:	SUNWpysqlite
+Requires:	Genshi
+Requires:	Pygments
 
 Meta(info.maintainer):          James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):            Edgewall Software <trac-dev@googlegroups.com>
@@ -80,5 +81,7 @@ rm -rf $RPM_BUILD_ROOT
 %class(manifest) %attr(444,root,sys) %{_localstatedir}/svc/manifest/network/tracd.xml
 
 %changelog
+* Fri May 31 2009 - jlee@thestaticvoid.com
+- Add Pygments requirement for syntax highlighting.
 * Fri May 30 2009 - jlee@thestaticvoid.com
 - Initial version
