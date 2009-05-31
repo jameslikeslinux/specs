@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<!DOCTYPE service_bundle SYSTEM "/usr/share/lib/xml/dtd/service_bundle.dtd.1">
+
+<service_bundle type='manifest' name='tracd'>
+
+<service
+	name='network/tracd'
+	type='service'
+	version='1'>
+
+	<create_default_instance enabled='false' />
+	<single_instance />
+
+	<dependency
+	    name='fs-local'
+	    grouping='require_all'
+	    restart_on='none'
+	    type='service'>
+		<service_fmri value='svc:/system/filesystem/local' />
+	</dependency>
+
+	<dependency
+	    name='network-service'
+	    grouping='require_all'
+	    restart_on='none'
+	    type='service'>
+		<service_fmri value='svc:/network/service' />
+	</dependency>
+
+	<dependent
+		name='tracd_multi-user'
+		grouping='optional_all'
+		restart_on='none'>
+			<service_fmri
+			    value='svc:/milestone/multi-user' />
+	</dependent>
+
+	<exec_method
+		type='method'
+		name='start'
+		exec='/usr/bin/tracd -b %{options/bind} -p %{options/port} `%{options/parent} &amp;&amp; echo -e` %{options/projenv}'
+		timeout_seconds='60' />
+
+	<exec_method
+		type='method'
+		name='stop'
+		exec=':kill'
+		timeout_seconds='60' />
+
+	<property_group name='startd' type='framework'>
+		<propval name='duration' type='astring' value='child' />
+	</property_group>
+
+	<property_group name='options' type='application'>
+		<propval name='bind' type='astring' value='0.0.0.0' />
+		<propval name='port' type='integer' value='8080' />
+		<propval name='parent' type='boolean' value='true' />
+		<propval name='projenv' type='astring' value='/var/trac' />
+	</property_group>
+
+	<stability value='Unstable' />
+
+	<template>
+		<common_name>
+			<loctext xml:lang='C'>
+			Trac Standalone Server
+			</loctext>
+		</common_name>
+		<documentation>
+			<doc_link name='Tracd'
+				uri='http://trac.edgewall.org/wiki/TracStandalone' />
+		</documentation>
+	</template>
+</service>
+
+</service_bundle>
