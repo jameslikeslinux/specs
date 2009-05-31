@@ -1,0 +1,24 @@
+--- saslauthd/auth_getpwent.c.orig	Sun Apr 19 14:18:35 2009
++++ saslauthd/auth_getpwent.c	Sun Apr 19 14:17:27 2009
+@@ -41,6 +41,10 @@
+ #include <string.h>
+ #include <pwd.h>
+ 
++#ifdef HAVE_CRYPT_H
++#include <crypt.h>
++#endif
++
+ # ifdef WITH_DES
+ #  ifdef WITH_SSL_DES
+ #   include <openssl/des.h>
+@@ -48,10 +52,6 @@
+ #   include <des.h>
+ #  endif /* WITH_SSL_DES */
+ # endif /* WITH_DES */
+-
+-#ifdef HAVE_CRYPT_H
+-#include <crypt.h>
+-#endif
+ /* END PUBLIC DEPENDENCIES */
+ 
+ #define RETURN(x) return strdup(x)
