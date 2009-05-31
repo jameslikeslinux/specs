@@ -1,0 +1,335 @@
+<?xml version="1.0"?>
+<!DOCTYPE service_bundle SYSTEM "/usr/share/lib/xml/dtd/service_bundle.dtd.1">
+
+<service_bundle type='manifest' name='courier-imap'>
+
+<service
+	name='network/courier-imap'
+	type='service'
+	version='1'>
+
+	<dependency
+	    name='fs-local'
+	    grouping='require_all'
+	    restart_on='none'
+	    type='service'>
+		<service_fmri value='svc:/system/filesystem/local' />
+	</dependency>
+
+	<dependency
+	    name='network-service'
+	    grouping='require_all'
+	    restart_on='none'
+	    type='service'>
+		<service_fmri value='svc:/network/service' />
+	</dependency>
+
+	<dependency
+	    name='name-services'
+	    grouping='require_all'
+	    restart_on='refresh'
+	    type='service'>
+		<service_fmri value='svc:/milestone/name-services' />
+	</dependency>
+
+	<dependency
+	    name='identity'
+	    grouping='optional_all'
+	    restart_on='refresh'
+	    type='service'>
+		<service_fmri value='svc:/system/identity:domain' />
+	</dependency>
+
+	<dependency
+	    name='system-log'
+	    grouping='optional_all'
+	    restart_on='none'
+	    type='service'>
+		<service_fmri value='svc:/system/system-log' />
+	</dependency>
+
+	<instance name='imapd' enabled='false'>
+
+		<dependency
+		    name='config-file'
+		    grouping='require_all'
+		    restart_on='refresh'
+		    type='path'>
+			<service_fmri
+			    value='file://localhost/etc/courier-imap/imapd' />
+		</dependency>
+
+		<dependency
+		    name='nsswitch'
+		    grouping='require_all'
+		    restart_on='refresh'
+		    type='path'>
+			<service_fmri
+			    value='file://localhost/etc/nsswitch.conf' />
+		</dependency>
+
+		<!--
+		If autofs is enabled, wait for it to get users' home
+		directories.
+		-->
+		<dependency
+		    name='autofs'
+		    grouping='optional_all'
+		    restart_on='none'
+		    type='service'>
+			<service_fmri value='svc:/system/filesystem/autofs' />
+		</dependency>
+
+		<dependency
+		    name='authdaemond'
+		    grouping='require_all'
+		    restart_on='none'
+		    type='service'>
+			<service_fmri value='svc:/network/authdaemond' />
+		</dependency>
+		
+		<dependent
+			name='courier-imap-imapd_multi-user'
+			grouping='optional_all'
+			restart_on='none'>
+				<service_fmri
+				    value='svc:/milestone/multi-user' />
+		</dependent>
+
+		<exec_method
+			type='method'
+			name='start'
+			exec='/usr/lib/courier-imap/imapd.rc start'
+			timeout_seconds='60' />
+
+		<exec_method
+			type='method'
+			name='stop'
+			exec='/usr/lib/courier-imap/imapd.rc stop'
+			timeout_seconds='60' />
+
+		<template>
+			<common_name>
+				<loctext xml:lang='C'>
+				Courier-IMAP imapd Server
+				</loctext>
+			</common_name>
+		</template>
+
+	</instance>
+
+	<instance name='imapd-ssl' enabled='false'>
+
+		<dependency
+		    name='config-file'
+		    grouping='require_all'
+		    restart_on='refresh'
+		    type='path'>
+			<service_fmri
+			    value='file://localhost/etc/courier-imap/imapd-ssl' />
+		</dependency>
+
+		<dependency
+		    name='nsswitch'
+		    grouping='require_all'
+		    restart_on='refresh'
+		    type='path'>
+			<service_fmri
+			    value='file://localhost/etc/nsswitch.conf' />
+		</dependency>
+
+		<!--
+		If autofs is enabled, wait for it to get users' home
+		directories.
+		-->
+		<dependency
+		    name='autofs'
+		    grouping='optional_all'
+		    restart_on='none'
+		    type='service'>
+			<service_fmri value='svc:/system/filesystem/autofs' />
+		</dependency>
+
+		<dependency
+		    name='authdaemond'
+		    grouping='require_all'
+		    restart_on='none'
+		    type='service'>
+			<service_fmri value='svc:/network/authdaemond' />
+		</dependency>
+		
+		<dependent
+			name='courier-imap-imapd-ssl_multi-user'
+			grouping='optional_all'
+			restart_on='none'>
+				<service_fmri
+				    value='svc:/milestone/multi-user' />
+		</dependent>
+
+		<exec_method
+			type='method'
+			name='start'
+			exec='/usr/lib/courier-imap/imapd-ssl.rc start'
+			timeout_seconds='60' />
+
+		<exec_method
+			type='method'
+			name='stop'
+			exec='/usr/lib/courier-imap/imapd-ssl.rc stop'
+			timeout_seconds='60' />
+
+		<template>
+			<common_name>
+				<loctext xml:lang='C'>
+				Courier-IMAP imapd-ssl Server
+				</loctext>
+			</common_name>
+		</template>
+
+	</instance>
+
+	<instance name='pop3d' enabled='false'>
+
+		<dependency
+		    name='config-file'
+		    grouping='require_all'
+		    restart_on='refresh'
+		    type='path'>
+			<service_fmri
+			    value='file://localhost/etc/courier-imap/pop3d' />
+		</dependency>
+
+		<dependency
+		    name='nsswitch'
+		    grouping='require_all'
+		    restart_on='refresh'
+		    type='path'>
+			<service_fmri
+			    value='file://localhost/etc/nsswitch.conf' />
+		</dependency>
+
+		<!--
+		If autofs is enabled, wait for it to get users' home
+		directories.
+		-->
+		<dependency
+		    name='autofs'
+		    grouping='optional_all'
+		    restart_on='none'
+		    type='service'>
+			<service_fmri value='svc:/system/filesystem/autofs' />
+		</dependency>
+
+		<dependency
+		    name='authdaemond'
+		    grouping='require_all'
+		    restart_on='none'
+		    type='service'>
+			<service_fmri value='svc:/network/authdaemond' />
+		</dependency>
+		
+		<dependent
+			name='courier-imap-pop3d_multi-user'
+			grouping='optional_all'
+			restart_on='none'>
+				<service_fmri
+				    value='svc:/milestone/multi-user' />
+		</dependent>
+
+		<exec_method
+			type='method'
+			name='start'
+			exec='/usr/lib/courier-imap/pop3d.rc start'
+			timeout_seconds='60' />
+
+		<exec_method
+			type='method'
+			name='stop'
+			exec='/usr/lib/courier-imap/pop3d.rc stop'
+			timeout_seconds='60' />
+
+		<template>
+			<common_name>
+				<loctext xml:lang='C'>
+				Courier-IMAP pop3d Server
+				</loctext>
+			</common_name>
+		</template>
+
+	</instance>
+
+	<instance name='pop3d-ssl' enabled='false'>
+
+		<dependency
+		    name='config-file'
+		    grouping='require_all'
+		    restart_on='refresh'
+		    type='path'>
+			<service_fmri
+			    value='file://localhost/etc/courier-imap/pop3d-ssl' />
+		</dependency>
+
+		<dependency
+		    name='nsswitch'
+		    grouping='require_all'
+		    restart_on='refresh'
+		    type='path'>
+			<service_fmri
+			    value='file://localhost/etc/nsswitch.conf' />
+		</dependency>
+
+		<!--
+		If autofs is enabled, wait for it to get users' home
+		directories.
+		-->
+		<dependency
+		    name='autofs'
+		    grouping='optional_all'
+		    restart_on='none'
+		    type='service'>
+			<service_fmri value='svc:/system/filesystem/autofs' />
+		</dependency>
+
+		<dependency
+		    name='authdaemond'
+		    grouping='require_all'
+		    restart_on='none'
+		    type='service'>
+			<service_fmri value='svc:/network/authdaemond' />
+		</dependency>
+		
+		<dependent
+			name='courier-imap-pop3d-ssl_multi-user'
+			grouping='optional_all'
+			restart_on='none'>
+				<service_fmri
+				    value='svc:/milestone/multi-user' />
+		</dependent>
+
+		<exec_method
+			type='method'
+			name='start'
+			exec='/usr/lib/courier-imap/pop3d-ssl.rc start'
+			timeout_seconds='60' />
+
+		<exec_method
+			type='method'
+			name='stop'
+			exec='/usr/lib/courier-imap/pop3d-ssl.rc stop'
+			timeout_seconds='60' />
+
+		<template>
+			<common_name>
+				<loctext xml:lang='C'>
+				Courier-IMAP pop3d Server
+				</loctext>
+			</common_name>
+		</template>
+
+	</instance>
+
+	<stability value='Unstable' />
+
+</service>
+
+</service_bundle>
