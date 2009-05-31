@@ -2,34 +2,34 @@
 
 %define python_version 2.4
 
-Name:		Pygments
-Version:	1.0
-Summary:	Pygments is a syntax highlighting package written in Python
+Name:		python-genshi
+Version:	0.5.1
+Summary:	Python toolkit for generation of output for the web
 License:	BSD
 Group:		Development/Python
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
-Url:		http://pygments.org/
+Url:		http://genshi.edgewall.org/
 SUNW_Basedir:	%{_basedir}
 SUNW_Copyright: %{name}.copyright
 
-Source0:	http://pypi.python.org/packages/source/P/Pygments/%{name}-%{version}.tar.gz
+Source0:	ftp://ftp.edgewall.org/pub/genshi/Genshi-%{version}.tar.bz2
 
 %include default-depend.inc
 BuildRequires:	SUNWpython-setuptools
 Requires:	SUNWpython-setuptools
 
 Meta(info.maintainer):          James Lee <jlee@thestaticvoid.com>
-Meta(info.upstream):            Georg Brandl <georg@python.org>
-Meta(info.upstream_url):        http://pygments.org/
+Meta(info.upstream):            Edgewall Software <trac-dev@googlegroups.com>
+Meta(info.upstream_url):        http://trac.edgewall.org/
 
 %description
-Pygments aims to be a generic syntax highlighter for general use in all kinds
-of software such as forum systems, wikis or other applications that need to
-prettify source code. 
+Genshi is a Python library that provides an integrated set of components for
+parsing, generating, and processing HTML, XML or other textual content for
+output generation on the web. 
 
 %prep
-%setup -q
+%setup -q -n Genshi-%{version}
 
 %build
 python setup.py build
@@ -51,12 +51,14 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,bin)
-%dir %{_bindir}
-%{_bindir}/pygmentize
 %dir %{_libdir}
 %dir %{_libdir}/python%{python_version}
-%{_libdir}/python%{python_version}/vendor-packages
+%dir %{_libdir}/python%{python_version}/vendor-packages
+%{_libdir}/python%{python_version}/vendor-packages/genshi
+%{_libdir}/python%{python_version}/vendor-packages/Genshi-0.5.1-py%{python_version}.egg-info
 
 %changelog
 * Sun May 31 2009 - jlee@thestaticvoid.com
+- Rename from Genshi to python-genshi
+* Sat May 30 2009 - jlee@thestaticvoid.com
 - Initial version

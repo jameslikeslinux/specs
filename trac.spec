@@ -2,7 +2,7 @@
 
 %define python_version 2.4
 
-Name:           Trac
+Name:           trac
 Version:        0.11.4
 Summary:        Trac Integrated SCM & Project Management
 License:        BSD
@@ -13,7 +13,7 @@ Url:            http://trac.edgewall.org/
 SUNW_Basedir:	/
 SUNW_Copyright: %{name}.copyright
 
-Source0:        ftp://ftp.edgewall.org/pub/trac/%{name}-%{version}.tar.gz
+Source0:        ftp://ftp.edgewall.org/pub/trac/Trac-%{version}.tar.gz
 Source1:	tracd.xml
 
 %include default-depend.inc
@@ -21,8 +21,8 @@ BuildRequires:	SUNWpython-setuptools
 Requires:	SUNWpython-setuptools
 Requires:	SUNWsvn-python 
 Requires:	SUNWpysqlite
-Requires:	Genshi
-Requires:	Pygments
+Requires:	python-genshi
+Requires:	python-pygments
 
 Meta(info.maintainer):          James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):            Edgewall Software <trac-dev@googlegroups.com>
@@ -33,7 +33,7 @@ Trac is an enhanced wiki and issue tracking system for software development
 projects.
 
 %prep
-%setup -q
+%setup -q -n Trac-%{version}
 
 %build
 python setup.py build
@@ -81,6 +81,8 @@ rm -rf $RPM_BUILD_ROOT
 %class(manifest) %attr(444,root,sys) %{_localstatedir}/svc/manifest/network/tracd.xml
 
 %changelog
+* Sun May 31 2009 - jlee@thestaticvoid.com
+- Change name from Trac to trac
 * Sun May 31 2009 - jlee@thestaticvoid.com
 - Add Pygments requirement for syntax highlighting.
 * Sat May 30 2009 - jlee@thestaticvoid.com
