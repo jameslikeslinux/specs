@@ -66,9 +66,9 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,bin)
 %ifarch amd64 sparcv9
-%{_libdir}/amd64/ao/plugins-2/libesd.so
-%{_libdir}/amd64/libao.so.2
-%{_libdir}/amd64/libao.so.2.1.3
+%{_libdir}/%{_arch64}/ao/plugins-2/libesd.so
+%{_libdir}/%{_arch64}/libao.so.2
+%{_libdir}/%{_arch64}/libao.so.2.1.3
 %endif
 %{_libdir}/libao.so.2.1.3
 %{_libdir}/libao.so.2
@@ -78,11 +78,11 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(-,root,bin)
 %ifarch amd64 sparcv9
-%{_libdir}/amd64/libao.so
-%{_libdir}/amd64/libao.la
-%{_libdir}/amd64/ao/plugins-2/libesd.la
-%attr(755,root,other) %dir %{_libdir}/amd64/pkgconfig
-%{_libdir}/amd64/pkgconfig/ao.pc
+%{_libdir}/%{_arch64}/libao.so
+%{_libdir}/%{_arch64}/libao.la
+%{_libdir}/%{_arch64}/ao/plugins-2/libesd.la
+%attr(755,root,other) %dir %{_libdir}/%{_arch64}/pkgconfig
+%{_libdir}/%{_arch64}/pkgconfig/ao.pc
 %endif
 %{_libdir}/libao.so
 %{_libdir}/libao.la
