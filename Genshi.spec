@@ -58,5 +58,5 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/python%{python_version}/vendor-packages/Genshi-0.5.1-py%{python_version}.egg-info
 
 %changelog
-* Fri May 30 2009 - jlee@thestaticvoid.com
+* Sat May 30 2009 - jlee@thestaticvoid.com
 - Initial version

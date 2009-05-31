@@ -198,5 +198,5 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/include/sasl/hmac-md5.h
 
 %changelog
-* Fri May 31 2009 - jlee@thestaticvoid.com
+* Sun May 31 2009 - jlee@thestaticvoid.com
 - Initial version

@@ -130,7 +130,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/libffcall/html/avcall.html
 
 %changelog
-* Fri May 30 2009 - jlee@thestaticvoid.com
+* Sat May 30 2009 - jlee@thestaticvoid.com
 - export CC=gcc
 * Fri May 29 2009 - jlee@thestaticvoid.com
 - Initial version

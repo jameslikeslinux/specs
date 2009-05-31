@@ -167,5 +167,5 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/include/courier_auth_config.h
 
 %changelog
-* Fri May 30 2009 - jlee@thestaticvoid.com
+* Sat May 30 2009 - jlee@thestaticvoid.com
 - Initial version

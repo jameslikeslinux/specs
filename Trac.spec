@@ -81,7 +81,7 @@ rm -rf $RPM_BUILD_ROOT
 %class(manifest) %attr(444,root,sys) %{_localstatedir}/svc/manifest/network/tracd.xml
 
 %changelog
-* Fri May 31 2009 - jlee@thestaticvoid.com
+* Sun May 31 2009 - jlee@thestaticvoid.com
 - Add Pygments requirement for syntax highlighting.
-* Fri May 30 2009 - jlee@thestaticvoid.com
+* Sat May 30 2009 - jlee@thestaticvoid.com
 - Initial version

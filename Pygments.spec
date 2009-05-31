@@ -58,5 +58,5 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/python%{python_version}/vendor-packages
 
 %changelog
-* Fri May 31 2009 - jlee@thestaticvoid.com
+* Sun May 31 2009 - jlee@thestaticvoid.com
 - Initial version

@@ -120,5 +120,5 @@ rm -rf $RPM_BUILD_ROOT
 %class(manifest) %attr(444,root,sys) %{_localstatedir}/svc/manifest/network/courier-imap.xml
 
 %changelog
-* Fri May 30 2009 - jlee@thestaticvoid.com
+* Sat May 30 2009 - jlee@thestaticvoid.com
 - Initial version
