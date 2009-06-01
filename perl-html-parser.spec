@@ -46,7 +46,7 @@ make
 
 %install
 rm -rf $RPM_BUILD_ROOT
-make install
+make pure_install
 
 %clean
 rm -rf $RPM_BUILD_ROOT
