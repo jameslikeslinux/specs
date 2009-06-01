@@ -76,13 +76,13 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,bin)
 %ifarch amd64 sparcv9
-%{_libdir}/%{_arch64}/ao/plugins-2/libesd.so
+%{_libdir}/%{_arch64}/ao/plugins-2/*.so
 %{_libdir}/%{_arch64}/libao.so.2
 %{_libdir}/%{_arch64}/libao.so.2.1.3
 %endif
 %{_libdir}/libao.so.2.1.3
 %{_libdir}/libao.so.2
-%{_libdir}/ao/plugins-2/libesd.so
+%{_libdir}/ao/plugins-2/*.so
 
 
 %files devel
@@ -90,13 +90,13 @@ rm -rf $RPM_BUILD_ROOT
 %ifarch amd64 sparcv9
 %{_libdir}/%{_arch64}/libao.so
 %{_libdir}/%{_arch64}/libao.la
-%{_libdir}/%{_arch64}/ao/plugins-2/libesd.la
+%{_libdir}/%{_arch64}/ao/plugins-2/*.la
 %attr(755,root,other) %dir %{_libdir}/%{_arch64}/pkgconfig
 %{_libdir}/%{_arch64}/pkgconfig/ao.pc
 %endif
 %{_libdir}/libao.so
 %{_libdir}/libao.la
-%{_libdir}/ao/plugins-2/libesd.la
+%{_libdir}/ao/plugins-2/*.la
 %attr(755,root,other) %dir %{_libdir}/pkgconfig
 %{_libdir}/pkgconfig/ao.pc
 %{_includedir}/ao/os_types.h
@@ -145,6 +145,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/aclocal/ao.m4
 
 %changelog
+* Mon Jun 01 2009 - jlee@thestaticvoid.com
+- Install all plugins that are built.
 * Sun May 31 2009 - jlee@thestaticvoid.com
 - Add header and correct copyright
 * Fri May 29 2009 - jlee@thestaticvoid.com
