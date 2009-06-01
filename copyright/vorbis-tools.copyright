@@ -1,24 +1,23 @@
 oggenc:
-Michael Smith <msmith@xiph.org>
+Copyright 2000-2005, Michael Smith <msmith@xiph.org>
 
 oggdec:
-Michael Smith <msmith@xiph.org>
+Copyright 2002, Michael Smith <msmith@xiph.org>
 
 ogg123:
-Kenneth Arnold <kcarnold-xiph@arnoldnet.net>
-Stan Seibert <volsung@xiph.org>
-Segher Boessenkool <segher@xiph.org>
+Copyright 2000-2005, Stan Seibert <volsung@xiph.org>
+Copyright 2000-2001, Kenneth C. Arnold <ogg@arnoldnet.net>
 
 ogginfo:
-Michael Smith <msmith@xiph.org>
+Copyright 2002-2003, Xiph.Org Foundation
+Copyright 2002-2005, Michael Smith <msmith@xiph.org>
 
 vcut:
-Michael Smith <msmith@xiph.org>
+Copyright 2000-2001, Michael Smith <msmith@xiph.org>
 
 vorbiscomment:
-Michael Smith <msmith@xiph.org>
-
-and the rest of the Xiph.Org Foundation.
+Copyright 2000-2002, Michael Smith <msmith@xiph.org>
+Copyright 2001, Ralph Giles <giles@xiph.org>
 
 
 
