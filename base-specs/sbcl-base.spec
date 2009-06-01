@@ -1,3 +1,12 @@
+#
+# spec file for package: sbcl
+#
+# This file and all modifications and additions to the pristine
+# package are under the same license as the package itself.
+#
+# includes module(s):
+#
+
 Name:		sbcl
 Version:	1.0.28
 Source0:	http://voxel.dl.sourceforge.net/sourceforge/sbcl/%{name}-%{version}-source.tar.bz2

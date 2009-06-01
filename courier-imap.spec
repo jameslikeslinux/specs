@@ -1,3 +1,12 @@
+#
+# spec file for package: courier-imap
+#
+# This file and all modifications and additions to the pristine
+# package are under the same license as the package itself.
+#
+# includes module(s):
+#
+
 %include Solaris.inc
 
 Name:		courier-imap
@@ -22,7 +31,7 @@ Requires:	bdb
 Requires:	SUNWgamin
 Requires:	courier-authlib
 
-Meta(info.maintainer):		James Lee <jlee@thestaticvoid.org>
+Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):		Sam Varshavchik <mrsam@courier-mta.com>
 Meta(info.upstream_url):	http://www.courier-mta.org/imap/
 
@@ -120,5 +129,7 @@ rm -rf $RPM_BUILD_ROOT
 %class(manifest) %attr(444,root,sys) %{_localstatedir}/svc/manifest/network/courier-imap.xml
 
 %changelog
+* Sun May 31 2009 - jlee@thestaticvoid.com
+- Add header and correct copyright
 * Sat May 30 2009 - jlee@thestaticvoid.com
 - Initial version

@@ -1,4 +1,14 @@
+#
+# spec file for package: clisp
+#
+# This file and all modifications and additions to the pristine
+# package are under the same license as the package itself.
+#
+# includes module(s):
+#
+
 %include Solaris.inc
+
 %ifarch amd64 sparcv9
 %include arch64.inc
 %define confargs --disable-mmap
@@ -28,7 +38,6 @@ Requires:	libffcall
 Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):		Bruno Haible <bruno@clisp.org>
 Meta(info.upstream_url):	http://www.gnu.org/software/clisp/
-
 
 %description
 ANSI Common Lisp is a high-level, general-purpose programming language. GNU
@@ -215,6 +224,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/clisp.1
 
 %changelog
+* Sun May 31 2009 - jlee@thestaticvoid.com
+- Add header and correct copyright
 * Sat May 30 2009 - jlee@thestaticvoid.com
 - export CC=gcc
 * Fri May 29 2009 - jlee@thestaticvoid.com

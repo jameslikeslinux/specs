@@ -1,4 +1,14 @@
+#
+# spec file for package: libao
+#
+# This file and all modifications and additions to the pristine
+# package are under the same license as the package itself.
+#
+# includes module(s):
+#
+
 %include Solaris.inc
+
 %ifarch amd64 sparcv9
 %include arch64.inc
 %use libao_64 = libao-base.spec
@@ -135,5 +145,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/aclocal/ao.m4
 
 %changelog
+* Sun May 31 2009 - jlee@thestaticvoid.com
+- Add header and correct copyright
 * Fri May 29 2009 - jlee@thestaticvoid.com
 - Initial version

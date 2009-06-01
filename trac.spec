@@ -1,3 +1,12 @@
+#
+# spec file for package: trac
+#
+# This file and all modifications and additions to the pristine
+# package are under the same license as the package itself.
+#
+# includes module(s):
+#
+
 %include Solaris.inc
 
 %define python_version 2.4
@@ -81,6 +90,8 @@ rm -rf $RPM_BUILD_ROOT
 %class(manifest) %attr(444,root,sys) %{_localstatedir}/svc/manifest/network/tracd.xml
 
 %changelog
+* Sun May 31 2009 - jlee@thestaticvoid.com
+- Add header
 * Sun May 31 2009 - jlee@thestaticvoid.com
 - Change name from Trac to trac
 * Sun May 31 2009 - jlee@thestaticvoid.com

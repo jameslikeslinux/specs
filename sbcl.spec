@@ -1,4 +1,14 @@
+#
+# spec file for package: sbcl
+#
+# This file and all modifications and additions to the pristine
+# package are under the same license as the package itself.
+#
+# includes module(s):
+#
+
 %include Solaris.inc
+
 %ifarch amd64 
 %include arch64.inc
 %define bindist sbcl-1.0.23-x86-solaris
@@ -22,7 +32,7 @@
 Name:		sbcl
 Version:	%{sbcl.version}
 Summary:	A Common Lisp Implementation
-License:	BSD
+License:	Public Domain/BSD
 Group:		Development/Other Languages
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
@@ -99,5 +109,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/sbcl.1
 
 %changelog
+* Sun May 31 2009 - jlee@thestaticvoid.com
+- Add header and correct copyright
 * Sat May 30 2009 - jlee@thestaticvoid.com
 - Initial version

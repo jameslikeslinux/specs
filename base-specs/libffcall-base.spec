@@ -1,3 +1,12 @@
+#
+# spec file for package: libffcall
+#
+# This file and all modifications and additions to the pristine
+# package are under the same license as the package itself.
+#
+# includes module(s):
+#
+
 Name:		libffcall
 Version:	1.10
 Source0:	http://www.haible.de/bruno/gnu/ffcall-%{version}.tar.gz

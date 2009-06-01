@@ -1,3 +1,12 @@
+#
+# spec file for package: murrine
+#
+# This file and all modifications and additions to the pristine
+# package are under the same license as the package itself.
+#
+# includes module(s):
+#
+
 Name:		murrine
 Version:	0.90.3
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/%{name}/0.90/%{name}-%{version}.tar.bz2

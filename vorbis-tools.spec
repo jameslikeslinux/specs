@@ -1,4 +1,14 @@
+#
+# spec file for package: vorbis-tools
+#
+# This file and all modifications and additions to the pristine
+# package are under the same license as the package itself.
+#
+# includes module(s):
+#
+
 %include Solaris.inc
+
 %ifarch amd64 sparcv9
 %include arch64.inc
 %use vorbis_tools_64 = vorbis-tools-base.spec
@@ -149,5 +159,7 @@ ln -s ../lib/isaexec oggdec
 %{_datadir}/locale/sv/LC_MESSAGES/vorbis-tools.mo
 
 %changelog
+* Sun May 31 2009 - jlee@thestaticvoid.com
+- Add header and correct copyright
 * Fri May 29 2009 - jlee@thestaticvoid.com
 - Initial version

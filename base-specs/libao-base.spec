@@ -1,3 +1,12 @@
+#
+# spec file for package: libao
+#
+# This file and all modifications and additions to the pristine
+# package are under the same license as the package itself.
+#
+# includes module(s):
+#
+
 Name:		libao
 Version:	0.8.8
 Source0:	http://downloads.xiph.org/releases/ao/libao-0.8.8.tar.gz

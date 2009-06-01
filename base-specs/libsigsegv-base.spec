@@ -1,3 +1,12 @@
+#
+# spec file for package: libsigsegv
+#
+# This file and all modifications and additions to the pristine
+# package are under the same license as the package itself.
+#
+# includes module(s):
+#
+
 Name:		libsigsegv
 Version:	2.6
 Source0:	http://ftp.gnu.org/gnu/%{name}/%{name}-%{version}.tar.gz

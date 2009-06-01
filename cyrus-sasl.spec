@@ -1,3 +1,12 @@
+#
+# spec file for package: cyrus-sasl
+#
+# This file and all modifications and additions to the pristine
+# package are under the same license as the package itself.
+#
+# includes module(s):
+#
+
 %include Solaris.inc
 
 Name:		cyrus-sasl
@@ -198,5 +207,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/include/sasl/hmac-md5.h
 
 %changelog
+* Sun May 31 2009 - jlee@thestaticvoid.com
+- Add header
 * Sun May 31 2009 - jlee@thestaticvoid.com
 - Initial version

@@ -1,3 +1,12 @@
+#
+# spec file for package: courier-authlib
+#
+# This file and all modifications and additions to the pristine
+# package are under the same license as the package itself.
+#
+# includes module(s):
+#
+
 %include Solaris.inc
 
 Name:		courier-authlib
@@ -167,5 +176,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/include/courier_auth_config.h
 
 %changelog
+* Sun May 31 2009 - jlee@thestaticvoid.com
+- Add header and correct copyright
 * Sat May 30 2009 - jlee@thestaticvoid.com
 - Initial version

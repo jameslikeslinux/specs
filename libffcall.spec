@@ -1,4 +1,14 @@
+#
+# spec file for package: libffcall
+#
+# This file and all modifications and additions to the pristine
+# package are under the same license as the package itself.
+#
+# includes module(s):
+#
+
 %include Solaris.inc
+
 %ifarch amd64 sparcv9
 %include arch64.inc
 %ifarch amd64
@@ -130,6 +140,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/libffcall/html/avcall.html
 
 %changelog
+* Sun May 31 2009 - jlee@thestaticvoid.com
+- Add header and correct copyright
 * Sat May 30 2009 - jlee@thestaticvoid.com
 - export CC=gcc
 * Fri May 29 2009 - jlee@thestaticvoid.com

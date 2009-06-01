@@ -1,3 +1,12 @@
+#
+# spec file for package: python-pygments
+#
+# This file and all modifications and additions to the pristine
+# package are under the same license as the package itself.
+#
+# includes module(s):
+#
+
 %include Solaris.inc
 
 %define python_version 2.4
@@ -58,6 +67,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/python%{python_version}/vendor-packages
 
 %changelog
+* Sun May 31 2009 - jlee@thestaticvoid.com
+- Add header
 * Sun May 31 2009 - jlee@thestaticvoid.com
 - Change name from Pygments to python-pygments
 * Sun May 31 2009 - jlee@thestaticvoid.com
