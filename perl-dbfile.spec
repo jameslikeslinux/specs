@@ -1,5 +1,5 @@
 #
-# spec file for package: perl-db-file
+# spec file for package: perl-dbfile
 #
 # This file and all modifications and additions to the pristine
 # package are under the same license as the package itself.
@@ -9,7 +9,7 @@
 
 %include Solaris.inc
 
-Name:		perl-db-file
+Name:		perl-dbfile
 Version:	1.820
 Summary:	Perl5 access to Berkeley DB version 1.x
 License:	Artistic
