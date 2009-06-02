@@ -27,7 +27,7 @@ BuildRequires:	SUNWperl584core
 BuildRequires:	SUNWopenssl-include
 BuildRequires:	SUNWopenssl-libraries
 Requires:	SUNWperl584core
-BuildRequires:	SUNWopenssl-libraries
+Requires:	SUNWopenssl-libraries
 
 Meta(info.maintainer):          James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):            David Landgren <david@landgren.net>
