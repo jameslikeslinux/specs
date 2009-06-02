@@ -31,6 +31,7 @@ BuildRequires:	perl-lwp
 BuildRequires:	perl-io-zlib
 BuildRequires:	perl-archive-tar
 BuildRequires:	perl-dbfile
+BuildRequires:	perl-io-socket-ssl
 Requires:	SUNWperl584core
 Requires:	perl-digest-sha1
 Requires:	perl-html-parser
@@ -39,6 +40,7 @@ Requires:	perl-lwp
 Requires:	perl-io-zlib
 Requires:	perl-archive-tar
 Requires:	perl-dbfile
+Requires:	perl-io-socket-ssl
 
 Meta(info.maintainer):          James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):            Apache.org <users@spamassassin.apache.org>
