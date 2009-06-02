@@ -15,7 +15,6 @@ Name:		python-pygments
 Version:	1.0
 Summary:	Pygments is a syntax highlighting package written in Python
 License:	BSD
-Group:		Development/Python
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
 Url:		http://pygments.org/
@@ -31,6 +30,7 @@ Requires:	SUNWpython-setuptools
 Meta(info.maintainer):          James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):            Georg Brandl <georg@python.org>
 Meta(info.upstream_url):        http://pygments.org/
+Meta(info.classification):	org.opensolaris.category.2008:Development/Python
 
 %description
 Pygments aims to be a generic syntax highlighter for general use in all kinds

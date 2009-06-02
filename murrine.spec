@@ -19,7 +19,6 @@ Name:		murrine
 Version:	%{murrine.version}
 Summary:	Gtk2 Engine Featuring a Modern Glassy Look
 License:	GPLv2
-Group:		Desktop (GNOME)/Theming
 Distribution:	OpenSolaris
 Vendor:		OpenSolaris Community
 Url:		http://www.cimitan.com/murrine/
@@ -42,6 +41,7 @@ Requires:	SUNWzlib
 Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):		Andrea Cimitan <andrea.cimitan@gmail.com>
 Meta(info.upstream_url):	http://www.cimitan.com/murrine/
+Meta(info.classification):	org.opensolaris.category.2008:Desktop (GNOME)/Theming
 
 %description
 Murrine is a Gtk2 engine, written in C language, using cairo vectorial drawing
@@ -50,7 +50,6 @@ and clean on the eyes. It is also extremely customizable.
 
 %package themes
 Summary:	Themes for the Murrine engine by Cimi
-Group:		Desktop (GNOME)/Theming
 Requires:	%{name}
 
 %description themes

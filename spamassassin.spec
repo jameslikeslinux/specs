@@ -13,7 +13,6 @@ Name:		spamassassin
 Version:	3.2.5
 Summary:	Spam Filter
 License:	Apache-2.0
-Group:		System/Security
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
 Url:		http://spamassassin.apache.org/
@@ -45,6 +44,7 @@ Requires:	perl-io-socket-ssl
 Meta(info.maintainer):          James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):            Apache.org <users@spamassassin.apache.org>
 Meta(info.upstream_url):        http://spamassassin.apache.org/
+Meta(info.classification):	org.opensolaris.category.2008:System/Security
 
 %description
 SpamAssassin is a mail filter which attempts to identify spam using

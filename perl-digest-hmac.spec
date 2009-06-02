@@ -13,7 +13,6 @@ Name:		perl-digest-hmac
 Version:	1.01
 Summary:	Keyed-Hashing for Message Authentication
 License:	Artistic
-Group:		Development/Perl
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
 Url:		http://search.cpan.org/~gaas/Digest-HMAC-%{version}/lib/Digest/HMAC.pm
@@ -31,6 +30,7 @@ Requires:	perl-digest-sha1
 Meta(info.maintainer):          James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):            Gisle Aas <gisle@ActiveState.com>
 Meta(info.upstream_url):        http://search.cpan.org/~gaas/Digest-HMAC-%{version}/lib/Digest/HMAC.pm
+Meta(info.classification):	org.opensolaris.category.2008:Development/Perl
 
 %description
 HMAC is used for message integrity checks between two parties that share a

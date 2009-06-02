@@ -13,7 +13,6 @@ Name:		perl-html-parser
 Version:	3.60
 Summary:	HTML Parser Class
 License:	Artistic
-Group:		Development/Perl
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
 Url:		http://search.cpan.org/dist/HTML-Parser/Parser.pm
@@ -31,6 +30,7 @@ Requires:	perl-html-tagset
 Meta(info.maintainer):          James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):            Gisle Aas <gisle@ActiveState.com>
 Meta(info.upstream_url):        http://search.cpan.org/dist/HTML-Parser/Parser.pm
+Meta(info.classification):	org.opensolaris.category.2008:Development/Perl
 
 %description
 The HTML::Parser class will recognize markup and separate it from plain text

@@ -13,7 +13,6 @@ Name:		courier-imap
 Version:	4.5.0
 Summary:	Courier IMAP Server
 License:	GPLv3
-Group:		System/Services
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
 Url:		http://www.courier-mta.org/imap/
@@ -34,6 +33,7 @@ Requires:	courier-authlib
 Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):		Sam Varshavchik <mrsam@courier-mta.com>
 Meta(info.upstream_url):	http://www.courier-mta.org/imap/
+Meta(info.classification):	org.opensolaris.category.2008:System/Services
 
 %description
 The Courier mail transfer agent (MTA) is an integrated mail/groupware server

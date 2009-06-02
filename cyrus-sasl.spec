@@ -13,7 +13,6 @@ Name:		cyrus-sasl
 Version:	2.1.23
 Summary:	Simple Authentication and Security Layer
 License:	CMU
-Group:		System/Services
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
 Url:		http://cyrusimap.web.cmu.edu/
@@ -34,6 +33,7 @@ Requires:	bdb
 Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):		CMU <cyrus-bugs+@andrew.cmu.edu>
 Meta(info.upstream_url):	http://asg.web.cmu.edu/sasl/
+Meta(info.classification):	org.opensolaris.category.2008:System/Services
 
 %description
 SASL is the Simple Authentication and Security Layer, a method for adding
@@ -45,7 +45,6 @@ the connection. See RFC 2222 for more information.
 
 %package devel
 Summary:	Headers for cyrus-sasl
-Group:		System/Services
 Requires:	%{name}
 
 %description devel

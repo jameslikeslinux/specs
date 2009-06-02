@@ -13,7 +13,6 @@ Name:		perl-lwp
 Version:	5.826
 Summary:	The World-Wide Web library for Perl
 License:	Artistic
-Group:		Development/Perl
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
 Url:		http://search.cpan.org/~gaas/libwww-perl-%{version}/lib/LWP.pm
@@ -35,6 +34,7 @@ Requires:	perl-crypt-ssleay
 Meta(info.maintainer):          James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):            Gisle Aas <gisle@ActiveState.com>
 Meta(info.upstream_url):        http://search.cpan.org/~gaas/libwww-perl-%{version}/lib/LWP.pm
+Meta(info.classification):	org.opensolaris.category.2008:Development/Perl
 
 %description
 The libwww-perl collection is a set of Perl modules which provides a simple and

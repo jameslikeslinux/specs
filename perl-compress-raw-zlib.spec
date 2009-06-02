@@ -13,7 +13,6 @@ Name:		perl-compress-raw-zlib
 Version:	2.019
 Summary:	Low-Level Interface to zlib compression library
 License:	Artistic
-Group:		Development/Perl
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
 Url:		http://search.cpan.org/~pmqs/Compress-Raw-Zlib-%{version}/lib/Compress/Raw/Zlib.pm
@@ -29,6 +28,7 @@ Requires:	SUNWperl584core
 Meta(info.maintainer):          James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):            Paul Marquees <pmqs@cpan.org>
 Meta(info.upstream_url):        http://search.cpan.org/~pmqs/Compress-Raw-Zlib-%{version}/lib/Compress/Raw/Zlib.pm
+Meta(info.classification):	org.opensolaris.category.2008:Development/Perl
 
 %description
 The Compress::Raw::Zlib module provides a Perl interface to the zlib

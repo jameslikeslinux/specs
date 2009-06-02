@@ -13,7 +13,6 @@ Name:		perl-net-ssleay
 Version:	1.35
 Summary:	Perl extension for using OpenSSL
 License:	OpenSSL
-Group:		Development/Perl
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
 Url:		http://search.cpan.org/~flora/Net-SSLeay-%{version}/lib/Net/SSLeay.pm
@@ -32,6 +31,7 @@ Requires:	SUNWopenssl-libraries
 Meta(info.maintainer):          James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):            Florian Ragwitz <rafl@debian.org>
 Meta(info.upstream_url):        http://search.cpan.org/~flora/Net-SSLeay-%{version}/lib/Net/SSLeay.pm
+Meta(info.classification):	org.opensolaris.category.2008:Development/Perl
 
 %description
 This module offers some high level convinience functions for accessing web

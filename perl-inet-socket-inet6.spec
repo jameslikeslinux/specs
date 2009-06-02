@@ -13,7 +13,6 @@ Name:		perl-inet-socket-inet6
 Version:	2.56
 Summary:	Object interface for AF_INET|AF_INET6 domain sockets
 License:	Artistic
-Group:		Development/Perl
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
 Url:		http://search.cpan.org/dist/IO-Socket-INET6/lib/IO/Socket/INET6.pm
@@ -31,6 +30,7 @@ Requires:	perl-socket6
 Meta(info.maintainer):          James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):            Shlomi Fish <shlomif@iglu.org.il>
 Meta(info.upstream_url):        http://search.cpan.org/dist/IO-Socket-INET6/lib/IO/Socket/INET6.pm
+Meta(info.classification):	org.opensolaris.category.2008:Development/Perl
 
 %description
 IO::Socket::INET6 provides an object interface to creating and using sockets in

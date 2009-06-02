@@ -26,7 +26,6 @@ Name:		libffcall
 Version:	%{libffcall.version}
 Summary:	Foreign Function Call Libraries
 License:	GPLv2
-Group:		System/Libraries
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
 Url:		http://www.gnu.org/software/libffcall/
@@ -38,6 +37,7 @@ SUNW_Copyright:	%{name}.copyright
 Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):		Bruno Haible <bruno@clisp.org>
 Meta(info.upstream_url):	http://www.gnu.org/software/libffcall/
+Meta(info.classification):	org.opensolaris.category.2008:System/Libraries
 
 %description
 A collection of four libraries which can be used to build foreign function call
@@ -47,7 +47,6 @@ This package contains the shared library.
 
 %package devel
 Summary:	Headers for libffcall
-Group:		Libraries
 Requires:	%{name}
 
 %description devel

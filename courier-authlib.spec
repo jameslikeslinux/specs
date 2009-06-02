@@ -13,7 +13,6 @@ Name:		courier-authlib
 Version:	0.62.2
 Summary:	Courier Authentication Library
 License:	GPLv3
-Group:		System/Services
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
 Url:		http://www.courier-mta.org/authlib/
@@ -32,6 +31,7 @@ Requires:	bdb
 Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):		Sam Varshavchik <mrsam@courier-mta.com>
 Meta(info.upstream_url):	http://www.courier-mta.org/authlib/
+Meta(info.classification):	org.opensolaris.category.2008:System/Services
 
 %description
 The Courier authentication library provides authentication services for other
@@ -41,7 +41,6 @@ This package contains authdaemond and shared libraries.
 
 %package devel
 Summary:	Headers for courier-authlib
-Group:		System/Services
 Requires:	%{name}
 
 %description devel

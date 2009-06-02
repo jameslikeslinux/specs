@@ -13,7 +13,6 @@ Name:		perl-html-tagset
 Version:	3.20
 Summary:	Data Tables Useful in Parsing HTML
 License:	Artistic
-Group:		Development/Perl
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
 Url:		http://search.cpan.org/~petdance/HTML-Tagset-%{version}/Tagset.pm
@@ -29,6 +28,7 @@ Requires:	SUNWperl584core
 Meta(info.maintainer):          James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):            Andy Lester <andy@petdance.com>
 Meta(info.upstream_url):        http://search.cpan.org/~petdance/HTML-Tagset-%{version}/Tagset.pm
+Meta(info.classification):	org.opensolaris.category.2008:Development/Perl
 
 %description
 This module contains several data tables useful in various kinds of HTML

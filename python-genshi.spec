@@ -15,7 +15,6 @@ Name:		python-genshi
 Version:	0.5.1
 Summary:	Python toolkit for generation of output for the web
 License:	BSD
-Group:		Development/Python
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
 Url:		http://genshi.edgewall.org/
@@ -31,6 +30,7 @@ Requires:	SUNWpython-setuptools
 Meta(info.maintainer):          James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):            Edgewall Software <trac-dev@googlegroups.com>
 Meta(info.upstream_url):        http://trac.edgewall.org/
+Meta(info.classification):	org.opensolaris.category.2008:Development/Python
 
 %description
 Genshi is a Python library that provides an integrated set of components for

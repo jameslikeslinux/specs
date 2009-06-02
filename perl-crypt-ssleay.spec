@@ -13,7 +13,6 @@ Name:		perl-crypt-ssleay
 Version:	0.57
 Summary:	OpenSSL support for LWP
 License:	Artistic
-Group:		Development/Perl
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
 Url:		http://search.cpan.org/~dland/Crypt-SSLeay-%{version}/SSLeay.pm
@@ -32,6 +31,7 @@ Requires:	SUNWopenssl-libraries
 Meta(info.maintainer):          James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):            David Landgren <david@landgren.net>
 Meta(info.upstream_url):        http://search.cpan.org/~dland/Crypt-SSLeay-%{version}/SSLeay.pm
+Meta(info.classification):	org.opensolaris.category.2008:Development/Perl
 
 %description
 This perl module provides support for the https protocol under LWP, to allow an

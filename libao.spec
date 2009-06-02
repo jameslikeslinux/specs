@@ -20,7 +20,6 @@ Name:		libao
 Version:	%{libao.version}
 Summary:	Cross Platform Audio Library
 License:	GPLv2
-Group:		System/Libraries
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
 Url:		http://www.xiph.org/ao/
@@ -32,6 +31,7 @@ SUNW_Copyright:	%{name}.copyright
 Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):		Stan Seibert <volsung@xiph.org>
 Meta(info.upstream_url):	http://www.xiph.org/ao/
+Meta(info.classification):	org.opensolaris.category.2008:System/Libraries
 
 %description
 Libao is a cross-platform audio library that allows programs to output audio
@@ -41,7 +41,6 @@ This package contains the shared library.
 
 %package devel
 Summary:	Headers for libao
-Group:		System/Libraries
 Requires:	%{name}
 
 %description devel

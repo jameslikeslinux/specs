@@ -13,7 +13,6 @@ Name:		perl-package-constants
 Version:	0.02
 Summary:	List all constants declared in a package
 License:	Artistic
-Group:		Development/Perl
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
 Url:		http://search.cpan.org/~kane/Package-Constants-%{version}/lib/Package/Constants.pm
@@ -29,6 +28,7 @@ Requires:	SUNWperl584core
 Meta(info.maintainer):          James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):            Jos Boumans <kane@cpan.org>
 Meta(info.upstream_url):        http://search.cpan.org/~kane/Package-Constants-%{version}/lib/Package/Constants.pm
+Meta(info.classification):	org.opensolaris.category.2008:Development/Perl
 
 %description
 Package::Constants lists all the constants defined in a certain package. This

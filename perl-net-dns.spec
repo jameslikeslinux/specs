@@ -13,7 +13,6 @@ Name:		perl-net-dns
 Version:	0.65
 Summary:	Perl interface to the DNS resolver
 License:	Artistic
-Group:		Development/Perl
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
 Url:		http://search.cpan.org/dist/Net-DNS/lib/Net/DNS.pm
@@ -35,6 +34,7 @@ Requires:	perl-inet-socket-inet6
 Meta(info.maintainer):          James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):            Olaf Kolkman <olaf@net-dns.org>
 Meta(info.upstream_url):        http://search.cpan.org/dist/Net-DNS/lib/Net/DNS.pm
+Meta(info.classification):	org.opensolaris.category.2008:Development/Perl
 
 %description
 Net::DNS is a collection of Perl modules that act as a Domain Name System (DNS)

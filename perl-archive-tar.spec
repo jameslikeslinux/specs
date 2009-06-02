@@ -13,7 +13,6 @@ Name:		perl-archive-tar
 Version:	1.48
 Summary:	Module for manipulations of tar archives
 License:	Artistic
-Group:		Development/Perl
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
 Url:		http://search.cpan.org/dist/Archive-Tar/lib/Archive/Tar.pm
@@ -35,6 +34,7 @@ Requires:	perl-package-constants
 Meta(info.maintainer):          James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):            Jos Boumans <kane@cpan.org>
 Meta(info.upstream_url):        http://search.cpan.org/dist/Archive-Tar/lib/Archive/Tar.pm
+Meta(info.classification):	org.opensolaris.category.2008:Development/Perl
 
 %description
 Archive::Tar provides an object oriented mechanism for handling tar files. It

@@ -20,7 +20,6 @@ Name:		vorbis-tools
 Version:	%{vorbis_tools.version}
 Summary:	Vorbis Audio Encoder and Utilities
 License:	GPLv2
-Group:		Applications/Sound and Video
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
 Url:		http://www.vorbis.com/
@@ -39,6 +38,7 @@ Requires:	SUNWspeex
 Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):		Xiph.org <vorbis@xiph.org>
 Meta(info.upstream_url):	http://xiph.org/vorbis/
+Meta(info.classification):	org.opensolaris.category.2008:Applications/Sound and Video
 
 %description
 vorbis-tools contains oggenc (an encoder) and ogg123 (a playback tool).

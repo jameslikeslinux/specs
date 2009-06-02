@@ -13,7 +13,6 @@ Name:		perl-uri
 Version:	1.38
 Summary:	Uniform Resource Identifiers (absolute and relative)
 License:	Artistic
-Group:		Development/Perl
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
 Url:		http://search.cpan.org/~gaas/URI-%{version}/URI.pm
@@ -29,6 +28,7 @@ Requires:	SUNWperl584core
 Meta(info.maintainer):          James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):            Gisle Aas <gisle@ActiveState.com>
 Meta(info.upstream_url):        http://search.cpan.org/~gaas/URI-%{version}/URI.pm
+Meta(info.classification):	org.opensolaris.category.2008:Development/Perl
 
 %description
 This module implements the URI class. Objects of this class represent "Uniform

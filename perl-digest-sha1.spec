@@ -13,7 +13,6 @@ Name:		perl-digest-sha1
 Version:	2.12
 Summary:	Perl interface to the SHA-1 algorithm
 License:	Artistic
-Group:		Development/Perl
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
 Url:		http://search.cpan.org/~gaas/Digest-SHA1-%{version}/SHA1.pm
@@ -29,6 +28,7 @@ Requires:	SUNWperl584core
 Meta(info.maintainer):          James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):            Gisle Aas <gisle@ActiveState.com>
 Meta(info.upstream_url):        http://search.cpan.org/~gaas/Digest-SHA1-%{version}/SHA1.pm
+Meta(info.classification):	org.opensolaris.category.2008:Development/Perl
 
 %description
 The Digest::SHA1 module allows you to use the NIST SHA-1 message digest

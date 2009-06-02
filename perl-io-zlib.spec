@@ -13,7 +13,6 @@ Name:		perl-io-zlib
 Version:	1.09
 Summary:	IO:: style interface to Compress::Zlib
 License:	Artistic
-Group:		Development/Perl
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
 Url:		http://search.cpan.org/dist/IO-Zlib/Zlib.pm
@@ -29,6 +28,7 @@ Requires:	SUNWperl584core
 Meta(info.maintainer):          James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):            Tom Hughes <tom@compton.nu>
 Meta(info.upstream_url):        http://search.cpan.org/dist/IO-Zlib/Zlib.pm
+Meta(info.classification):	org.opensolaris.category.2008:Development/Perl
 
 %description
 IO::Zlib provides an IO:: style interface to Compress::Zlib and hence to

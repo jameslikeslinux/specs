@@ -15,7 +15,6 @@ Name:		trac-accountmanagerplugin
 Version:	0.11
 Summary:	Account Managment for Trac
 License:	Attribution
-Group:		Development/Python
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
 Url:		http://trac-hacks.org/wiki/AccountManagerPlugin
@@ -33,6 +32,7 @@ Requires:	trac
 Meta(info.maintainer):          James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):            pacopablo <pacopablo@pacopablo.com>
 Meta(info.upstream_url):        http://trac-hacks.org/wiki/AccountManagerPlugin
+Meta(info.classification):	org.opensolaris.category.2008:Development/Python
 
 %prep
 %setup -q -n AccountManagerPlugin-%{version}

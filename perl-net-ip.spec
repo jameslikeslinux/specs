@@ -13,7 +13,6 @@ Name:		perl-net-ip
 Version:	1.25
 Summary:	Perl Extension for Manipulating IPv4/IPv6 Addresses
 License:	Artistic
-Group:		Development/Perl
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
 Url:		http://search.cpan.org/~manu/Net-IP-%{version}/IP.pm
@@ -29,6 +28,7 @@ Requires:	SUNWperl584core
 Meta(info.maintainer):          James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):            Manuel Valente <manuel.valente@gmail.com>
 Meta(info.upstream_url):        http://search.cpan.org/~manu/Net-IP-%{version}/IP.pm
+Meta(info.classification):	org.opensolaris.category.2008:Development/Perl
 
 %description
 This module provides functions to deal with IPv4/IPv6 addresses.

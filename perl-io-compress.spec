@@ -13,7 +13,6 @@ Name:		perl-io-compress
 Version:	2.019
 Summary:	IO:: Interface to Compressed Files
 License:	Artistic
-Group:		Development/Perl
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
 Url:		http://search.cpan.org/~pmqs/IO-Compress-%{version}/
@@ -33,6 +32,7 @@ Requires:	perl-compress-raw-zlib
 Meta(info.maintainer):          James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):            Paul Marquees <pmqs@cpan.org>
 Meta(info.upstream_url):        http://search.cpan.org/~pmqs/IO-Compress-%{version}/
+Meta(info.classification):	org.opensolaris.category.2008:Development/Perl
 
 %description
 This distribution provides a Perl interface to allow reading and writing of

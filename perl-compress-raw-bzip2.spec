@@ -13,7 +13,6 @@ Name:		perl-compress-raw-bzip2
 Version:	2.019
 Summary:	Low-Level Interface to bzip2 compression library
 License:	Artistic
-Group:		Development/Perl
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
 Url:		http://search.cpan.org/~pmqs/Compress-Raw-Bzip2-%{version}/lib/Compress/Raw/Bzip2.pm
@@ -29,6 +28,7 @@ Requires:	SUNWperl584core
 Meta(info.maintainer):          James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):            Paul Marquees <pmqs@cpan.org>
 Meta(info.upstream_url):        http://search.cpan.org/~pmqs/Compress-Raw-Bzip2-%{version}/lib/Compress/Raw/Bzip2.pm
+Meta(info.classification):	org.opensolaris.category.2008:Development/Perl
 
 %description
 Compress::Raw::Bzip2 provides an interface to the in-memory

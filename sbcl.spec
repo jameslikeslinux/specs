@@ -33,7 +33,6 @@ Name:		sbcl
 Version:	%{sbcl.version}
 Summary:	A Common Lisp Implementation
 License:	Public Domain/BSD
-Group:		Development/Other Languages
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
 Url:		http://www.sbcl.org/
@@ -45,6 +44,7 @@ SUNW_Copyright:	%{name}.copyright
 Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):		SBCL <sbcl-devel@lists.sourceforge.net>
 Meta(info.upstream_url):	http://www.sbcl.org/
+Meta(info.classification):	org.opensolaris.category.2008:Development/Other Languages
 
 %description
 Steel Bank Common Lisp (SBCL) is an open source (free software) compiler and

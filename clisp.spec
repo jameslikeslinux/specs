@@ -22,7 +22,6 @@ Name:		clisp
 Version:	%{clisp.version}
 Summary:	A Common Lisp Implementation
 License:	GPLv2
-Group:		Development/Other Languages
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
 Url:		http://www.gnu.org/software/clisp/
@@ -38,6 +37,7 @@ Requires:	libffcall
 Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):		Bruno Haible <bruno@clisp.org>
 Meta(info.upstream_url):	http://www.gnu.org/software/clisp/
+Meta(info.classification):	org.opensolaris.category.2008:Development/Other Languages
 
 %description
 ANSI Common Lisp is a high-level, general-purpose programming language. GNU

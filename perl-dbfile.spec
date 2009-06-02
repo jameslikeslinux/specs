@@ -13,7 +13,6 @@ Name:		perl-dbfile
 Version:	1.820
 Summary:	Perl5 access to Berkeley DB version 1.x
 License:	Artistic
-Group:		Development/Perl
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
 Url:		http://search.cpan.org/~pmqs/DB_File-%{version}/DB_File.pm
@@ -31,6 +30,7 @@ Requires:	bdb
 Meta(info.maintainer):          James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):            Paul Marquees <pmqs@cpan.org>
 Meta(info.upstream_url):        http://search.cpan.org/~pmqs/DB_File-%{version}/DB_File.pm
+Meta(info.classification):	org.opensolaris.category.2008:Development/Perl
 
 %description
 Compress::Raw::Bzip2 provides an interface to the in-memory

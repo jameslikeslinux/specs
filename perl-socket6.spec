@@ -13,7 +13,6 @@ Name:		perl-socket6
 Version:	0.23
 Summary:	IPv6 related part of the C socket.h defines and structure manipulators
 License:	BSD
-Group:		Development/Perl
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
 Url:		http://search.cpan.org/~umemoto/Socket6-%{version}/Socket6.pm
@@ -29,6 +28,7 @@ Requires:	SUNWperl584core
 Meta(info.maintainer):          James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):            Hajimu Umemoto <ume@mahoroba.org>
 Meta(info.upstream_url):        http://search.cpan.org/~umemoto/Socket6-%{version}/Socket6.pm
+Meta(info.classification):	org.opensolaris.category.2008:Development/Perl
 
 %description
 This module provides glue routines to the various IPv6 functions.

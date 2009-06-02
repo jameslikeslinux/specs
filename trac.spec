@@ -15,7 +15,6 @@ Name:           trac
 Version:        0.11.4
 Summary:        Trac Integrated SCM & Project Management
 License:        BSD
-Group:          Development/Python
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
 Url:            http://trac.edgewall.org/
@@ -36,6 +35,7 @@ Requires:	python-pygments
 Meta(info.maintainer):          James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):            Edgewall Software <trac-dev@googlegroups.com>
 Meta(info.upstream_url):        http://trac.edgewall.org/
+Meta(info.classification):	org.opensolaris.category.2008:Development/Python
 
 %description
 Trac is an enhanced wiki and issue tracking system for software development
