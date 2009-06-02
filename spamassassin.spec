@@ -55,7 +55,7 @@ DNS blocklists, and collaborative filtering databases.
 %setup -q -n Mail-SpamAssassin-%{version}
 
 %build
-perl Makefile.PL PREFIX=%{_prefix} INSTALLSITEMAN1DIR=%{_mandir}/man1 INSTALLSITEMAN3DIR=%{_mandir}/man3 DESTDIR=$RPM_BUILD_ROOT LIB=/usr/perl5/vendor_perl/5.8.4
+PERL_MM_USE_DEFAULT=1 perl Makefile.PL PREFIX=%{_prefix} INSTALLSITEMAN1DIR=%{_mandir}/man1 INSTALLSITEMAN3DIR=%{_mandir}/man3 DESTDIR=$RPM_BUILD_ROOT LIB=/usr/perl5/vendor_perl/5.8.4
 make
 
 %install
