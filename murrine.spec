@@ -28,6 +28,8 @@ SUNW_Copyright:	%{name}.copyright
 %include default-depend.inc
 BuildRequires:	SUNWgnome-common-devel
 BuildRequires:	SUNWgnu-gettext
+BuildRequires:	SUNWxwinc
+BuildRequires:	SUNWxorg-headers
 Requires:	SUNWfontconfig
 Requires:	SUNWfreetype2
 Requires:	SUNWgnome-base-libs
