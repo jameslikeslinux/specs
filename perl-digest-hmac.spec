@@ -9,17 +9,19 @@
 
 %include Solaris.inc
 
+%define real_version 1.01
+
 Name:		perl-digest-hmac
-Version:	1.01
+Version:	1.0.1
 Summary:	Keyed-Hashing for Message Authentication
 License:	Artistic
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
-Url:		http://search.cpan.org/~gaas/Digest-HMAC-%{version}/lib/Digest/HMAC.pm
+Url:		http://search.cpan.org/~gaas/Digest-HMAC-%{real_version}/lib/Digest/HMAC.pm
 SUNW_Basedir:	%{_basedir}
 SUNW_Copyright: %{name}.copyright
 
-Source0:	http://search.cpan.org/CPAN/authors/id/G/GA/GAAS/Digest-HMAC-%{version}.tar.gz
+Source0:	http://search.cpan.org/CPAN/authors/id/G/GA/GAAS/Digest-HMAC-%{real_version}.tar.gz
 
 %include default-depend.inc
 BuildRequires:	SUNWperl584core
@@ -29,7 +31,7 @@ Requires:	perl-digest-sha1
 
 Meta(info.maintainer):          James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):            Gisle Aas <gisle@ActiveState.com>
-Meta(info.upstream_url):        http://search.cpan.org/~gaas/Digest-HMAC-%{version}/lib/Digest/HMAC.pm
+Meta(info.upstream_url):        http://search.cpan.org/~gaas/Digest-HMAC-%{real_version}/lib/Digest/HMAC.pm
 Meta(info.classification):	org.opensolaris.category.2008:Development/Perl
 
 %description
@@ -38,7 +40,7 @@ secret key, and works in combination with some other Digest algorithm, usually
 MD5 or SHA-1. The HMAC mechanism is described in RFC 2104.
 
 %prep
-%setup -q -n Digest-HMAC-%{version}
+%setup -q -n Digest-HMAC-%{real_version}
 
 %build
 perl Makefile.PL PREFIX=%{_prefix} INSTALLSITEMAN3DIR=%{_mandir}/man3 DESTDIR=$RPM_BUILD_ROOT LIB=/usr/perl5/vendor_perl/5.8.4
@@ -60,3 +62,5 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Sun May 31 2009 - jlee@thestaticvoid.com
 - Initial version
+* Fri Jun 12 2009 - jlee@thestaticvoid.com
+- Separate zeros with dots in version number for IPS compatibility.

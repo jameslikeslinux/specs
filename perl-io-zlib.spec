@@ -9,8 +9,10 @@
 
 %include Solaris.inc
 
+%define real_version 1.09
+
 Name:		perl-io-zlib
-Version:	1.09
+Version:	1.0.9
 Summary:	IO:: style interface to Compress::Zlib
 License:	Artistic
 Distribution:   OpenSolaris
@@ -19,7 +21,7 @@ Url:		http://search.cpan.org/dist/IO-Zlib/Zlib.pm
 SUNW_Basedir:	%{_basedir}
 SUNW_Copyright: %{name}.copyright
 
-Source0:	http://search.cpan.org/CPAN/authors/id/T/TO/TOMHUGHES/IO-Zlib-%{version}.tar.gz
+Source0:	http://search.cpan.org/CPAN/authors/id/T/TO/TOMHUGHES/IO-Zlib-%{real_version}.tar.gz
 
 %include default-depend.inc
 BuildRequires:	SUNWperl584core
@@ -36,7 +38,7 @@ gzip/zlib compressed files. It provides many of the same methods as the
 IO::Handle interface.
 
 %prep
-%setup -q -n IO-Zlib-%{version}
+%setup -q -n IO-Zlib-%{real_version}
 
 %build
 perl Makefile.PL PREFIX=%{_prefix} INSTALLSITEMAN3DIR=%{_mandir}/man3 DESTDIR=$RPM_BUILD_ROOT LIB=/usr/perl5/vendor_perl/5.8.4
@@ -58,3 +60,5 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Mon Jun 01 2009 - jlee@thestaticvoid.com
 - Initial version
+* Fri Jun 12 2009 - jlee@thestaticvoid.com
+- Separate zeros with dots in version number for IPS compatibility.
