@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+<!DOCTYPE service_bundle SYSTEM "/usr/share/lib/xml/dtd/service_bundle.dtd.1">
+<!--
+    Copyright 2006 Sun Microsystems, Inc.  All rights reserved.
+    Use is subject to license terms.
+
+    ident	"@(#)smtp-sendmail.xml	1.12	06/08/01 SMI"
+
+    NOTE:  This service manifest is not editable; its contents will
+    be overwritten by package or patch operations, including
+    operating system upgrade.  Make customizations in a different
+    file.
+-->
+
+<service_bundle type='manifest' name='postfix'>
+
+<service
+	name='network/smtp'
+	type='service'
+	version='1'>
+
+	<single_instance />
+
+	<dependency
+	    name='fs-local'
+	    grouping='require_all'
+	    restart_on='none'
+	    type='service'>
+		<service_fmri value='svc:/system/filesystem/local' />
+	</dependency>
+
+	<dependency
+	    name='network-service'
+	    grouping='require_all'
+	    restart_on='none'
+	    type='service'>
+		<service_fmri value='svc:/network/service' />
+	</dependency>
+
+	<dependency
+	    name='name-services'
+	    grouping='require_all'
+	    restart_on='refresh'
+	    type='service'>
+		<service_fmri value='svc:/milestone/name-services' />
+	</dependency>
+
+	<dependency
+	    name='identity'
+	    grouping='optional_all'
+	    restart_on='refresh'
+	    type='service'>
+		<service_fmri value='svc:/system/identity:domain' />
+	</dependency>
+
+	<dependency
+	    name='system-log'
+	    grouping='optional_all'
+	    restart_on='none'
+	    type='service'>
+		<service_fmri value='svc:/system/system-log' />
+	</dependency>
+
+	<instance name='postfix' enabled='false'>
+
+		<dependency
+		    name='config-file'
+		    grouping='require_all'
+		    restart_on='refresh'
+		    type='path'>
+			<service_fmri
+			    value='file://localhost/etc/postfix/main.cf' />
+		</dependency>
+
+		<dependency
+		    name='nsswitch'
+		    grouping='require_all'
+		    restart_on='refresh'
+		    type='path'>
+			<service_fmri
+			    value='file://localhost/etc/nsswitch.conf' />
+		</dependency>
+
+		<!--
+		If autofs is enabled, wait for it to get users' home
+		directories.
+		-->
+		<dependency
+		    name='autofs'
+		    grouping='optional_all'
+		    restart_on='none'
+		    type='service'>
+			<service_fmri value='svc:/system/filesystem/autofs' />
+		</dependency>
+
+		<dependency
+		    name='saslauthd'
+		    grouping='optional_all'
+		    restart_on='none'
+		    type='service'>
+			<service_fmri value='svc:/network/saslauthd' />
+		</dependency>
+
+		<dependent
+			name='smtp-postfix_multi-user'
+			grouping='optional_all'
+			restart_on='none'>
+				<service_fmri
+				    value='svc:/milestone/multi-user' />
+		</dependent>
+
+		<exec_method
+			type='method'
+			name='start'
+			exec='/usr/sbin/postfix start'
+			timeout_seconds='60' />
+
+		<exec_method
+			type='method'
+			name='stop'
+			exec='/usr/sbin/postfix stop'
+			timeout_seconds='60' />
+
+		<exec_method
+			type='method'
+			name='refresh'
+			exec='/usr/sbin/postfix reload'
+			timeout_seconds='60' />
+
+		<template>
+			<common_name>
+				<loctext xml:lang='C'>
+				Postfix SMTP Server
+				</loctext>
+			</common_name>
+			<documentation>
+				<manpage title='postfix' section='1M'
+				    manpath='/usr/share/man' />
+			</documentation>
+		</template>
+
+	</instance>
+
+	<stability value='Unstable' />
+
+</service>
+
+</service_bundle>
