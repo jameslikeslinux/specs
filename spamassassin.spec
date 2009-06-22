@@ -24,6 +24,7 @@ Source1:	spamd.xml
 
 %include default-depend.inc
 BuildRequires:	SUNWperl584core
+BuildRequires:	SUNWperl584usr
 BuildRequires:	SUNWopenssl-include
 BuildRequires:	SUNWopenssl-libraries
 BuildRequires:	perl-digest-sha1
