@@ -29,6 +29,7 @@ BuildRequires:	courier-authlib-devel
 Requires:	bdb
 Requires:	SUNWgamin
 Requires:	courier-authlib
+Requires:	SUNWgnu-coreutils
 
 Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):		Sam Varshavchik <mrsam@courier-mta.com>

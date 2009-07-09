@@ -60,6 +60,15 @@
 		</dependency>
 
 		<dependency
+		    name='config-file-ssl'
+		    grouping='require_all'
+		    restart_on='refresh'
+		    type='path'>
+			<service_fmri
+			    value='file://localhost/etc/courier-imap/imapd-ssl' />
+		</dependency>
+
+		<dependency
 		    name='nsswitch'
 		    grouping='require_all'
 		    restart_on='refresh'
@@ -119,9 +128,18 @@
 	</instance>
 
 	<instance name='imapd-ssl' enabled='false'>
-
+		
 		<dependency
 		    name='config-file'
+		    grouping='require_all'
+		    restart_on='refresh'
+		    type='path'>
+			<service_fmri
+			    value='file://localhost/etc/courier-imap/imapd' />
+		</dependency>
+
+		<dependency
+		    name='config-file-ssl'
 		    grouping='require_all'
 		    restart_on='refresh'
 		    type='path'>
@@ -198,6 +216,15 @@
 			<service_fmri
 			    value='file://localhost/etc/courier-imap/pop3d' />
 		</dependency>
+		
+		<dependency
+		    name='config-file-ssl'
+		    grouping='require_all'
+		    restart_on='refresh'
+		    type='path'>
+			<service_fmri
+			    value='file://localhost/etc/courier-imap/pop3d-ssl' />
+		</dependency>
 
 		<dependency
 		    name='nsswitch'
@@ -262,6 +289,15 @@
 
 		<dependency
 		    name='config-file'
+		    grouping='require_all'
+		    restart_on='refresh'
+		    type='path'>
+			<service_fmri
+			    value='file://localhost/etc/courier-imap/pop3d' />
+		</dependency>
+
+		<dependency
+		    name='config-file-ssl'
 		    grouping='require_all'
 		    restart_on='refresh'
 		    type='path'>
