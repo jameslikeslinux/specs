@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<!DOCTYPE service_bundle SYSTEM "/usr/share/lib/xml/dtd/service_bundle.dtd.1">
+
+<service_bundle type='manifest' name='yaws'>
+
+<service
+	name='network/http'
+	type='service'
+	version='1'>
+
+	<single_instance />
+
+	<dependency
+	    name='fs-local'
+	    grouping='require_all'
+	    restart_on='none'
+	    type='service'>
+		<service_fmri value='svc:/system/filesystem/local' />
+	</dependency>
+
+	<dependency
+	    name='network-service'
+	    grouping='require_all'
+	    restart_on='none'
+	    type='service'>
+		<service_fmri value='svc:/network/service' />
+	</dependency>
+
+	<dependency
+	    name='name-services'
+	    grouping='require_all'
+	    restart_on='refresh'
+	    type='service'>
+		<service_fmri value='svc:/milestone/name-services' />
+	</dependency>
+
+	<instance name='yaws' enabled='false'>
+
+		<dependency
+		    name='config-file'
+		    grouping='require_all'
+		    restart_on='refresh'
+		    type='path'>
+			<service_fmri
+			    value='file://localhost/etc/yaws/yaws.conf' />
+		</dependency>
+
+		<dependent
+			name='http-yaws_multi-user'
+			grouping='optional_all'
+			restart_on='none'>
+				<service_fmri
+				    value='svc:/milestone/multi-user' />
+		</dependent>
+
+		<exec_method
+			type='method'
+			name='start'
+			exec='/usr/bin/yaws --daemon'
+			timeout_seconds='60' />
+
+		<exec_method
+			type='method'
+			name='stop'
+			exec='/usr/bin/yaws --stop'
+			timeout_seconds='60' />
+
+		<exec_method
+			type='method'
+			name='refresh'
+			exec='/usr/bin/yaws --hup'
+			timeout_seconds='60' />
+
+		<template>
+			<common_name>
+				<loctext xml:lang='C'>
+				Yet Anather Web Server
+				</loctext>
+			</common_name>
+			<documentation>
+				<manpage title='yaws' section='1M'
+				    manpath='/usr/share/man' />
+			</documentation>
+		</template>
+
+	</instance>
+
+	<stability value='Unstable' />
+
+</service>
+
+</service_bundle>
