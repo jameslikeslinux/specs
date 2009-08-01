@@ -21,6 +21,7 @@ SUNW_Copyright: %{name}.copyright
 
 Source0:	http://yaws.hyber.org/download/yaws-%{version}.tar.gz
 Source1:	http-yaws.xml
+Patch0:		yaws-00-redirect-remove-extra-slash.spec
 
 #%include default-depend.inc
 BuildRequires:	SUNWerlang
@@ -39,6 +40,7 @@ process is used to handle each client.
 
 %prep
 %setup -q
+%patch0
 ./configure --prefix=%{_prefix} --sysconfdir=%{_sysconfdir} --localstatedir=%{_localstatedir}
 
 %build
@@ -144,7 +146,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,sys)
 %dir %{_sysconfdir}
 %dir %{_sysconfdir}/yaws
-%{_sysconfdir}/yaws/yaws.conf
+%config %{_sysconfdir}/yaws/yaws.conf
 %dir %{_localstatedir}/log
 %dir %{_localstatedir}/log/yaws
 %{_localstatedir}/yaws
