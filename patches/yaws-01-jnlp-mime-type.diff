@@ -1,0 +1,10 @@
+--- src/mime.types.old	2009-08-02 01:53:10.684238618 -0400
++++ src/mime.types	2009-08-02 01:54:02.488758175 -0400
+@@ -301,6 +301,7 @@
+ application/x-gtar		gtar
+ application/x-gzip		gz tgz
+ application/x-hdf		hdf
++application/x-java-jnlp-file	jnlp
+ application/x-javascript	js
+ application/x-kword		kwd kwt
+ application/x-kspread		ksp
