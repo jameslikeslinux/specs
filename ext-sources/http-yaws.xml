@@ -74,7 +74,7 @@
 		<template>
 			<common_name>
 				<loctext xml:lang='C'>
-				Yet Anather Web Server
+				Yet Another Web Server
 				</loctext>
 			</common_name>
 			<documentation>
