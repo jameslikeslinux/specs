@@ -24,6 +24,9 @@ Source1:	smtp-postfix.xml
 
 %include default-depend.inc
 BuildRequires:	cyrus-sasl
+BuildRequires:	SUNWopenssl-include
+BuildRequires:	SUNWopenssl-libraries
+Requires:	SUNWopenssl-libraries
 Requires:	cyrus-sasl
 Conflicts:	SUNWsndm
 
@@ -41,7 +44,7 @@ sendmail-ish flavor, but the inside is completely different.
 
 %prep
 %setup -q
-make makefiles CCARGS='-DDEF_COMMAND_DIR=\"%{_sbindir}\" -DDEF_CONFIG_DIR=\"%{_sysconfdir}/postfix\" -DDEF_DAEMON_DIR=\"%{_libdir}/postfix\" -DDEF_DATA_DIR=\"%{_localstatedir}/lib/postfix\" -DDEF_MAILQ_PATH=\"%{_bindir}/mailq\" -DDEF_HTML_DIR=\"no\" -DDEF_MANPAGE_DIR=\"%{_mandir}\" -DDEF_NEWALIAS_PATH=\"%{_bindir}/newaliases\" -DDEF_QUEUE_DIR=\"%{_localstatedir}/spool/postfix\" -DDEF_README_DIR=\"no\" -DDEF_SENDMAIL_PATH=\"%{_sbindir}/sendmail\" -DUSE_SASL_AUTH -DUSE_CYRUS_SASL -I/usr/include/sasl' AUXLIBS="-lsasl2"
+make makefiles CCARGS='-DDEF_COMMAND_DIR=\"%{_sbindir}\" -DDEF_CONFIG_DIR=\"%{_sysconfdir}/postfix\" -DDEF_DAEMON_DIR=\"%{_libdir}/postfix\" -DDEF_DATA_DIR=\"%{_localstatedir}/lib/postfix\" -DDEF_MAILQ_PATH=\"%{_bindir}/mailq\" -DDEF_HTML_DIR=\"no\" -DDEF_MANPAGE_DIR=\"%{_mandir}\" -DDEF_NEWALIAS_PATH=\"%{_bindir}/newaliases\" -DDEF_QUEUE_DIR=\"%{_localstatedir}/spool/postfix\" -DDEF_README_DIR=\"no\" -DDEF_SENDMAIL_PATH=\"%{_sbindir}/sendmail\" -DUSE_SASL_AUTH -DUSE_CYRUS_SASL -I/usr/include/sasl -DUSE_TLS' AUXLIBS="-lsasl2 -lssl -lcrypto"
 
 %build
 make
