@@ -22,9 +22,9 @@ SUNW_Copyright: %{name}.copyright
 Source0:	http://yaws.hyber.org/download/yaws-%{version}.tar.gz
 Source1:	http-yaws.xml
 Patch0:		yaws-00-redirect-remove-extra-slash.diff
-Patch1:		yaws-01-jnlp-mime-type.diff
+Patch1:		yaws-01-mime-types.diff
 
-#%include default-depend.inc
+%include default-depend.inc
 BuildRequires:	SUNWerlang
 Requires:	SUNWerlang
 
