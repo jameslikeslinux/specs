@@ -40,6 +40,7 @@ SUNW_BaseDir:	%{_basedir}
 SUNW_Copyright:	%{name}.copyright
 
 %include default-depend.inc
+BuildRequires:	SUNWgcc
 
 Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):		SBCL <sbcl-devel@lists.sourceforge.net>
