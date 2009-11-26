@@ -10,7 +10,7 @@
 %include Solaris.inc
 
 Name:		courier-authlib
-Version:	0.62.2
+Version:	0.62.4
 Summary:	Courier Authentication Library
 License:	GPLv3
 Distribution:   OpenSolaris
@@ -175,6 +175,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/include/courier_auth_config.h
 
 %changelog
+* Wed Nov 25 2009 - jlee@thestaticvoid.com
+- Bump to 0.62.4
 * Sun May 31 2009 - jlee@thestaticvoid.com
 - Add header and correct copyright
 * Sat May 30 2009 - jlee@thestaticvoid.com
