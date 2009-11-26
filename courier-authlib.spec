@@ -23,6 +23,7 @@ Source0:	http://voxel.dl.sourceforge.net/sourceforge/courier/%{name}-%{version}.
 Source1:	authdaemond.xml
 
 %include default-depend.inc
+BuildRequires:	SUNWggrp
 BuildRequires:	SUNWexpect
 BuildRequires:	bdb
 Requires:	SUNWexpect
