@@ -17,7 +17,8 @@ Source1:	http://voxel.dl.sourceforge.net/sourceforge/sbcl/%{bindist}-binary.tar.
 bzip2 -dc %{SOURCE1} | tar -xf -
 
 %build
-sed -i 's@/usr/local/lib/sbcl@%{sbclhome}@' src/runtime/runtime.c
+sed 's@/usr/local/lib/sbcl@%{sbclhome}@' src/runtime/runtime.c > src/runtime/runtime.c.new
+mv -f src/runtime/runtime.c.new src/runtime/runtime.c
 SBCL_ARCH=%{sbclarch} sh make.sh "%{bindist}/src/runtime/sbcl --core %{bindist}/output/sbcl.core" || true
 
 %install
