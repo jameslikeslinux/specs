@@ -27,6 +27,7 @@ SUNW_BaseDir:	%{_basedir}
 SUNW_Copyright:	%{name}.copyright
 
 %include default-depend.inc
+BuildRequires:	SUNWggrp
 
 Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):		Stan Seibert <volsung@xiph.org>
