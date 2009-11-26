@@ -27,13 +27,16 @@ SUNW_BaseDir:	%{_basedir}
 SUNW_Copyright:	%{name}.copyright
 
 %include default-depend.inc
-BuildRequires:	libao-devel
+BuildRequires:	SUNWbtool
+BuildRequires:	SUNWggrp
+BuildRequires:	SUNWgnome-common-devel
 BuildRequires:	SUNWcurl
-Requires:	libao
+BuildRequires:	libao-devel
 Requires:	SUNWcurl
 Requires:	SUNWflac
 Requires:	SUNWogg-vorbis
 Requires:	SUNWspeex
+Requires:	libao
 
 Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):		Xiph.org <vorbis@xiph.org>
