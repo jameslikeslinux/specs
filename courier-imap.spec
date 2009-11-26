@@ -10,7 +10,7 @@
 %include Solaris.inc
 
 Name:		courier-imap
-Version:	4.5.0
+Version:	4.6.0
 Summary:	Courier IMAP Server
 License:	GPLv3
 Distribution:   OpenSolaris
@@ -130,6 +130,8 @@ rm -rf $RPM_BUILD_ROOT
 %class(manifest) %attr(444,root,sys) %{_localstatedir}/svc/manifest/network/courier-imap.xml
 
 %changelog
+* Wed Nov 25 2009 - jlee@thestaticvoid.com
+- Bump version to 4.6.0
 * Sun May 31 2009 - jlee@thestaticvoid.com
 - Add header and correct copyright
 * Sat May 30 2009 - jlee@thestaticvoid.com
