@@ -109,6 +109,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/sbcl.1
 
 %changelog
+* Wed Nov 25 2009 - jlee@thestaticvoid.com
+- Bump to version 1.0.32
 * Sun May 31 2009 - jlee@thestaticvoid.com
 - Add header and correct copyright
 * Sat May 30 2009 - jlee@thestaticvoid.com

@@ -8,7 +8,7 @@
 #
 
 Name:		sbcl
-Version:	1.0.28
+Version:	1.0.32
 Source0:	http://voxel.dl.sourceforge.net/sourceforge/sbcl/%{name}-%{version}-source.tar.bz2
 Source1:	http://voxel.dl.sourceforge.net/sourceforge/sbcl/%{bindist}-binary.tar.bz2
 
