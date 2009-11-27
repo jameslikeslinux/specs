@@ -23,8 +23,9 @@ Source0:	http://yaws.hyber.org/download/yaws-%{version}.tar.gz
 Source1:	http-yaws.xml
 
 %include default-depend.inc
-BuildRequires:	SUNWerlang
+BuildRequires:	SUNWggrp
 BuildRequires:	SUNWgmake
+BuildRequires:	SUNWerlang
 Requires:	SUNWerlang
 
 Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
