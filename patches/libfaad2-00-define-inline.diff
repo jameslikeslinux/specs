@@ -1,0 +1,11 @@
+--- libfaad/common.h.old	2009-11-26 22:23:38.797023706 -0500
++++ libfaad/common.h	2009-11-26 22:23:51.506199151 -0500
+@@ -41,7 +41,7 @@
+ 
+ #include "neaacdec.h"
+ 
+-#if 1
++#if 0
+ #define INLINE __inline
+ #else
+ #define INLINE inline
