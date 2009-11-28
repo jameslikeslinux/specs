@@ -1,0 +1,7 @@
+--- mpcgain/Makefile.am.old	2009-11-27 02:53:37.005305095 -0500
++++ mpcgain/Makefile.am	2009-11-27 02:53:48.314450606 -0500
+@@ -5,4 +5,3 @@
+ 	$(top_builddir)/libmpcdec/libmpcdec.la
+ mpcgain_SOURCES = mpcgain.c
+ INCLUDES = -I$(top_srcdir)/include
+-AM_CFLAGS = -ffast-math

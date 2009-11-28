@@ -1,0 +1,30 @@
+--- mpcenc/mpcenc.h.old	2009-11-27 18:18:57.214771042 -0500
++++ mpcenc/mpcenc.h	2009-11-27 18:16:32.515724445 -0500
+@@ -34,6 +34,7 @@
+ //// portable system includes //////////////////////////////////////
+ #include <stddef.h>
+ #include <math.h>
++#include <string.h>
+ 
+ //// system dependent system includes //////////////////////////////
+ // low level I/O, where are prototypes and constants?
+--- mpcenc/stderr.c.old	2009-11-27 18:18:40.279679090 -0500
++++ mpcenc/stderr.c	2009-11-27 18:17:39.545414652 -0500
+@@ -27,6 +27,7 @@
+ 
+ #include <stdio.h>
+ #include <stdarg.h>
++#include <string.h>
+ // #include "mpcenc.h"
+ 
+ #define WRITE(fp,ptr,len)      fwrite (ptr, 1, len, fp)     // WRITE   returns -1 or 0 on error/EOF, otherwise > 0
+--- common/tags.c.old	2009-11-27 18:19:11.302971206 -0500
++++ common/tags.c	2009-11-27 18:22:30.176178924 -0500
+@@ -23,6 +23,7 @@
+ 
+ // #include "mpcenc.h"
+ #include <stdio.h>
++#include <string.h>
+ #include <mpc/mpc_types.h>
+ 
+ #ifdef _WIN32
