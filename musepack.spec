@@ -1,5 +1,5 @@
 #
-# spec file for package: libmpcdec
+# spec file for package: musepack
 #
 # This file and all modifications and additions to the pristine
 # package are under the same license as the package itself.
@@ -11,13 +11,13 @@
 
 %ifarch amd64 sparcv9
 %include arch64.inc
-%use libmpcdec_64 = libmpcdec-base.spec
+%use musepack_64 = musepack-base.spec
 %endif
 %include base.inc
-%use libmpcdec = libmpcdec-base.spec
+%use musepack = musepack-base.spec
 
-Name:		libmpcdec
-Version:	%{libmpcdec.version}
+Name:		musepack
+Version:	%{musepack.version}
 Summary:	Musepack
 License:	BSD/LGPLv2.1/GPLv2
 Distribution:   OpenSolaris
@@ -31,6 +31,10 @@ BuildRequires:	SUNWgnu-automake-19
 BuildRequires:	SUNWaconf
 BuildRequires:	SUNWlibtool
 BuildRequires:	SUNWggrp
+BuildRequires:	libreplaygain-devel
+BuildRequires:	libcuefile-devel
+Requires:	libreplaygain
+Requires:	libcuefile
 
 Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):		Shy Keidar <shykeidar@musepack.net>
@@ -47,48 +51,37 @@ It is based on the MPEG-1 Layer-2 / MP2 algorithms, but since 1997 it has
 rapidly developed and vastly improved and is now at an advanced stage in which
 it contains heavily optimized and patentless code. 
 
-This package contains the libmpcdec shared library.
+This package contains the musepack shared library and tools.
 
 %package devel
 Summary:	Headers for libmpcdec
 Requires:	%{name}
 
 %description devel
-This package contains the libmpcdec development files.
-
-%package -n musepack-tools
-Summary:	Musepack Tools
-BuildRequires:	libreplaygain-devel
-BuildRequires:	libcuefile-devel
-Requires:	libreplaygain
-Requires:	libcuefile
-Requires:	libmpcdec
-
-%description -n musepack-tools
-This package contains tools to create, decode, and manipulate Musepack files.
+This package contains the musepack development files.
 
 %prep
 rm -rf %{name}-%{version}
 mkdir %{name}-%{version}
 %ifarch amd64 sparcv9
 mkdir %{name}-%{version}/%{_arch64}
-%libmpcdec_64.prep -d %{name}-%{version}/%{_arch64}
+%musepack_64.prep -d %{name}-%{version}/%{_arch64}
 %endif
 mkdir %{name}-%{version}/%{base_arch}
-%libmpcdec.prep -d %{name}-%{version}/%{base_arch}
+%musepack.prep -d %{name}-%{version}/%{base_arch}
 
 %build
 %ifarch amd64 sparcv9
-%libmpcdec_64.build -d %{name}-%{version}/%{_arch64}
+%musepack_64.build -d %{name}-%{version}/%{_arch64}
 %endif
-%libmpcdec.build -d %{name}-%{version}/%{base_arch}
+%musepack.build -d %{name}-%{version}/%{base_arch}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 %ifarch amd64 sparcv9
-%libmpcdec_64.install -d %{name}-%{version}/%{_arch64}
+%musepack_64.install -d %{name}-%{version}/%{_arch64}
 %endif
-%libmpcdec.install -d %{name}-%{version}/%{base_arch}
+%musepack.install -d %{name}-%{version}/%{base_arch}
 
 %if %can_isaexec
 mkdir $RPM_BUILD_ROOT%{_bindir}/%{base_isa}
@@ -114,29 +107,6 @@ ln -s ../lib/isaexec wavcmp
 %ifarch amd64 sparcv9
 %{_libdir}/%{_arch64}/libmpcdec.so.6
 %{_libdir}/%{_arch64}/libmpcdec.so.6.1.0
-%endif
-%{_libdir}/libmpcdec.so.6
-%{_libdir}/libmpcdec.so.6.1.0
-
-%files devel
-%defattr(-,root,bin)
-%ifarch amd64 sparcv9
-%{_libdir}/%{_arch64}/libmpcdec.la
-%{_libdir}/%{_arch64}/libmpcdec.so
-%endif
-%{_libdir}/libmpcdec.la
-%{_libdir}/libmpcdec.so
-%{_includedir}/mpc/mpcdec.h
-%{_includedir}/mpc/mpc_types.h
-%{_includedir}/mpc/streaminfo.h
-%{_includedir}/mpc/datatypes.h
-%{_includedir}/mpc/minimax.h
-%{_includedir}/mpc/reader.h
-%{_includedir}/mpc/mpcmath.h
-
-%files -n musepack-tools
-%defattr(-,root,bin)
-%ifarch amd64 sparcv9
 %{_bindir}/%{_arch64}/mpcenc
 %{_bindir}/%{_arch64}/mpc2sv8
 %{_bindir}/%{_arch64}/mpccut
@@ -145,6 +115,8 @@ ln -s ../lib/isaexec wavcmp
 %{_bindir}/%{_arch64}/mpcgain
 %{_bindir}/%{_arch64}/wavcmp
 %endif
+%{_libdir}/libmpcdec.so.6
+%{_libdir}/libmpcdec.so.6.1.0
 %if %can_isaexec
 %{_bindir}/%{base_isa}/mpcenc
 %{_bindir}/%{base_isa}/mpc2sv8
@@ -169,6 +141,22 @@ ln -s ../lib/isaexec wavcmp
 %{_bindir}/mpcgain
 %{_bindir}/wavcmp
 %endif
+
+%files devel
+%defattr(-,root,bin)
+%ifarch amd64 sparcv9
+%{_libdir}/%{_arch64}/libmpcdec.la
+%{_libdir}/%{_arch64}/libmpcdec.so
+%endif
+%{_libdir}/libmpcdec.la
+%{_libdir}/libmpcdec.so
+%{_includedir}/mpc/mpcdec.h
+%{_includedir}/mpc/mpc_types.h
+%{_includedir}/mpc/streaminfo.h
+%{_includedir}/mpc/datatypes.h
+%{_includedir}/mpc/minimax.h
+%{_includedir}/mpc/reader.h
+%{_includedir}/mpc/mpcmath.h
 
 %changelog
 * Fri Nov 27 2009 - jlee@thestaticvoid.com

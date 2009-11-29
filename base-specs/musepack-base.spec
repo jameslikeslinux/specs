@@ -1,5 +1,5 @@
 #
-# spec file for package: libmpcdec
+# spec file for package: musepack
 #
 # This file and all modifications and additions to the pristine
 # package are under the same license as the package itself.
@@ -7,11 +7,11 @@
 # includes module(s):
 #
 
-Name:		libmpcdec
+Name:		musepack
 Version:	435
 Source0:	http://files.musepack.net/source/musepack_src_r%{version}.tar.gz
-Patch0:		libmpcdec-00-mpcgain-ldflags.diff
-Patch1:		libmpcdec-01-include-string-header.diff
+Patch0:		musepack-00-mpcgain-ldflags.diff
+Patch1:		musepack-01-include-string-header.diff
 
 %prep
 %setup -q -n musepack_src_r%{version}
