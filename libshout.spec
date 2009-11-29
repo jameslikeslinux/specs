@@ -30,7 +30,7 @@ SUNW_Copyright:	%{name}.copyright
 BuildRequires:	SUNWgnu-automake-19
 BuildRequires:	SUNWaconf
 BuildRequires:	SUNWlibtool
-BuildRequires:	SUNWogg-vorbis
+BuildRequires:	SUNWogg-vorbis-devel
 Requires:	SUNWogg-vorbis
 
 # Solaris doesn't package 64-bit versions of the following libraries

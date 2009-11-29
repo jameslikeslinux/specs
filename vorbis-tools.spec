@@ -31,6 +31,9 @@ BuildRequires:	SUNWbtool
 BuildRequires:	SUNWggrp
 BuildRequires:	SUNWgnome-common-devel
 BuildRequires:	SUNWcurl
+BuildRequires:	SUNWflac-devel
+BuildRequires:	SUNWogg-vorbis-devel
+BuildRequires:	SUNWspeex-devel
 BuildRequires:	libao-devel
 Requires:	SUNWcurl
 Requires:	SUNWflac
