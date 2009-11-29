@@ -73,19 +73,13 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,bin)
 %ifarch amd64 sparcv9
-%{_libdir}/%{_arch64}/libcuefile.so.0.0.0
-%{_libdir}/%{_arch64}/libcuefile.so.0
+%{_libdir}/%{_arch64}/libcuefile.so
 %endif
-%{_libdir}/libcuefile.so.0.0.0
-%{_libdir}/libcuefile.so.0
+%{_libdir}/libcuefile.so
         
 
 %files devel
 %defattr(-,root,bin)
-%ifarch amd64 sparcv9
-%{_libdir}/%{_arch64}/libcuefile.so
-%endif
-%{_libdir}/libcuefile.so
 %{_includedir}/cuetools/cd.h
 %{_includedir}/cuetools/cuefile.h
 %{_includedir}/cuetools/cdtext.h
