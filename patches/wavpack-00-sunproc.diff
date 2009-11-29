@@ -1,0 +1,20 @@
+--- cli/utils.c.old	2009-11-29 16:42:45.538030224 -0500
++++ cli/utils.c	2009-11-29 16:45:51.673367604 -0500
+@@ -16,7 +16,7 @@
+ #include <io.h>
+ #include <conio.h>
+ #include <shlobj.h>
+-#elif defined(__GNUC__)
++#elif defined(__GNUC__) || defined(__SUNPRO_C)
+ #include <glob.h>
+ #include <unistd.h>
+ #endif
+@@ -164,7 +164,7 @@
+ // returned.                                                                //
+ //////////////////////////////////////////////////////////////////////////////
+ 
+-#if defined(__GNUC__) && !defined(WIN32)
++#if (defined(__GNUC__) || defined(__SUNPRO_C)) && !defined(WIN32)
+ 
+ char *filespec_path (char *filespec)
+ {
