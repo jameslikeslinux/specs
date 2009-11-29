@@ -27,6 +27,10 @@ SUNW_BaseDir:	%{_basedir}
 SUNW_Copyright:	%{name}.copyright
 
 %include default-depend.inc
+BuildRequires:	SUNWgnu-automake-19
+BuildRequires:	SUNWaconf
+BuildRequires:	SUNWlibtool
+BuildRequires:	SUNWggrp
 
 Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):		Glen Sawyer <mp3gain@hotmail.com>
