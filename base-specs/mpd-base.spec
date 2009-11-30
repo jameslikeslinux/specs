@@ -21,7 +21,7 @@ export LDFLAGS="%{_ldflags}"
 export MAD_CFLAGS="-I/usr/include"
 export MAD_LIBS="-L%{_libdir} -lmad"
 export PKG_CONFIG_LIBDIR="%{_libdir}/pkgconfig"
-./configure --prefix=%{_prefix} --bindir=%{_bindir} --libdir=%{_libdir} --with-zeroconf=no
+./configure --prefix=%{_prefix} --bindir=%{_bindir} --with-zeroconf=no
 make
 
 %install

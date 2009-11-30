@@ -112,7 +112,6 @@ ln -s ../lib/isaexec mpd
 mkdir $RPM_BUILD_ROOT%{_sysconfdir}
 cp %{SOURCE0} $RPM_BUILD_ROOT%{_sysconfdir}/mpd.conf
 
-mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/log/mpd
 mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/lib/mpd
 mkdir $RPM_BUILD_ROOT%{_localstatedir}/lib/mpd/music
 mkdir $RPM_BUILD_ROOT%{_localstatedir}/lib/mpd/playlists
@@ -142,9 +141,8 @@ cp %{SOURCE1} $RPM_BUILD_ROOT%{_localstatedir}/svc/manifest/application/mpd.xml
 %{_mandir}/man5/mpd.conf.5
 %defattr(-,root,sys)
 %dir %{_sysconfdir}
-%config %{_sysconfdir}/mpd.conf
+%attr(640,root,nobody) %config %{_sysconfdir}/mpd.conf
 %dir %{_localstatedir}
-%attr(755,nobody,nobody) %dir %{_localstatedir}/log/mpd
 %attr(755,root,other) %dir %{_localstatedir}/lib
 %attr(755,nobody,nobody) %dir %{_localstatedir}/lib/mpd
 %attr(755,nobody,nobody) %dir %{_localstatedir}/lib/mpd/music
