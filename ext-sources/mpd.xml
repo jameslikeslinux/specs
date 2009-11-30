@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<!DOCTYPE service_bundle SYSTEM "/usr/share/lib/xml/dtd/service_bundle.dtd.1">
+
+<service_bundle type='manifest' name='mpd'>
+
+<service
+	name='application/mpd'
+	type='service'
+	version='1'>
+
+	<create_default_instance enabled='false' />
+	<single_instance />
+
+	<dependency
+	    name='fs-local'
+	    grouping='require_all'
+	    restart_on='none'
+	    type='service'>
+		<service_fmri value='svc:/system/filesystem/local' />
+	</dependency>
+
+	<dependency
+	    name='fs-autofs'
+	    grouping='optional_all'
+	    restart_on='none'
+	    type='service'>
+		<service_fmri value='svc:/system/filesystem/autofs' />
+	</dependency>
+
+	<dependency
+	    name='network-service'
+	    grouping='require_all'
+	    restart_on='none'
+	    type='service'>
+		<service_fmri value='svc:/network/service' />
+	</dependency>
+
+	<exec_method
+		type='method'
+		name='start'
+		exec='/usr/bin/mpd "%{options/config}"'
+		timeout_seconds='60'>
+		<method_context>
+			<method_credential user='nobody' group='nobody' />
+		</method_context>
+	</exec_method>
+
+	<exec_method
+		type='method'
+		name='stop'
+		exec=':kill'
+		timeout_seconds='60' />
+
+	<property_group name='options' type='application'>
+		<propval name='config' type='astring' value='/etc/mpd.conf' />
+	</property_group>
+
+	<stability value='Unstable' />
+
+	<template>
+		<common_name>
+			<loctext xml:lang='C'>
+			Music Player Daemon
+			</loctext>
+		</common_name>
+		<documentation>
+			<manpage title='mpd' section='1M'
+			    manpath='/usr/share/man' />
+		</documentation>
+	</template>
+</service>
+
+</service_bundle>
