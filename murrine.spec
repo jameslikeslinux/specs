@@ -26,6 +26,7 @@ SUNW_BaseDir:	%{_basedir}
 SUNW_Copyright:	%{name}.copyright
 
 %include default-depend.inc
+BuildRequires:	SUNWggrp
 BuildRequires:	SUNWgnome-common-devel
 BuildRequires:	SUNWgnu-gettext
 BuildRequires:	SUNWxwinc

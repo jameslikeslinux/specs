@@ -23,6 +23,7 @@ Source6:	http://www.cimitan.com/murrine/files/MurrineRounded.tar.bz2
 %build
 export CFLAGS="%{optflags}"
 export LDFLAGS="%{_ldflags}"
+export PKG_CONFIG_LIBDIR="%{_libdir}/pkgconfig"
 ./configure --prefix=%{_prefix} --libdir=%{_libdir} --enable-animation
 make
 
