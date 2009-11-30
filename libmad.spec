@@ -27,10 +27,6 @@ SUNW_BaseDir:	%{_basedir}
 SUNW_Copyright:	%{name}.copyright
 
 %include default-depend.inc
-BuildRequires:	SUNWgnu-automake-19
-BuildRequires:	SUNWaconf
-BuildRequires:	SUNWlibtool
-BuildRequires:	SUNWggrp
 
 Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):		Robert Leslie <rob@underbit.com>
@@ -94,13 +90,9 @@ rm -rf $RPM_BUILD_ROOT
 %ifarch amd64 sparcv9
 %{_libdir}/%{_arch64}/libmad.la
 %{_libdir}/%{_arch64}/libmad.so
-%attr(755,root,other) %dir %{_libdir}/%{_arch64}/pkgconfig
-%{_libdir}/%{_arch64}/pkgconfig/mad.pc
 %endif
 %{_libdir}/libmad.la
 %{_libdir}/libmad.so
-%attr(755,root,other) %dir %{_libdir}/pkgconfig
-%{_libdir}/pkgconfig/mad.pc
 %{_includedir}/mad.h
 
 %changelog
