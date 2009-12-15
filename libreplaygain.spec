@@ -27,6 +27,7 @@ SUNW_BaseDir:	%{_basedir}
 SUNW_Copyright:	%{name}.copyright
 
 %include default-depend.inc
+BuildRequires:	SUNWbtool
 BuildRequires:	SUNWgnu-automake-19
 BuildRequires:	SUNWaconf
 BuildRequires:	SUNWlibtool
