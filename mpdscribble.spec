@@ -29,6 +29,8 @@ SUNW_Copyright:	%{name}.copyright
 Source0:	mpdscribble.xml
 
 %include default-depend.inc
+BuildRequires:	SUNWbtool
+BuildRequires:	SUNWgnome-common-devel
 BuildRequires:	SUNWgnome-base-libs-devel
 BuildRequires:	SUNWcurl
 Requires:	SUNWgnome-base-libs
