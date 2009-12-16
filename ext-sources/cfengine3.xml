@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<!DOCTYPE service_bundle SYSTEM "/usr/share/lib/xml/dtd/service_bundle.dtd.1">
+
+<service_bundle type='manifest' name='cfengine3'>
+
+<service
+	name='application/cfengine3/cf-execd'
+	type='service'
+	version='1'>
+
+	<create_default_instance enabled='false' />
+	<single_instance />
+
+	<dependency
+	    name='fs-local'
+	    grouping='require_all'
+	    restart_on='none'
+	    type='service'>
+		<service_fmri value='svc:/system/filesystem/local' />
+	</dependency>
+
+	<dependency
+	    name='network-service'
+	    grouping='require_all'
+	    restart_on='none'
+	    type='service'>
+		<service_fmri value='svc:/network/service' />
+	</dependency>
+
+	<dependency
+	    name='config-file'
+	    grouping='require_all'
+	    restart_on='refresh'
+	    type='path'>
+		<service_fmri
+		    value='file://localhost/var/cfengine/inputs/promises.cf' />
+	</dependency>
+
+	<exec_method
+		type='method'
+		name='start'
+		exec='/usr/sbin/cf-execd'
+		timeout_seconds='60'>
+	</exec_method>
+
+	<exec_method
+		type='method'
+		name='stop'
+		exec=':kill'
+		timeout_seconds='60' />
+
+	<stability value='Unstable' />
+
+	<template>
+		<common_name>
+			<loctext xml:lang='C'>
+				Cfengine Execution Agent
+			</loctext>
+		</common_name>
+		<documentation>
+			<manpage title='cf-execd' section='8'
+			    manpath='/usr/share/man' />
+		</documentation>
+	</template>
+</service>
+
+<service
+	name='application/cfengine3/cf-serverd'
+	type='service'
+	version='1'>
+
+	<create_default_instance enabled='false' />
+	<single_instance />
+
+	<dependency
+	    name='fs-local'
+	    grouping='require_all'
+	    restart_on='none'
+	    type='service'>
+		<service_fmri value='svc:/system/filesystem/local' />
+	</dependency>
+
+	<dependency
+	    name='network-service'
+	    grouping='require_all'
+	    restart_on='none'
+	    type='service'>
+		<service_fmri value='svc:/network/service' />
+	</dependency>
+
+	<dependency
+	    name='config-file'
+	    grouping='require_all'
+	    restart_on='refresh'
+	    type='path'>
+		<service_fmri
+		    value='file://localhost/var/cfengine/inputs/promises.cf' />
+	</dependency>
+
+	<exec_method
+		type='method'
+		name='start'
+		exec='/usr/sbin/cf-serverd'
+		timeout_seconds='60'>
+	</exec_method>
+
+	<exec_method
+		type='method'
+		name='stop'
+		exec=':kill'
+		timeout_seconds='60' />
+
+	<stability value='Unstable' />
+
+	<template>
+		<common_name>
+			<loctext xml:lang='C'>
+				Cfengine Server Agent
+			</loctext>
+		</common_name>
+		<documentation>
+			<manpage title='cf-serverd' section='8'
+			    manpath='/usr/share/man' />
+		</documentation>
+	</template>
+</service>
+
+</service_bundle>
