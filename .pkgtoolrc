@@ -11,4 +11,4 @@ patchdirs:	${MYDIR}/patches
 specdirs:	${MYDIR}:${MYDIR}/include:${MYDIR}/base-specs:${MYDIR}/indiana
 
 # sourcedirs [string]: colon (:) separated list of directories where extra sources (not tarballs) are searched for
-sourcedirs:	${MYDIR}/ext-sources:${MYDIR}/copyright
+sourcedirs:	${MYDIR}/ext-sources:${MYDIR}/copyright:${MYDIR}/manpage

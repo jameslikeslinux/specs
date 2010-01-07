@@ -1,0 +1,179 @@
+diff -ur par2cmdline-0.4.old/diskfile.cpp par2cmdline-0.4/diskfile.cpp
+--- par2cmdline-0.4.old/diskfile.cpp	2004-04-12 07:25:37.000000000 -0400
++++ par2cmdline-0.4/diskfile.cpp	2010-01-07 11:14:16.212503993 -0500
+@@ -974,7 +974,7 @@
+   string filename = diskfile->FileName();
+   assert(filename.length() != 0);
+ 
+-  pair<map<string,DiskFile*>::const_iterator,bool> location = diskfilemap.insert(pair<string,DiskFile*>(filename, diskfile));
++  pair<map<string,DiskFile*>::iterator,bool> location = diskfilemap.insert(pair<string,DiskFile*>(filename, diskfile));
+ 
+   return location.second;
+ }
+diff -ur par2cmdline-0.4.old/galois.h par2cmdline-0.4/galois.h
+--- par2cmdline-0.4.old/galois.h	2003-07-29 04:51:28.000000000 -0400
++++ par2cmdline-0.4/galois.h	2010-01-07 11:14:52.406181720 -0500
+@@ -46,7 +46,7 @@
+     Bits = bits,
+     Count = 1<<Bits,
+     Limit = Count-1,
+-    Generator = generator,
++    Generator = generator
+   };
+ 
+   ValueType log[Count];
+@@ -100,7 +100,7 @@
+   {
+     Bits  = GaloisTable<bits,generator,valuetype>::Bits,
+     Count = GaloisTable<bits,generator,valuetype>::Count,
+-    Limit = GaloisTable<bits,generator,valuetype>::Limit,
++    Limit = GaloisTable<bits,generator,valuetype>::Limit
+   };
+ 
+ protected:
+@@ -121,7 +121,7 @@
+   enum
+   {
+     Bytes = ((G::Bits + 7) >> 3),
+-    Count = ((Bytes * (Bytes+1)) / 2),
++    Count = ((Bytes * (Bytes+1)) / 2)
+   };
+ 
+   G tables[Count * 256 * 256];
+diff -ur par2cmdline-0.4.old/Makefile.am par2cmdline-0.4/Makefile.am
+--- par2cmdline-0.4.old/Makefile.am	2004-04-12 12:40:40.000000000 -0400
++++ par2cmdline-0.4/Makefile.am	2010-01-07 11:23:48.832961535 -0500
+@@ -45,8 +45,7 @@
+ 	verificationhashtable.cpp verificationhashtable.h \
+ 	verificationpacket.cpp verificationpacket.h
+ 
+-LDADD = -lstdc++
+-AM_CXXFLAGS = -Wall
++AM_CXXFLAGS = -Wall -features=zla
+ 
+ EXTRA_DIST = PORTING ROADMAP par2cmdline.sln par2cmdline.vcproj \
+ 	testdata.tar.gz pretest test1 test2 test3 test4 test5 test6 \
+diff -ur par2cmdline-0.4.old/par1fileformat.h par2cmdline-0.4/par1fileformat.h
+--- par2cmdline-0.4.old/par1fileformat.h	2003-08-01 19:42:21.000000000 -0400
++++ par2cmdline-0.4/par1fileformat.h	2010-01-07 11:10:05.921263174 -0500
+@@ -55,13 +55,13 @@
+   leu64       filesize;
+   MD5Hash     hashfull;
+   MD5Hash     hash16k;
+-  leu16       name[];
++  leu16       name[0];
+ }PACKED;
+ 
+ enum FILEENTRYSTATUS
+ {
+   INPARITYVOLUME = 1,
+-  CHECKED = 2,
++  CHECKED = 2
+ };
+ 
+ #ifdef _MSC_VER
+diff -ur par2cmdline-0.4.old/par2cmdline.h par2cmdline-0.4/par2cmdline.h
+--- par2cmdline-0.4.old/par2cmdline.h	2004-04-15 09:30:02.000000000 -0400
++++ par2cmdline-0.4/par2cmdline.h	2010-01-07 11:09:10.262707189 -0500
+@@ -230,7 +230,7 @@
+ 
+   eFileIOError                 = 6,  // An error occured when accessing files
+   eLogicError                  = 7,  // In internal error occurred
+-  eMemoryError                 = 8,  // Out of memory
++  eMemoryError                 = 8   // Out of memory
+ 
+ } Result;
+ 
+diff -ur par2cmdline-0.4.old/par2fileformat.h par2cmdline-0.4/par2fileformat.h
+--- par2cmdline-0.4.old/par2fileformat.h	2003-08-01 19:43:40.000000000 -0400
++++ par2cmdline-0.4/par2fileformat.h	2010-01-07 11:07:37.714174188 -0500
+@@ -84,7 +84,7 @@
+   PACKET_HEADER         header;
+   // Body
+   MD5Hash               fileid;     // MD5hash of file_hash_16k, file_length, file_name
+-  FILEVERIFICATIONENTRY entries[];
++  FILEVERIFICATIONENTRY entries[0];
+ } PACKED;
+ 
+ // The file description packet is used to record the name of the file,
+@@ -102,7 +102,7 @@
+   MD5Hash          hashfull;  // MD5 Hash of the whole file
+   MD5Hash          hash16k;   // MD5 Hash of the first 16k of the file
+   leu64            length;    // Length of the file
+-  u8               name[];    // Name of the file, padded with 1 to 3 zero bytes to reach 
++  u8               name[0];   // Name of the file, padded with 1 to 3 zero bytes to reach 
+                               // a multiple of 4 bytes.
+                               // Actual length can be determined from overall packet
+                               // length and then working backwards to find the first non
+@@ -140,7 +140,7 @@
+ {
+   PACKET_HEADER    header;
+   // Body
+-  u8               client[];
++  u8               client[0];
+   //u8* client(void) {return (u8*)&this[1];}
+ } PACKED;
+ 
+diff -ur par2cmdline-0.4.old/par2repairer.cpp par2cmdline-0.4/par2repairer.cpp
+--- par2cmdline-0.4.old/par2repairer.cpp	2004-04-15 09:42:48.000000000 -0400
++++ par2cmdline-0.4/par2repairer.cpp	2010-01-07 11:16:15.702189224 -0500
+@@ -515,7 +515,7 @@
+   u32 exponent = packet->Exponent();
+ 
+   // Try to insert the new packet into the recovery packet map
+-  pair<map<u32,RecoveryPacket*>::const_iterator, bool> location = recoverypacketmap.insert(pair<u32,RecoveryPacket*>(exponent, packet));
++  pair<map<u32,RecoveryPacket*>::iterator, bool> location = recoverypacketmap.insert(pair<u32,RecoveryPacket*>(exponent, packet));
+ 
+   // Did the insert fail
+   if (!location.second)
+diff -ur par2cmdline-0.4.old/reedsolomon.cpp par2cmdline-0.4/reedsolomon.cpp
+--- par2cmdline-0.4.old/reedsolomon.cpp	2003-05-26 14:01:31.000000000 -0400
++++ par2cmdline-0.4/reedsolomon.cpp	2010-01-07 11:20:21.942049002 -0500
+@@ -51,6 +51,7 @@
+   }
+ }
+ 
++template<>
+ bool ReedSolomon<Galois8>::SetInput(const vector<bool> &present)
+ {
+   inputcount = (u32)present.size();
+@@ -80,6 +81,7 @@
+   return true;
+ }
+ 
++template<>
+ bool ReedSolomon<Galois8>::SetInput(u32 count)
+ {
+   inputcount = count;
+@@ -101,6 +103,7 @@
+   return true;
+ }
+ 
++template<>
+ bool ReedSolomon<Galois8>::Process(size_t size, u32 inputindex, const void *inputbuffer, u32 outputindex, void *outputbuffer)
+ {
+   // Look up the appropriate element in the RS matrix
+@@ -189,6 +192,7 @@
+ 
+ // Set which of the source files are present and which are missing
+ // and compute the base values to use for the vandermonde matrix.
++template<>
+ bool ReedSolomon<Galois16>::SetInput(const vector<bool> &present)
+ {
+   inputcount = (u32)present.size();
+@@ -233,6 +237,7 @@
+ 
+ // Record that the specified number of source files are all present
+ // and compute the base values to use for the vandermonde matrix.
++template<>
+ bool ReedSolomon<Galois16>::SetInput(u32 count)
+ {
+   inputcount = count;
+@@ -267,6 +272,7 @@
+   return true;
+ }
+ 
++template<>
+ bool ReedSolomon<Galois16>::Process(size_t size, u32 inputindex, const void *inputbuffer, u32 outputindex, void *outputbuffer)
+ {
+   // Look up the appropriate element in the RS matrix
