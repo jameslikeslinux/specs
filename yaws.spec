@@ -10,7 +10,7 @@
 %include Solaris.inc
 
 Name:		yaws
-Version:	1.86
+Version:	1.87
 Summary:	Yet Another Web Server
 License:	BSD
 Distribution:   OpenSolaris
@@ -159,6 +159,8 @@ rm -rf $RPM_BUILD_ROOT
 %class(manifest) %attr(444,root,sys) %{_localstatedir}/svc/manifest/network/http-yaws.xml
 
 %changelog
+* Thu Jan 21 2010 - jlee@thestaticvoid.com
+- Bump to version 1.87
 * Mon Dec 28 2009 - jlee@thestaticvoid.com
 - Bump to version 1.86
 * Thu Nov 26 2009 - jlee@thestaticvoid.com
