@@ -1,0 +1,11 @@
+--- tunip.c.old	2010-01-29 11:11:32.081840622 -0500
++++ tunip.c	2010-01-29 11:12:19.849994134 -0500
+@@ -1058,7 +1058,7 @@
+ 	} else {
+ 		printf("VPNC started in foreground...\n");
+ 	}
+-	openlog("vpnc", LOG_PID | LOG_PERROR, LOG_DAEMON);
++	openlog("vpnc", LOG_PID, LOG_DAEMON);
+ 	write_pidfile(pidfile);
+ 	
+ 	vpnc_main_loop(s);

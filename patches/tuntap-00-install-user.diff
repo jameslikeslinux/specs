@@ -1,0 +1,23 @@
+--- Makefile.in.old	2010-01-28 16:44:46.716071061 -0500
++++ Makefile.in	2010-01-28 16:45:16.434215599 -0500
+@@ -53,13 +53,13 @@
+ 	$(CC) $(CFLAGS) -c tun.c -o tap.o -DTUNTAP_TAP
+ 
+ install: tun tap
+-	$(INSTALL) -d -m 0755 -o root -g bin $(DESTDIR)/usr/include/net
+-	$(INSTALL) -d -m 0755 -o root -g sys $(DESTDIR)$(DRV_DIR)
+-	$(INSTALL) -m 644 -o root -g root if_tun.h $(DESTDIR)/usr/include/net 
+-	$(INSTALL) -m 644 -o root -g root tun $(DESTDIR)$(DRV_DIR)
+-	$(INSTALL) -m 644 -o root -g root tap $(DESTDIR)$(DRV_DIR)
+-	$(INSTALL) -m 644 -o root -g root tun.conf $(DESTDIR)$(DRV_CONF_DIR)
+-	$(INSTALL) -m 644 -o root -g root tap.conf $(DESTDIR)$(DRV_CONF_DIR)
++	$(INSTALL) -d -m 0755 $(DESTDIR)/usr/include/net
++	$(INSTALL) -d -m 0755 $(DESTDIR)$(DRV_DIR)
++	$(INSTALL) -m 644 if_tun.h $(DESTDIR)/usr/include/net 
++	$(INSTALL) -m 755 tun $(DESTDIR)$(DRV_DIR)
++	$(INSTALL) -m 755 tap $(DESTDIR)$(DRV_DIR)
++	$(INSTALL) -m 644 tun.conf $(DESTDIR)$(DRV_CONF_DIR)
++	$(INSTALL) -m 644 tap.conf $(DESTDIR)$(DRV_CONF_DIR)
+ 	-[ -z "$(DESTDIR)" ]&& $(REM_DRV) tun >/dev/null 2>&1
+ 	-[ -z "$(DESTDIR)" ]&& $(REM_DRV) tap >/dev/null 2>&1
+ 	-[ -z "$(DESTDIR)" ]&& $(ADD_DRV) tun	
