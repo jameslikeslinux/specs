@@ -1,0 +1,11 @@
+--- examples/qtconcurrent/map/main.cpp.old	Wed Feb 10 00:41:30 2010
++++ examples/qtconcurrent/map/main.cpp	Wed Feb 10 00:41:43 2010
+@@ -67,7 +67,7 @@
+ 
+     // Use QtConcurrentBlocking::mapped to apply the scale function to all the
+     // images in the list.
+-    QList<QImage> thumbnails = QtConcurrent::blockingMapped(images, scale);
++    QList<QImage> thumbnails = QtConcurrent::blockingMapped<QList<QImage> >(images, scale);
+ 
+     return 0;
+ }

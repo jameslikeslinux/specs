@@ -24,11 +24,41 @@ Summary:	Cross-platform C++ Application Framework
 License:	LGPLv2.1/GPLv3
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
-Url:		http://www.qtsoftware.com/
+Url:		http://qt.nokia.com/
 SUNW_BaseDir:	%{_basedir}
 SUNW_Copyright:	%{name}.copyright
 
 %include default-depend.inc
+BuildRequires:	SUNWgmake
+BuildRequires:	SUNWdbus-devel
+BuildRequires:	SUNWglib2-devel
+BuildRequires:	SUNWTiff-devel
+BuildRequires:	SUNWjpg-devel
+BuildRequires:	SUNWpng-devel
+BuildRequires:	SUNWlibmng
+BuildRequires:	SUNWzlib
+BuildRequires:	SUNWxwplt
+BuildRequires:	SUNWxorg-clientlibs
+BuildRequires:	SUNWfontconfig
+BuildRequires:	SUNWxorg-xkb
+BuildRequires:	SUNWgtk2-devel
+BuildRequires:	SUNWfreetype2
+BuildRequires:	SUNWopenssl-include
+BuildRequires:	SUNWopenssl-libraries
+Requires:	SUNWdbus
+Requires:	SUNWglib2
+Requires:	SUNWTiff
+Requires:	SUNWjpg
+Requires:	SUNWpng
+Requires:	SUNWlibmng
+Requires:	SUNWzlib
+Requires:	SUNWxwplt
+Requires:	SUNWxorg-clientlibs
+Requires:	SUNWfontconfig
+Requires:	SUNWxorg-xkb
+Requires:	SUNWgtk2
+Requires:	SUNWfreetype2
+Requires:	SUNWopenssl
 
 Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):		qt-interest <qt-interest@trolltech.com>
@@ -183,10 +213,14 @@ done
 %{_bindir}/%{_arch64}/moc
 %{_bindir}/%{_arch64}/qdbuscpp2xml
 %{_bindir}/%{_arch64}/qdbusxml2cpp
+%{_bindir}/%{_arch64}/qdoc3
 %{_bindir}/%{_arch64}/qt3to4
+%{_bindir}/%{_arch64}/qttracereplay
 %{_bindir}/%{_arch64}/rcc
 %{_bindir}/%{_arch64}/uic
 %{_bindir}/%{_arch64}/uic3
+%{_bindir}/%{_arch64}/xmlpatterns
+%{_bindir}/%{_arch64}/xmlpatternsvalidator
 %endif
 %if %can_isaexec
 %{_bindir}/%{base_isa}/lrelease
@@ -194,29 +228,41 @@ done
 %{_bindir}/%{base_isa}/moc
 %{_bindir}/%{base_isa}/qdbuscpp2xml
 %{_bindir}/%{base_isa}/qdbusxml2cpp
+%{_bindir}/%{base_isa}/qdoc3
 %{_bindir}/%{base_isa}/qt3to4
+%{_bindir}/%{base_isa}/qttracereplay
 %{_bindir}/%{base_isa}/rcc
 %{_bindir}/%{base_isa}/uic
 %{_bindir}/%{base_isa}/uic3
+%{_bindir}/%{base_isa}/xmlpatterns
+%{_bindir}/%{base_isa}/xmlpatternsvalidator
 %hard %{_bindir}/lrelease
 %hard %{_bindir}/lupdate
 %hard %{_bindir}/moc
 %hard %{_bindir}/qdbuscpp2xml
 %hard %{_bindir}/qdbusxml2cpp
+%hard %{_bindir}/qdoc3
 %hard %{_bindir}/qt3to4
+%hard %{_bindir}/qttracereplay
 %hard %{_bindir}/rcc
 %hard %{_bindir}/uic
 %hard %{_bindir}/uic3
+%hard %{_bindir}/xmlpatterns
+%hard %{_bindir}/xmlpatternsvalidator
 %else
 %{_bindir}/lrelease
 %{_bindir}/lupdate
 %{_bindir}/moc
 %{_bindir}/qdbuscpp2xml
 %{_bindir}/qdbusxml2cpp
+%{_bindir}/qdoc3
 %{_bindir}/qt3to4
+%{_bindir}/qttracereplay
 %{_bindir}/rcc
 %{_bindir}/uic
 %{_bindir}/uic3
+%{_bindir}/xmlpatterns
+%{_bindir}/xmlpatternsvalidator
 %endif
 %{_includedir}
 %{_libdir}/*.{la,prl,so,a}

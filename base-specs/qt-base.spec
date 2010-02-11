@@ -8,14 +8,14 @@
 #
 
 Name:		qt
-Version:	4.5.1
-Source0:	http://get.qtsoftware.com/qt/source/%{name}-x11-opensource-src-%{version}.tar.gz
-Patch0:		qt-00-sunstudio-version.diff
+Version:	4.6.1
+Source0:	http://get.qt.nokia.com/qt/source/%{name}-everywhere-opensource-src-%{version}.tar.gz
+Patch0:		qt-00-qtconcurrent-map-explicit-type.diff
 #Patch1:	qt-00-sunstudio-gstreamer.diff
 
 %prep
-%setup -q -n %{name}-x11-opensource-src-%{version}
-%patch0 -p1
+%setup -q -n %{name}-everywhere-opensource-src-%{version}
+%patch0
 #%patch1 -p1
 
 %build
