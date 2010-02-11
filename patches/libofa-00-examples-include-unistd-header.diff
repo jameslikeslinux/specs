@@ -1,0 +1,22 @@
+--- examples/uselame.cpp.old	Thu Feb 11 16:45:34 2010
++++ examples/uselame.cpp	Thu Feb 11 16:45:58 2010
+@@ -11,6 +11,8 @@
+ #include "windows.h"
+ #else
+ #include <sys/wait.h>
++#include <sys/types.h>
++#include <unistd.h>
+ #endif
+ 
+ AudioData *loadWaveFile(char *file);
+--- examples/wavefile.cpp.old	Thu Feb 11 16:46:26 2010
++++ examples/wavefile.cpp	Thu Feb 11 16:48:08 2010
+@@ -11,6 +11,8 @@
+ #include "io.h"
+ #endif
+ #include <fcntl.h>
++#include <sys/types.h>
++#include <unistd.h>
+ 
+ static bool readBytes(int fd, unsigned char *buf, int size) {
+     int ct = 0;
