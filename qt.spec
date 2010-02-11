@@ -112,76 +112,14 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 %qt.install -d %{name}-%{version}/%{base_arch}
 
-%if %can_isaexec
-mkdir $RPM_BUILD_ROOT%{_bindir}/%{base_isa}
-cd $RPM_BUILD_ROOT%{_bindir}
-for i in *; do
-	if [ -f $i ]; then
-	        mv $i %{base_isa}
-	        ln -s ../lib/isaexec $i
-	fi
-done
-%endif
-
 %files
 %defattr(-,root,bin)
 %ifarch amd64 sparcv9
-%{_bindir}/%{_arch64}/assistant
-%{_bindir}/%{_arch64}/assistant_adp
-%{_bindir}/%{_arch64}/designer
-%{_bindir}/%{_arch64}/lconvert
-%{_bindir}/%{_arch64}/linguist
-%{_bindir}/%{_arch64}/pixeltool
-%{_bindir}/%{_arch64}/qcollectiongenerator
 %{_bindir}/%{_arch64}/qdbus
-%{_bindir}/%{_arch64}/qdbusviewer
-%{_bindir}/%{_arch64}/qhelpconverter
-%{_bindir}/%{_arch64}/qhelpgenerator
-%{_bindir}/%{_arch64}/qmake
 %{_bindir}/%{_arch64}/qtconfig
 %endif
-%if %can_isaexec
-%{_bindir}/%{base_isa}/assistant
-%{_bindir}/%{base_isa}/assistant_adp
-%{_bindir}/%{base_isa}/designer
-%{_bindir}/%{base_isa}/lconvert
-%{_bindir}/%{base_isa}/linguist
-%{_bindir}/%{base_isa}/pixeltool
-%{_bindir}/%{base_isa}/qcollectiongenerator
-%{_bindir}/%{base_isa}/qdbus
-%{_bindir}/%{base_isa}/qdbusviewer
-%{_bindir}/%{base_isa}/qhelpconverter
-%{_bindir}/%{base_isa}/qhelpgenerator
-%{_bindir}/%{base_isa}/qmake
-%{_bindir}/%{base_isa}/qtconfig
-%hard %{_bindir}/assistant
-%hard %{_bindir}/assistant_adp
-%hard %{_bindir}/designer
-%hard %{_bindir}/lconvert
-%hard %{_bindir}/linguist
-%hard %{_bindir}/pixeltool
-%hard %{_bindir}/qcollectiongenerator
-%hard %{_bindir}/qdbus
-%hard %{_bindir}/qdbusviewer
-%hard %{_bindir}/qhelpconverter
-%hard %{_bindir}/qhelpgenerator
-%hard %{_bindir}/qmake
-%hard %{_bindir}/qtconfig
-%else
-%{_bindir}/assistant
-%{_bindir}/assistant_adp
-%{_bindir}/designer
-%{_bindir}/lconvert
-%{_bindir}/linguist
-%{_bindir}/pixeltool
-%{_bindir}/qcollectiongenerator
 %{_bindir}/qdbus
-%{_bindir}/qdbusviewer
-%{_bindir}/qhelpconverter
-%{_bindir}/qhelpgenerator
-%{_bindir}/qmake
 %{_bindir}/qtconfig
-%endif
 %{_libdir}/*.so.*
 %{_libdir}/qt/plugins/accessible
 %{_libdir}/qt/plugins/designer/libqt3supportwidgets.so
@@ -208,12 +146,23 @@ done
 %files devel
 %defattr(-,root,bin)
 %ifarch amd64 sparcv9
+%{_bindir}/%{_arch64}/assistant
+%{_bindir}/%{_arch64}/assistant_adp
+%{_bindir}/%{_arch64}/designer
+%{_bindir}/%{_arch64}/lconvert
+%{_bindir}/%{_arch64}/linguist
 %{_bindir}/%{_arch64}/lrelease
 %{_bindir}/%{_arch64}/lupdate
 %{_bindir}/%{_arch64}/moc
+%{_bindir}/%{_arch64}/pixeltool
+%{_bindir}/%{_arch64}/qcollectiongenerator
 %{_bindir}/%{_arch64}/qdbuscpp2xml
+%{_bindir}/%{_arch64}/qdbusviewer
 %{_bindir}/%{_arch64}/qdbusxml2cpp
 %{_bindir}/%{_arch64}/qdoc3
+%{_bindir}/%{_arch64}/qhelpconverter
+%{_bindir}/%{_arch64}/qhelpgenerator
+%{_bindir}/%{_arch64}/qmake
 %{_bindir}/%{_arch64}/qt3to4
 %{_bindir}/%{_arch64}/qttracereplay
 %{_bindir}/%{_arch64}/rcc
@@ -222,40 +171,23 @@ done
 %{_bindir}/%{_arch64}/xmlpatterns
 %{_bindir}/%{_arch64}/xmlpatternsvalidator
 %endif
-%if %can_isaexec
-%{_bindir}/%{base_isa}/lrelease
-%{_bindir}/%{base_isa}/lupdate
-%{_bindir}/%{base_isa}/moc
-%{_bindir}/%{base_isa}/qdbuscpp2xml
-%{_bindir}/%{base_isa}/qdbusxml2cpp
-%{_bindir}/%{base_isa}/qdoc3
-%{_bindir}/%{base_isa}/qt3to4
-%{_bindir}/%{base_isa}/qttracereplay
-%{_bindir}/%{base_isa}/rcc
-%{_bindir}/%{base_isa}/uic
-%{_bindir}/%{base_isa}/uic3
-%{_bindir}/%{base_isa}/xmlpatterns
-%{_bindir}/%{base_isa}/xmlpatternsvalidator
-%hard %{_bindir}/lrelease
-%hard %{_bindir}/lupdate
-%hard %{_bindir}/moc
-%hard %{_bindir}/qdbuscpp2xml
-%hard %{_bindir}/qdbusxml2cpp
-%hard %{_bindir}/qdoc3
-%hard %{_bindir}/qt3to4
-%hard %{_bindir}/qttracereplay
-%hard %{_bindir}/rcc
-%hard %{_bindir}/uic
-%hard %{_bindir}/uic3
-%hard %{_bindir}/xmlpatterns
-%hard %{_bindir}/xmlpatternsvalidator
-%else
+%{_bindir}/assistant
+%{_bindir}/assistant_adp
+%{_bindir}/designer
+%{_bindir}/lconvert
+%{_bindir}/linguist
 %{_bindir}/lrelease
 %{_bindir}/lupdate
 %{_bindir}/moc
+%{_bindir}/pixeltool
+%{_bindir}/qcollectiongenerator
 %{_bindir}/qdbuscpp2xml
+%{_bindir}/qdbusviewer
 %{_bindir}/qdbusxml2cpp
 %{_bindir}/qdoc3
+%{_bindir}/qhelpconverter
+%{_bindir}/qhelpgenerator
+%{_bindir}/qmake
 %{_bindir}/qt3to4
 %{_bindir}/qttracereplay
 %{_bindir}/rcc
@@ -263,7 +195,6 @@ done
 %{_bindir}/uic3
 %{_bindir}/xmlpatterns
 %{_bindir}/xmlpatternsvalidator
-%endif
 %{_includedir}
 %{_libdir}/*.{la,prl,so,a}
 %attr(755,root,other) %dir %{_libdir}/pkgconfig
@@ -278,12 +209,7 @@ done
 %ifarch amd64 sparcv9
 %{_bindir}/%{_arch64}/qtdemo
 %endif
-%if %can_isaexec
-%{_bindir}/%{base_isa}/qtdemo
-%hard %{_bindir}/qtdemo
-%else
 %{_bindir}/qtdemo
-%endif
 %defattr(-,root,bin)
 %{_libdir}/qt/demos
 %{_libdir}/qt/examples

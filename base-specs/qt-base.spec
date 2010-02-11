@@ -39,7 +39,8 @@ echo "yes" | ./configure -platform %{platform} \
 			 -examplesdir %{_libdir}/qt/examples \
 			 -demosdir %{_libdir}/qt/demos \
 			 -no-phonon \
-			 -no-gstreamer
+			 -no-gstreamer \
+			 -lCrun
 gmake -j$CPUS
 
 %install

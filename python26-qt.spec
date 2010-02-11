@@ -31,6 +31,7 @@ BuildRequires:	python26-sip
 BuildRequires:	qt-devel
 Requires:	SUNWPython26
 Requires:	SUNWdbus-python26
+Requires:	python26-sip
 Requires:	qt
 
 Meta(info.maintainer):          James Lee <jlee@thestaticvoid.com>
@@ -53,6 +54,15 @@ python%{python_version} configure.py --confirm-license
 # instead of /usr/include/sip.h which ships with Solaris
 sed 's@<sip.h>@"/usr/include/python%{python_version}/sip.h"@' QtCore/sipAPIQtCore.h > QtCore/sipAPIQtCore.h.new
 mv -f QtCore/sipAPIQtCore.h.new QtCore/sipAPIQtCore.h
+
+# force libraries to link to libCrun because the python
+# that is shipped with OpenSolaris is not.
+# see section 16.8:
+# http://docs.sun.com/source/819-3690/Building.Libs.html
+find . -name "Makefile" | while read makefile; do
+	sed 's/^\(LIBS = .*\)/\1 -lCrun/' $makefile > $makefile.new
+	mv -f $makefile.new $makefile
+done
 
 CPUS=`/usr/sbin/psrinfo | grep on-line | wc -l | tr -d ' '`
 if test "x$CPUS" = "x" -o $CPUS = 0; then
