@@ -33,7 +33,7 @@ BuildRequires:	SUNWggrp
 Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):		M. Bakker <mbakker@nero.com>
 Meta(info.upstream_url):	http://www.audiocoding.com/
-Meta(info.classification):	org.opensolaris.category.2008:System/Libraries
+Meta(info.classification):	org.opensolaris.category.2008:System/Multimedia Libraries
 
 %description
 FAAD2 is an open source MPEG-4 and MPEG-2 AAC decoder.

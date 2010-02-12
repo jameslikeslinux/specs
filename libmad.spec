@@ -31,7 +31,7 @@ SUNW_Copyright:	%{name}.copyright
 Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):		Robert Leslie <rob@underbit.com>
 Meta(info.upstream_url):	http://www.underbit.com/products/mad/
-Meta(info.classification):	org.opensolaris.category.2008:System/Libraries
+Meta(info.classification):	org.opensolaris.category.2008:System/Multimedia Libraries
 
 %description
 MAD is a high-quality MPEG audio decoder. It currently supports MPEG-1 and the

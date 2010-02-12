@@ -32,7 +32,7 @@ BuildRequires:	SUNWbtool
 Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):		Svend Sorensen
 Meta(info.upstream_url):	http://www.musepack.net/
-Meta(info.classification):	org.opensolaris.category.2008:System/Libraries
+Meta(info.classification):	org.opensolaris.category.2008:System/Multimedia Librarie
 
 %description
 Cue file library from Musepack.

@@ -38,7 +38,7 @@ Requires:	SUNWfftw3
 Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):		adam@musicip.com
 Meta(info.upstream_url):	http://code.google.com/p/musicip-libofa/
-Meta(info.classification):	org.opensolaris.category.2008:System/Libraries
+Meta(info.classification):	org.opensolaris.category.2008:System/Multimedia Libraries
 
 %description
 LibOFA (Library Open Fingerprint Architecture) is an open-source audio

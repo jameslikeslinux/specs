@@ -36,7 +36,7 @@ BuildRequires:	SUNWggrp
 Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):		Glen Sawyer <mp3gain@hotmail.com>
 Meta(info.upstream_url):	http://www.musepack.net/
-Meta(info.classification):	org.opensolaris.category.2008:System/Libraries
+Meta(info.classification):	org.opensolaris.category.2008:System/Multimedia Libraries
 
 %description
 Replay Gain library from Musepack.
