@@ -29,7 +29,7 @@ SUNW_BaseDir:	%{_basedir}
 SUNW_Copyright:	%{name}.copyright
 
 %include default-depend.inc
-BuildRequires:	SUNWgcc
+BuildRequires:	SUNWgcc432
 BuildRequires:	SUNWgawk
 BuildRequires:	SUNWgsed
 BuildRequires:	SUNWggrp

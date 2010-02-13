@@ -33,6 +33,7 @@ export PATH=/usr/perl5/bin:$PATH
 	    --bindir=%{_bindir} \
 	    --libdir=%{_libdir} \
 	    --shlibdir=%{_libdir} \
+	    --cc=gcc-4.3.2 \
             --extra-cflags="%{optflags}" \
 	    --extra-ldflags="%{optflags} %{_ldflags}" \
 	    --disable-static \
