@@ -11,10 +11,12 @@ Name:		libofa
 Version:	0.9.3
 Source0:	http://musicip-libofa.googlecode.com/files/libofa-%{version}.tar.gz
 Patch0:		libofa-00-examples-include-unistd-header.diff
+Patch1:		libofa-01-pkgconfig-fftw3.diff
 
 %prep
 %setup -q
 %patch0
+%patch1
 aclocal-1.9
 autoconf
 libtoolize --force
