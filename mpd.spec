@@ -45,6 +45,7 @@ BuildRequires:	SUNWsqlite3
 BuildRequires:	SUNWaudh
 BuildRequires:	SUNWcurl
 BuildRequires:	libid3tag
+BuildRequires:	ffmpeg-devel
 Requires:	SUNWgnome-base-libs
 Requires:	libao
 Requires:	libshout
@@ -58,6 +59,7 @@ Requires:	libmad
 Requires:	SUNWsqlite3
 Requires:	SUNWcurl
 Requires:	libid3tag
+Requires:	ffmpeg
 
 Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):		Max Kellermann <max@duempel.org>
