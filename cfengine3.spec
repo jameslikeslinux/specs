@@ -10,7 +10,7 @@
 %include Solaris.inc
 
 Name:		cfengine3
-Version:	3.0.2
+Version:	3.0.3
 Summary:	Cfengine 3
 License:	GPLv3
 Distribution:   OpenSolaris
@@ -59,6 +59,12 @@ make DESTDIR=$RPM_BUILD_ROOT install
 
 rm -rf $RPM_BUILD_ROOT%{_libdir}
 
+mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/cfengine/bin
+cd $RPM_BUILD_ROOT%{_localstatedir}/cfengine/bin
+for i in cf-execd cf-key cf-monitord cf-serverd cf-promises cf-runagent cf-know cf-report cf-agent; do
+	ln -sf %{_sbindir}/$i .
+done
+
 mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/svc/manifest/application
 cp %{SOURCE1} $RPM_BUILD_ROOT%{_localstatedir}/svc/manifest/application/cfengine3.xml
 
@@ -96,12 +102,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/cf-agent.8
 %attr(755,root,other) %dir %{_docdir}
 %{_docdir}/cfengine
-%dir %{_localstatedir}
-%dir %{_localstatedir}/svc
-%dir %{_localstatedir}/svc/manifest
-%dir %{_localstatedir}/svc/manifest/application
+%{_localstatedir}/cfengine/bin/cf-*
 %class(manifest) %attr(444,root,sys) %{_localstatedir}/svc/manifest/application/cfengine3.xml
 
 %changelog
+* Thu Feb 17 2010 - jlee@thestaticvoid.com
+- Bump to version 3.0.3
 * Wed Dec 16 2009 - jlee@thestaticvoid.com
 - Initial version
