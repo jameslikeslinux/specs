@@ -10,7 +10,7 @@
 %include Solaris.inc
 
 Name:		cfengine3
-Version:	3.0.3
+Version:	3.0.4
 Summary:	Cfengine 3
 License:	GPLv3
 Distribution:   OpenSolaris
