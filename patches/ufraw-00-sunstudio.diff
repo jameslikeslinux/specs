@@ -1,0 +1,161 @@
+diff -ur ufraw-0.17.old/dcraw.cc ufraw-0.17/dcraw.cc
+--- ufraw-0.17.old/dcraw.cc	Mon Mar 29 16:18:13 2010
++++ ufraw-0.17/dcraw.cc	Fri Apr 30 15:29:21 2010
+@@ -3663,7 +3663,7 @@
+   if ((nc = colors) == 3 && filters) nc++;
+   FORC(nc) {			/* denoise R,G1,B,G3 individually */
+     for (i=0; i < size; i++)
+-      fimg[i] = 256 * sqrt(image[i][c] << scale);
++      fimg[i] = 256 * sqrt((float) (image[i][c] << scale));
+     for (hpass=lev=0; lev < 5; lev++) {
+       lpass = size*((lev & 1)+1);
+       for (row=0; row < iheight; row++) {
+@@ -3707,7 +3707,7 @@
+ 		window[2][col-1] + window[2][col+1] - black*4 )
+ 	      * mul[row & 1] + (window[1][col] - black) * 0.5 + black;
+ 	avg = avg < 0 ? 0 : sqrt(avg);
+-	diff = sqrt(BAYER(row,col)) - avg;
++	diff = sqrt((float) BAYER(row,col)) - avg;
+ 	if      (diff < -thold) diff += thold;
+ 	else if (diff >  thold) diff -= thold;
+ 	else diff = 0;
+@@ -4132,7 +4132,7 @@
+ 
+   for (i=0; i < 0x10000; i++) {
+     r = i / 65535.0;
+-    cbrt[i] = r > 0.008856 ? pow(r,1/3.0) : 7.787*r + 16/116.0;
++    cbrt[i] = r > 0.008856 ? pow(r, (float) (1/3.0)) : 7.787*r + 16/116.0;
+   }
+   for (i=0; i < 3; i++)
+     for (j=0; j < colors; j++)
+@@ -4319,7 +4319,7 @@
+ 
+   dcraw_message (DCRAW_VERBOSE,_("Rebuilding highlights...\n"));
+ 
+-  grow = pow (2, 4-highlight);
++  grow = pow (2.0, 4-highlight);
+   FORCC hsat[c] = 32000 * pre_mul[c];
+   for (kc=0, c=1; c < colors; c++)
+     if (pre_mul[kc] < pre_mul[c]) kc = c;
+diff -ur ufraw-0.17.old/dcraw_api.cc ufraw-0.17/dcraw_api.cc
+--- ufraw-0.17.old/dcraw_api.cc	Mon Mar 29 16:18:13 2010
++++ ufraw-0.17/dcraw_api.cc	Fri Apr 30 16:35:15 2010
+@@ -365,12 +365,14 @@
+ static inline void shrink_row(dcraw_image_type *obase, int osize,
+ 	dcraw_image_type *ibase, int isize, int colors, int scale)
+ {
+-    unsigned sum[osize];
++    unsigned *sum;
+     dcraw_image_type *iptr;
+     int cl, i;
+ 
++    sum = (unsigned*) malloc(osize * sizeof(unsigned));
++
+     for (cl = 0; cl < colors; ++cl) {
+-	memset(sum, 0, sizeof (sum));
++	memset(sum, 0, osize * sizeof(unsigned));
+ 	iptr = ibase;
+ 	for (i = 0; i < scale; ++i) {
+ 	    shrink_accumulate_row(sum, osize, iptr, scale, cl);
+@@ -379,6 +381,8 @@
+ 	for (i = 0; i < osize; ++i)
+ 	    obase[i][cl] = sum[i] / (scale * scale);
+     }
++
++    free(sum);
+ }
+ 
+ static inline void shrink_pixel(dcraw_image_type pixp, int row, int col,
+@@ -388,8 +392,8 @@
+     int ri, ci, cl;
+     dcraw_image_type *ibase;
+ 
+-    memset(sum, 0, sizeof (sum));
+-    memset(count, 0, sizeof (count));
++    memset(sum, 0, 4 * sizeof(unsigned));
++    memset(count, 0, 4 * sizeof(unsigned));
+     for (ri = 0; ri < scale; ++ri) {
+ 	ibase = hh->raw.image + ((row * scale + ri) / 2) * hh->raw.width;
+ 	for (ci = 0; ci < scale; ++ci) {
+@@ -408,7 +412,7 @@
+     DCRaw *d = (DCRaw *)hh->dcraw;
+     int h, w, fujiWidth, r, c, ri, recombine, pixels, f4;
+     dcraw_image_type *ibase, *obase;
+-    unsigned fseq[scale];
++    unsigned *fseq;
+     unsigned short *pixp;
+ 
+     g_free(d->messageBuffer);
+@@ -435,6 +439,7 @@
+ #pragma omp parallel for schedule(static) private(r,ri,fseq,c,pixp)
+ #endif
+ 	for (r = 0; r < h; ++r) {
++	    fseq = (unsigned*) malloc(scale * sizeof(unsigned));
+ 	    for (ri = 0; ri < scale; ++ri)
+ 		fseq[ri] = fc_sequence(f4, r + ri);
+ 	    for (c = 0; c < w; ++c) {
+@@ -443,6 +448,7 @@
+ 		if (recombine)
+ 		    pixp[1] = (pixp[1] + pixp[3]) / 2;
+ 	    }
++	    free(fseq);
+ 	}
+     } else {
+ 	if (hh->filters!=0) scale /= 2;
+diff -ur ufraw-0.17.old/dcraw_indi.c ufraw-0.17/dcraw_indi.c
+--- ufraw-0.17.old/dcraw_indi.c	Tue Mar  2 15:42:19 2010
++++ ufraw-0.17/dcraw_indi.c	Fri Apr 30 20:29:08 2010
+@@ -144,7 +144,7 @@
+ #ifdef _OPENMP
+ #pragma omp parallel for				\
+   default(none)						\
+-  shared(nc,image,size)					\
++  shared(nc,image,size,noise)					\
+   private(c,i,hpass,lev,lpass,row,col,thold,fimg,temp)
+ #endif
+   FORC(nc) {			/* denoise R,G1,B,G3 individually */
+diff -ur ufraw-0.17.old/ufobject.cc ufraw-0.17/ufobject.cc
+--- ufraw-0.17.old/ufobject.cc	Wed Mar  3 22:30:32 2010
++++ ufraw-0.17/ufobject.cc	Fri Apr 30 15:29:21 2010
+@@ -190,7 +190,7 @@
+ 	AccuracyDigits(std::max(accuracyDigits < 0 ?
+ 	    3 - (int)floor(log(Maximum - Minimum) / log(10.0)) :
+ 	    accuracyDigits, 0)),
+-	Accuracy(pow(10, -AccuracyDigits)),
++	Accuracy(pow(10.0, -AccuracyDigits)),
+ 	Step(step == 0.0 ? Accuracy * 10.0 : step),
+ 	Jump(jump == 0.0 ? Step * 10.0 : jump) { }
+ };
+@@ -542,7 +542,7 @@
+ 
+ class _UFNameCompare {
+ public:
+-    bool operator()(char const *a, char const *b) {
++    bool operator()(char const *a, char const *b) const {
+ 	return strcmp(a, b) < 0;
+     }
+ };
+diff -ur ufraw-0.17.old/ufraw_lensfun.cc ufraw-0.17/ufraw_lensfun.cc
+--- ufraw-0.17.old/ufraw_lensfun.cc	Wed Mar 31 18:42:05 2010
++++ ufraw-0.17/ufraw_lensfun.cc	Fri Apr 30 15:29:21 2010
+@@ -149,9 +149,9 @@
+     int precision;
+     if (number > 10.0 && (int)(10*number)%10 != 0)
+ 	// Support non-integer focal lengths longer than 10mm.
+-	precision = MAX(-floor(log(number) / log(10) - 1.99), 0);
++	precision = MAX(-floor(log(number) / log(10.0) - 1.99), 0);
+     else if (number > 0.0)
+-	precision = MAX(-floor(log(number) / log(10) - 0.99), 0);
++	precision = MAX(-floor(log(number) / log(10.0) - 0.99), 0);
+     else
+ 	precision = 0;
+     snprintf(buffer, _buffer_size, "%.*f", precision, number);
+@@ -256,7 +256,7 @@
+ 	double value = 0.25;
+ 	while (value < 1001) {
+ 	    *this << new UFString(ufPreset, _StringNumber(buffer, value));
+-	    value *= sqrt(2);
++	    value *= sqrt(2.0);
+ 	    if (value > 127 && value < 129) value = 125;
+ 	}
+     }

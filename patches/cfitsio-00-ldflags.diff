@@ -1,0 +1,49 @@
+--- configure.in.old	Fri Apr 23 21:53:29 2010
++++ configure.in	Fri Apr 23 21:54:03 2010
+@@ -311,6 +311,7 @@
+ 
+ AC_SUBST(ARCH)dnl
+ AC_SUBST(CFLAGS)dnl
++AC_SUBST(LDFLAGS)dnl
+ AC_SUBST(CC)dnl
+ AC_SUBST(FC)dnl
+ AC_SUBST(LIBPRE)dnl
+--- Makefile.in.old	Fri Apr 23 22:03:00 2010
++++ Makefile.in	Fri Apr 23 22:20:32 2010
+@@ -22,7 +22,7 @@
+ exec_prefix	= @exec_prefix@
+ DESTDIR		= 
+ CFITSIO_PREFIX	= $(prefix)
+-CFITSIO_LIB	= $(DESTDIR)$(exec_prefix)/lib
++CFITSIO_LIB	= $(DESTDIR)@libdir@
+ CFITSIO_INCLUDE	= $(DESTDIR)$(prefix)/include
+ INSTALL_DIRS	= $(DESTDIR)@INSTALL_ROOT@ ${CFITSIO_LIB} ${CFITSIO_LIB}/pkgconfig ${CFITSIO_INCLUDE}
+ 
+@@ -32,7 +32,7 @@
+ CC =		@CC@
+ CFLAGS =	@CFLAGS@
+ FC =		@FC@
+-LDFLAGS =	$(CFLAGS)
++LDFLAGS =	@LDFLAGS@
+ DEFS =		@DEFS@
+ LIBS =		@LIBS@
+ FLEX =		flex
+@@ -88,7 +88,7 @@
+ shared: libcfitsio${SHLIB_SUFFIX}
+ 
+ libcfitsio${SHLIB_SUFFIX}: ${OBJECTS}
+-		${SHLIB_LD} ${LDFLAGS} -o $@ ${OBJECTS}
++		${SHLIB_LD} ${LDFLAGS} -o $@ ${OBJECTS} -lc -lm -lsocket
+ 
+ install:	libcfitsio.a $(INSTALL_DIRS)
+ 		@if [ -f libcfitsio.a ]; then \
+--- cfitsio.pc.in.old	Fri Apr 23 22:28:08 2010
++++ cfitsio.pc.in	Fri Apr 23 22:29:00 2010
+@@ -1,6 +1,5 @@
+ prefix=@prefix@
+-exec_prefix=@exec_prefix@
+-libdir=${exec_prefix}/lib
++libdir=@libdir@
+ includedir=${prefix}/include
+ 
+ Name: cfitsio

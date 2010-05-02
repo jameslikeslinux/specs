@@ -1,0 +1,11 @@
+--- src/gtkiimagetool.c.old	Thu Apr 29 12:50:47 2010
++++ src/gtkiimagetool.c	Thu Apr 29 12:51:29 2010
+@@ -169,7 +169,7 @@
+                              GdkDrawable       *drawable)
+ {
+     GtkIImageToolClass *klass = GTK_IIMAGE_TOOL_GET_CLASS (tool);
+-    return klass->paint_image (tool, opts, drawable);
++    klass->paint_image (tool, opts, drawable);
+ }
+ 
+ /*************************************************************/

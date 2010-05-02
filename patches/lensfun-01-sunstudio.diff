@@ -1,0 +1,61 @@
+--- include/lensfun/lensfun.h.old	Wed Apr 28 17:05:30 2010
++++ include/lensfun/lensfun.h	Wed Apr 28 17:05:54 2010
+@@ -1895,7 +1895,7 @@
+     /* Prevent user from creating and destroying such objects */
+     lfModifier () {}
+     ~lfModifier () {}
+-#elif defined _MSC_VER
++#elif defined _MSC_VER || defined __SUNPRO_C
+     /* Sucks, like always */
+     void *dummy;
+ #endif
+--- ../lensfun-0.2.5.old/libs/lensfun/cpuid.cpp	Tue Mar 23 19:57:29 2010
++++ libs/lensfun/cpuid.cpp	Wed Apr 28 18:18:30 2010
+@@ -7,6 +7,10 @@
+ #include "lensfun.h"
+ #include "lensfunprv.h"
+ 
++#if defined (__SUNPRO_CC) && defined(__i386)
++#  define __i386__
++#endif
++
+ #if defined (__i386__) || defined (__x86_64__)
+ 
+ #if defined (__i386__)
+@@ -32,10 +36,10 @@
+        : "=a" (ax), "=c" (cx),  "=d" (dx) \
+        : "0" (cmd))
+ 
+-    register __SIZE_TYPE__ ax asm (R_AX);
+-    register __SIZE_TYPE__ bx asm (R_BX);
+-    register __SIZE_TYPE__ dx asm (R_DX);
+-    register __SIZE_TYPE__ cx asm (R_CX);
++    size_t ax;
++    size_t bx;
++    size_t dx;
++    size_t cx;
+     static GStaticMutex lock = G_STATIC_MUTEX_INIT;
+     static guint cpuflags = -1;
+ 
+--- ../lensfun-0.2.5.old/libs/lensfun/mod-color-sse2.cpp	Tue Mar 30 15:26:58 2010
++++ libs/lensfun/mod-color-sse2.cpp	Wed Apr 28 18:22:17 2010
+@@ -232,7 +232,7 @@
+             &pixels [loop_count * 4], comp_role, count);
+ }
+ 
+-typedef __SIZE_TYPE__ uintptr_t;
++typedef size_t uintptr_t;
+ 
+ void lfExtModifier::ModifyColor_DeVignetting_PA_Select (
+     void *data, float x, float y, lf_u16 *pixels, int comp_role, int count)
+--- ../lensfun-0.2.5.old/libs/lensfun/mod-coord-sse.cpp	Tue Mar 30 15:27:06 2010
++++ libs/lensfun/mod-coord-sse.cpp	Wed Apr 28 18:22:12 2010
+@@ -79,7 +79,7 @@
+     ModifyCoord_Dist_PTLens (data, &iocoord [loop_count * 2], remain);
+ }
+ 
+-typedef __SIZE_TYPE__ uintptr_t;
++typedef size_t uintptr_t;
+ 
+ void lfExtModifier::ModifyCoord_UnDist_PTLens_SSE (void *data, float *iocoord, int count)
+ {
