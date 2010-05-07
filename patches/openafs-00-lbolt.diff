@@ -1,0 +1,53 @@
+--- src/afs/SOLARIS/osi_sleep.c.old	Wed May  5 15:57:28 2010
++++ src/afs/SOLARIS/osi_sleep.c	Wed May  5 15:57:48 2010
+@@ -176,7 +176,7 @@
+     clock_t ticks;
+ 
+     ticks = (ams * afs_hz) / 1000;
+-    ticks = ticks + lbolt;
++    ticks = ticks + ddi_get_lbolt();
+ 
+     evp = afs_getevent(event);
+ 
+--- src/afs/afs_pioctl.c.old	Wed May  5 16:16:40 2010
++++ src/afs/afs_pioctl.c	Thu May  6 22:24:26 2010
+@@ -3397,6 +3397,9 @@
+     struct AFS_UCRED *newcred;
+     struct unixuser *au;
+     afs_uint32 comp = *com & 0xff00;
++#if defined(AFS_SUN510_ENV)
++    gid_t gids[2];
++#endif
+ 
+ #if defined(AFS_SGIMP_ENV)
+     osi_Assert(ISAFS_GLOCK());
+@@ -3468,6 +3471,10 @@
+ #ifdef AFS_AIX51_ENV
+     newcred->cr_groupset.gs_union.un_groups[0] = g0;
+     newcred->cr_groupset.gs_union.un_groups[1] = g1;
++#elif defined(AFS_SUN510_ENV)
++    gids[0] = g0;
++    gids[1] = g1;
++    crsetgroups(newcred, 2, gids);
+ #else
+     newcred->cr_groups[0] = g0;
+     newcred->cr_groups[1] = g1;
+@@ -3474,14 +3481,14 @@
+ #endif
+ #ifdef AFS_AIX_ENV
+     newcred->cr_ngrps = 2;
+-#else
+-#if defined(AFS_SGI_ENV) || defined(AFS_SUN5_ENV)
++#elif !defined(AFS_LINUX26_ENV) && !defined(AFS_SUN510_ENV)
++# if defined(AFS_SGI_ENV) || defined(AFS_SUN5_ENV)
+     newcred->cr_ngroups = 2;
+-#else
++# else
+     for (i = 2; i < NGROUPS; i++)
+ 	newcred->cr_groups[i] = NOGROUP;
++# endif
+ #endif
+-#endif
+ #if	!defined(AFS_OSF_ENV) 
+     afs_nfsclient_init();	/* before looking for exporter, ensure one exists */
+ #endif
