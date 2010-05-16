@@ -14,7 +14,7 @@
 %endif
 
 Name:		openafs
-Version:	1.4.12
+Version:	1.5.74
 Summary:	AFS Distributed Filesystem
 License:	IPL
 Distribution:   OpenSolaris
@@ -24,10 +24,11 @@ SUNW_BaseDir:   %{_basedir}
 SUNW_Copyright: %{name}.copyright
 
 Source0:	http://www.openafs.org/dl/openafs/%{version}/openafs-%{version}-src.tar.bz2
-Patch0:		openafs-00-lbolt.diff
 
 %include default-depend.inc
 BuildRequires:	SUNWggrp
+BuildRequires:	SUNWkrbu
+Requires:	SUNWkrbu
 
 Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):		OpenAFS <openafs-gatekeepers@openafs.org>
@@ -41,10 +42,9 @@ backup and administrative management.
 
 %prep
 %setup -q
-%patch0
 
 %build
-./configure --prefix=%{_prefix} --bindir=%{_bindir} --libdir=%{_libdir} --libexecdir=%{_libdir} --sbindir=%{_sbindir} --sysconfdir=%{_sysconfdir} --with-afs-sysname=%{sysname} --with-krb5-conf=/usr/bin/krb5-config --enable-namei-fileserver
+./configure --prefix=%{_prefix} --bindir=%{_bindir} --libdir=%{_libdir} --libexecdir=%{_libdir} --sbindir=%{_sbindir} --sysconfdir=%{_sysconfdir} --localstatedir=%{_localstatedir} --with-afs-sysname=%{sysname} --with-krb5-conf=/usr/bin/krb5-config --enable-namei-fileserver
 make
 
 %install
