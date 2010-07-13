@@ -10,7 +10,7 @@
 %include Solaris.inc
 
 Name:		cfengine3
-Version:	3.0.4
+Version:	3.0.5
 Summary:	Cfengine 3
 License:	GPLv3
 Distribution:   OpenSolaris
@@ -91,14 +91,14 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,sys) %dir %{_datadir}
 %dir %{_mandir}
 %dir %{_mandir}/man8
-%{_mandir}/man8/cf-serverd.8
-%{_mandir}/man8/cf-promises.8
-%{_mandir}/man8/cf-report.8
-%{_mandir}/man8/cf-know.8
-%{_mandir}/man8/cf-key.8
 %{_mandir}/man8/cf-runagent.8
 %{_mandir}/man8/cf-monitord.8
+%{_mandir}/man8/cf-know.8
 %{_mandir}/man8/cf-execd.8
+%{_mandir}/man8/cf-report.8
+%{_mandir}/man8/cf-key.8
+%{_mandir}/man8/cf-promises.8
+%{_mandir}/man8/cf-serverd.8
 %{_mandir}/man8/cf-agent.8
 %attr(755,root,other) %dir %{_docdir}
 %{_docdir}/cfengine
@@ -106,6 +106,8 @@ rm -rf $RPM_BUILD_ROOT
 %class(manifest) %attr(444,root,sys) %{_localstatedir}/svc/manifest/application/cfengine3.xml
 
 %changelog
+* Thu Jun 17 2010 - jlee@thestaticvoid.com
+- Bump to version 3.0.5
 * Thu Feb 17 2010 - jlee@thestaticvoid.com
 - Bump to version 3.0.3
 * Wed Dec 16 2009 - jlee@thestaticvoid.com
