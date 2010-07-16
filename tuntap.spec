@@ -7,16 +7,6 @@
 # includes module(s):
 #
 
-#
-# Until pkgbuild supports generic actions,
-#
-#   driver name=tun
-#   driver name=tap
-#
-# must be added to ~/packages/PKGMAPS/manifests/tuntap.manifest
-# and ~/packages/PKGMAPS/scripts/tuntap_ips.sh called manually.
-#
-
 %include Solaris.inc
 
 %ifarch amd64 sparcv9
@@ -74,6 +64,12 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,bin)
 /usr/include
 
+%actions
+driver name=tun
+driver name=tap
+
 %changelog
+* Wed Jul 14 2010 - jlee@thestaticvoid.com
+- Add driver actions now that it is supported by pkgbuild.
 * Thu Jan 28 2010 - jlee@thestaticvoid.com
 - Initial version
