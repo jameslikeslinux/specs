@@ -1,0 +1,21 @@
+--- vpnc-script.old	Thu Jul 22 15:40:24 2010
++++ vpnc-script	Thu Jul 22 15:41:33 2010
+@@ -215,12 +215,16 @@
+ 	}
+ 
+ 	set_vpngateway_route() {
+-		route add -host "$VPNGATEWAY" $route_syntax_gw "`get_default_gw`"
++		if [ "$VPNGATEWAY" != "`get_default_gw`" ]; then
++			route add -host "$VPNGATEWAY" $route_syntax_gw "`get_default_gw`"
++		fi
+ 	}
+ 
+ 	del_vpngateway_route() {
+ 	        vpngw_route=`netstat -r -n | awk '/:/ { next; } /^(default|0\.0\.0\.0)/ { print $2; }'`
+-		route $route_syntax_del -host "$VPNGATEWAY" $route_syntax_gw "$vpngw_route"
++		if [ "$VPNGATEWAY" != "$vpngw_route" ]; then
++			route $route_syntax_del -host "$VPNGATEWAY" $route_syntax_gw "$vpngw_route"
++		fi
+ 	}
+ 
+ 	set_default_route() {

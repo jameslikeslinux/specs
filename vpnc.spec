@@ -22,15 +22,18 @@ SUNW_Copyright: %{name}.copyright
 Source0:	http://www.unix-ag.uni-kl.de/~massar/vpnc/vpnc-%{version}.tar.gz
 Source1:	http://git.infradead.org/users/dwmw2/vpnc-scripts.git/blob_plain/HEAD:/vpnc-script
 Patch0:		vpnc-00-openlog.diff
+Patch1:		vpnc-01-sysdep.diff
+Patch2:		vpnc-02-vpnc-script.diff
 
 %include default-depend.inc
 BuildRequires:	SUNWgcc
 BuildRequires:	SUNWgmake
 BuildRequires:	SUNWgnu-coreutils
 BuildRequires:	SUNWopenssl-include
-BuildRequires:	libgcrypt-devel
+BuildRequires:	SUNWlibgcrypt-devel
+BuildRequires:	tuntap
 Requires:	SUNWopenssl-libraries
-Requires:	libgcrypt
+Requires:	SUNWlibgcrypt
 Requires:	tuntap
 
 Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
@@ -51,6 +54,10 @@ group settings.
 %prep
 %setup -q
 %patch0
+%patch1
+
+cp %{SOURCE1} vpnc-script
+%patch2
 
 # Compile with OpenSSL support for handling certificates
 # and force using ginstall instead of install
@@ -66,7 +73,7 @@ gmake PREFIX=%{_prefix} DESTDIR=$RPM_BUILD_ROOT ginstall
 
 # Install a vpnc-script which supports Solaris
 # from http://www.infradead.org/openconnect.html
-cp %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/vpnc/vpnc-script
+cp vpnc-script $RPM_BUILD_ROOT%{_sysconfdir}/vpnc/vpnc-script
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -89,5 +96,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/vpnc/vpnc-script
 
 %changelog
+* Thu Jul 22 2010 - jlee@thestaticvoid.com
+- Add Kazuyoshi's changes to the tun_open and tun_close functions.
+- Don't add or remove a vpn gateway route if it's the same as the
+  default route.
 * Fri Jan 29 2010 - jlee@thestaticvoid.com
 - Initial version

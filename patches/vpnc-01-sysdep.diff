@@ -1,0 +1,290 @@
+--- sysdep.c.old	2010-07-18 15:48:45.979535334 -0400
++++ sysdep.c	2010-07-23 15:13:43.771346889 -0400
+@@ -76,7 +76,8 @@
+ 
+ #if defined(__sun__)
+ extern char **environ;
+-static int ip_fd = -1, muxid;
++static int ip_fd = -1;
++static enum if_mode_enum mode;
+ #endif
+ 
+ #if defined(__CYGWIN__)
+@@ -96,12 +97,39 @@
+  * Stores dev name in the first arg(must be large enough).
+  */
+ #if defined(__sun__)
+-int tun_open(char *dev, enum if_mode_enum mode)
++int tun_open(char *dev, enum if_mode_enum devmode)
+ {
+-	int tun_fd, if_fd, ppa = -1;
+-	struct ifreq ifr;
++	int tun_fd, if_fd, ip_muxid, arp_muxid, arp_fd, ppa = -1;
++	struct lifreq ifr;
++	const char *ip_node, *arp_node, *dev_node;
++	const char *dev_tuntap_type;
++	int link_type;
++	int is_tun;
++	struct strioctl strioc_if, strioc_ppa;
+ 	char *ptr;
+ 
++	memset(&ifr, 0, sizeof(ifr));
++
++	mode = devmode;
++
++	if (mode == IF_MODE_TUN) {
++		ip_node = "/dev/udp";
++		dev_node = "/dev/tun";
++		dev_tuntap_type = "tun";
++		link_type = I_PLINK;
++		is_tun = 1;
++	} else if (mode == IF_MODE_TAP) {
++		ip_node = "/dev/udp";
++		dev_node = "/dev/tap";
++		arp_node = dev_node;
++		dev_tuntap_type = "tap";
++		link_type = I_PLINK;
++		is_tun = 0;
++	} else {
++		syslog(LOG_ERR, "Invalid device type");
++		return -1;
++	}
++
+ 	if (*dev) {
+ 		ptr = dev;
+ 		while (*ptr && !isdigit((int)*ptr))
+@@ -109,24 +137,28 @@
+ 		ppa = atoi(ptr);
+ 	}
+ 
+-	if ((ip_fd = open("/dev/ip", O_RDWR, 0)) < 0) {
+-		syslog(LOG_ERR, "Can't open /dev/ip");
++	if ((ip_fd = open(ip_node, O_RDWR, 0)) < 0) {
++		syslog(LOG_ERR, "Can't open %s", ip_node);
+ 		return -1;
+ 	}
+ 
+-	if ((tun_fd = open(((mode == IF_MODE_TUN) ? "/dev/tun" : "/dev/tap"), O_RDWR, 0)) < 0) {
+-		syslog(LOG_ERR, "Can't open /dev/tun");
++	if ((tun_fd = open(dev_node, O_RDWR, 0)) < 0) {
++		syslog(LOG_ERR, "Can't open %s", dev_node);
+ 		return -1;
+ 	}
+ 
+ 	/* Assign a new PPA and get its unit number. */
+-	if ((ppa = ioctl(tun_fd, TUNNEWPPA, ppa)) < 0) {
++	strioc_ppa.ic_cmd = TUNNEWPPA;
++	strioc_ppa.ic_timout = 0;
++	strioc_ppa.ic_len = sizeof(ppa);
++	strioc_ppa.ic_dp = (char *)&ppa;
++	if ((ppa = ioctl (tun_fd, I_STR, &strioc_ppa)) < 0) {
+ 		syslog(LOG_ERR, "Can't assign new interface");
+ 		return -1;
+ 	}
+ 
+-	if ((if_fd = open(((mode == IF_MODE_TUN) ? "/dev/tun" : "/dev/tap"), O_RDWR, 0)) < 0) {
+-		syslog(LOG_ERR, "Can't open /dev/tun (2)");
++	if ((if_fd = open(dev_node, O_RDWR, 0)) < 0) {
++		syslog(LOG_ERR, "Can't open %s (2)", dev_node);
+ 		return -1;
+ 	}
+ 	if (ioctl(if_fd, I_PUSH, "ip") < 0) {
+@@ -134,25 +166,100 @@
+ 		return -1;
+ 	}
+ 
+-	/* Assign ppa according to the unit number returned by tun device */
+-	if (ioctl(if_fd, IF_UNITSEL, (char *)&ppa) < 0 && errno != EEXIST) {
+-		syslog(LOG_ERR, "Can't set PPA %d", ppa);
+-		return -1;
++	if (mode == IF_MODE_TUN) {
++		/* Assign ppa according to the unit number returned by tun device */
++		if (ioctl(if_fd, IF_UNITSEL, (char *)&ppa) < 0) {
++			syslog(LOG_ERR, "Can't set PPA %d", ppa);
++			return -1;
++		}
+ 	}
+-	if ((muxid = ioctl(ip_fd, I_PLINK, if_fd)) < 0) {
+-		syslog(LOG_ERR, "Can't link TUN device to IP");
++
++	snprintf(dev, IFNAMSIZ, "%s%d", dev_tuntap_type, ppa);
++
++	if (mode == IF_MODE_TAP) {
++		if (ioctl(if_fd, SIOCGLIFFLAGS, &ifr) < 0) {
++			syslog(LOG_ERR, "Can't get flags");
++			return -1;
++		}
++
++		strcpy(ifr.lifr_name, dev);
++		ifr.lifr_ppa = ppa;
++
++		/* Assign ppa according to the unit number returned by tun device */
++		if (ioctl(if_fd, SIOCSLIFNAME, &ifr) < 0) {
++			syslog(LOG_ERR, "Can't set PPA %d", ppa);
++			return -1;
++		}
++
++		if (ioctl(if_fd, SIOCGLIFFLAGS, &ifr) <0) {
++			syslog(LOG_ERR, "Can't get flags");
++			return -1;
++		}
++
++		/* Push arp module to if_fd */
++		if (ioctl(if_fd, I_PUSH, "arp") < 0)
++			syslog(LOG_ERR, "Can't push ARP module");
++
++		/* Pop any modules on the stream */
++		while (1) {
++			if (ioctl(ip_fd, I_POP, NULL) < 0)
++				break;
++		}
++
++		/* Push arp module to ip_fd */
++		if (ioctl(ip_fd, I_PUSH, "arp") < 0) {
++			syslog(LOG_ERR, "Can't push ARP module");
++			return -1;
++		}
++
++		/* Open arp_fd */
++		if ((arp_fd = open(arp_node, O_RDWR, 0)) < 0) {
++			syslog(LOG_ERR, "Can't open %s", arp_node);
++			return -1;
++		}
++
++		if (ioctl(arp_fd, I_PUSH, "arp") < 0) {
++			syslog(LOG_ERR, "Can't push ARP module");
++			return -1;
++		}
++
++		/* Set ifname to arp */
++		strioc_if.ic_cmd = SIOCSLIFNAME;
++		strioc_if.ic_timout = 0;
++		strioc_if.ic_len = sizeof(ifr);
++		strioc_if.ic_dp = (char *)&ifr;
++		if (ioctl(arp_fd, I_STR, &strioc_if) < 0){
++			syslog(LOG_ERR, "Can't set ifname to arp");
++			return -1;
++		}
++
++	}
++
++	if ((ip_muxid = ioctl(ip_fd, link_type, if_fd)) < 0) {
++		syslog(LOG_ERR, "Can't link %s device to IP", dev_tuntap_type);
+ 		return -1;
+ 	}
+-	close(if_fd);
+ 
+-	snprintf(dev, IFNAMSIZ, "%s%d", ((mode == IF_MODE_TUN) ? "tun" : "tap"), ppa);
++	if (mode == IF_MODE_TAP) {
++		if ((arp_muxid = ioctl(ip_fd, link_type, arp_fd)) < 0) {
++			syslog(LOG_ERR, "Can't link %s device to ARP", dev_tuntap_type);
++			return -1;
++		}
++
++		close(arp_fd);
++	}
+ 
+ 	memset(&ifr, 0, sizeof(ifr));
+-	strcpy(ifr.ifr_name, dev);
+-	ifr.ifr_ip_muxid = muxid;
++	strcpy(ifr.lifr_name, dev);
++	ifr.lifr_ip_muxid = ip_muxid;
++	if (mode == IF_MODE_TAP)
++		ifr.lifr_arp_muxid = arp_muxid;
++
++	if (ioctl(ip_fd, SIOCSLIFMUXID, &ifr) < 0) {
++		if (mode == IF_MODE_TAP)
++			ioctl(ip_fd, I_PUNLINK, arp_muxid);
+ 
+-	if (ioctl(ip_fd, SIOCSIFMUXID, &ifr) < 0) {
+-		ioctl(ip_fd, I_PUNLINK, muxid);
++		ioctl(ip_fd, I_PUNLINK, ip_muxid);
+ 		syslog(LOG_ERR, "Can't set multiplexor id");
+ 		return -1;
+ 	}
+@@ -488,23 +595,43 @@
+ #if defined(__sun__)
+ int tun_close(int fd, char *dev)
+ {
+-	struct ifreq ifr;
++	struct lifreq ifr;
+ 
+-	memset(&ifr, 0, sizeof(ifr));
+-	strcpy(ifr.ifr_name, dev);
+-	if (ioctl(ip_fd, SIOCGIFFLAGS, &ifr) < 0) {
+-		syslog(LOG_ERR, "Can't get iface flags");
+-		return 0;
++	if (ip_fd >= 0) {
++		memset(&ifr, 0, sizeof(ifr));
++		strcpy(ifr.lifr_name, dev);
++
++		if (ioctl(ip_fd, SIOCGLIFFLAGS, &ifr) < 0) {
++			syslog(LOG_ERR, "Can't get iface flags");
++			return 0;
++		}
++
++		if (ioctl(ip_fd, SIOCGLIFMUXID, &ifr) < 0) {
++			syslog(LOG_ERR, "Can't get multiplexor id");
++			return 0;
++		}
++
++		if (mode == IF_MODE_TAP) {
++			if (ioctl(ip_fd, I_PUNLINK, ifr.lifr_arp_muxid) < 0) {
++				syslog(LOG_ERR, "Can't unlink interface(arp)");
++				return 0;
++			}
++		}
++
++		if (ioctl(ip_fd, I_PUNLINK, ifr.lifr_ip_muxid) < 0) {
++			syslog(LOG_ERR, "Can't unlink interface(ip)");
++			return 0;
++		}
++
++		close(ip_fd);
++		ip_fd = -1;
+ 	}
+ 
+-	if (ioctl(ip_fd, I_PUNLINK, muxid) < 0) {
+-		syslog(LOG_ERR, "Can't unlink interface");
+-		return 0;
++	if (fd >= 0) {
++		close(fd);
++		fd = -1;
+ 	}
+ 
+-	close(ip_fd);
+-	ip_fd = -1;
+-	close(fd);
+ 	return 0;
+ }
+ #elif defined(__CYGWIN__)
+@@ -666,7 +793,14 @@
+ 	}
+ 	
+ 	return 0;
+-#elif defined(SIOCGIFHWADDR)
++#elif defined(SIOCGIFHWADDR) || defined(__sun__)
++#if defined(__sun__)
++#define HWADDRIOCNUM SIOCGIFADDR
++#define IFR_ADDR_DATA &ifr.ifr_addr.sa_data
++#else
++#define HWADDRIOCNUM SIOCGIFHWADDR
++#define IFR_ADDR_DATA &ifr.ifr_hwaddr.sa_data
++#endif
+ 	struct ifreq ifr;
+ 	
+ 	/* Use a new socket fd! */
+@@ -677,11 +811,11 @@
+ 	memset(&ifr, 0, sizeof(struct ifreq));
+ 	strncpy(ifr.ifr_name, dev, IFNAMSIZ);
+ 	
+-	if (ioctl(fd, SIOCGIFHWADDR, &ifr) < 0) {
++	if (ioctl(fd, HWADDRIOCNUM, &ifr) < 0) {
+ 		return -1;
+ 	}
+ 	
+-	memcpy(hwaddr, &ifr.ifr_hwaddr.sa_data, ETH_ALEN);
++	memcpy(hwaddr, IFR_ADDR_DATA, ETH_ALEN);
+ 	
+ 	return 0;
+ #else
