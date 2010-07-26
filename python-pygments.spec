@@ -12,7 +12,7 @@
 %define python_version 2.4
 
 Name:		python-pygments
-Version:	1.0
+Version:	1.3.1
 Summary:	Pygments is a syntax highlighting package written in Python
 License:	BSD
 Distribution:   OpenSolaris
@@ -67,6 +67,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/python%{python_version}/vendor-packages
 
 %changelog
+* Fri Jul 23 2010 - jlee@thestaticvoid.com
+- Bump to version 1.3.1
 * Sun May 31 2009 - jlee@thestaticvoid.com
 - Add header
 * Sun May 31 2009 - jlee@thestaticvoid.com

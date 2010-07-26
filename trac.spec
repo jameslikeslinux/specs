@@ -12,7 +12,7 @@
 %define python_version 2.4
 
 Name:           trac
-Version:        0.11.4
+Version:        0.12
 Summary:        Trac Integrated SCM & Project Management
 License:        BSD
 Distribution:   OpenSolaris
@@ -90,6 +90,8 @@ rm -rf $RPM_BUILD_ROOT
 %class(manifest) %attr(444,root,sys) %{_localstatedir}/svc/manifest/network/tracd.xml
 
 %changelog
+* Fri Jul 23 2010 - jlee@thestaticvoid.com
+- Bump to version 0.12
 * Sun May 31 2009 - jlee@thestaticvoid.com
 - Add header
 * Sun May 31 2009 - jlee@thestaticvoid.com
