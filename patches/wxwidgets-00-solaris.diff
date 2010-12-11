@@ -1,0 +1,71 @@
+diff -ur wxWidgets-2.9.1.old/include/wx/event.h wxWidgets-2.9.1/include/wx/event.h
+--- wxWidgets-2.9.1.old/include/wx/event.h	Sun Jul 18 09:39:20 2010
++++ wxWidgets-2.9.1/include/wx/event.h	Sat Oct 16 00:58:25 2010
+@@ -215,13 +215,8 @@
+         : m_handler( handler ), m_method( method )
+         { }
+ 
+-    virtual void operator()(wxEvtHandler *handler, wxEvent& event)
+-    {
+-        wxEvtHandler * const realHandler = m_handler ? m_handler : handler;
++    virtual void operator()(wxEvtHandler *handler, wxEvent& event);
+ 
+-        (realHandler->*m_method)(event);
+-    }
+-
+     virtual bool IsMatching(const wxEventFunctor& functor) const
+     {
+         if ( wxTypeId(functor) == wxTypeId(*this) )
+@@ -3339,6 +3334,13 @@
+ 
+ WX_DEFINE_ARRAY_WITH_DECL_PTR(wxEvtHandler *, wxEvtHandlerArray, class WXDLLIMPEXP_BASE);
+ 
++inline void wxObjectEventFunctor::operator()(wxEvtHandler *handler, wxEvent& event)
++{
++    wxEvtHandler * const realHandler = m_handler ? m_handler : handler;
++
++    (realHandler->*m_method)(event);
++}
++
+ // ----------------------------------------------------------------------------
+ // wxEventConnectionRef represents all connections between two event handlers
+ // and enables automatic disconnect when an event handler sink goes out of
+diff -ur wxWidgets-2.9.1.old/include/wx/unix/private/sockunix.h wxWidgets-2.9.1/include/wx/unix/private/sockunix.h
+--- wxWidgets-2.9.1.old/include/wx/unix/private/sockunix.h	Sun Jul 18 09:39:20 2010
++++ wxWidgets-2.9.1/include/wx/unix/private/sockunix.h	Sat Oct 16 00:58:48 2010
+@@ -14,6 +14,11 @@
+ 
+ #include <unistd.h>
+ #include <sys/ioctl.h>
++
++#ifdef __sun
++#include <sys/filio.h>
++#endif
++
+ #include "wx/private/fdiomanager.h"
+ 
+ class wxSocketImplUnix : public wxSocketImpl,
+diff -ur wxWidgets-2.9.1.old/src/common/fldlgcmn.cpp wxWidgets-2.9.1/src/common/fldlgcmn.cpp
+--- wxWidgets-2.9.1.old/src/common/fldlgcmn.cpp	Sun Jul 18 09:39:20 2010
++++ wxWidgets-2.9.1/src/common/fldlgcmn.cpp	Sat Oct 16 00:59:00 2010
+@@ -186,7 +186,7 @@
+     wxString ext;
+     wxFileName::SplitPath(path, &m_dir, &m_fileName, &ext);
+     if ( !ext.empty() )
+-        m_fileName << _T('.') << ext;
++        m_fileName << wxT('.') << ext;
+     m_path = path;
+ }
+ 
+diff -ur wxWidgets-2.9.1.old/src/gtk/textctrl.cpp wxWidgets-2.9.1/src/gtk/textctrl.cpp
+--- wxWidgets-2.9.1.old/src/gtk/textctrl.cpp	Sun Jul 18 09:39:20 2010
++++ wxWidgets-2.9.1/src/gtk/textctrl.cpp	Sat Oct 16 00:59:17 2010
+@@ -1692,7 +1692,7 @@
+     gint l = gtk_text_buffer_get_char_count( m_buffer );
+ 
+     wxCHECK_MSG( position >= 0 && position <= l, false,
+-                 _T("invalid range in wxTextCtrl::GetStyle") );
++                 wxT("invalid range in wxTextCtrl::GetStyle") );
+ 
+     GtkTextIter positioni;
+     gtk_text_buffer_get_iter_at_offset(m_buffer, &positioni, position);
