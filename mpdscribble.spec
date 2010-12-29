@@ -33,8 +33,10 @@ BuildRequires:	SUNWbtool
 BuildRequires:	SUNWgnome-common-devel
 BuildRequires:	SUNWgnome-base-libs-devel
 BuildRequires:	SUNWcurl
+BuildRequires:	libmpdclient-devel
 Requires:	SUNWgnome-base-libs
 Requires:	SUNWcurl
+Requires:	libmpdclient
 
 Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):		Max Kellermann <max@duempel.org>
@@ -84,6 +86,10 @@ cp %{SOURCE0} $RPM_BUILD_ROOT%{_localstatedir}/svc/manifest/application/mpdscrib
 %iclass manifest -f i.manifest
 %endif
 
+%actions
+group groupname="mpdscribble"
+user username="mpdscribble" group="mpdscribble" gcos-field="mpdscribble User"
+
 %files
 %defattr(-,root,bin)
 %ifarch amd64 sparcv9
@@ -101,15 +107,18 @@ cp %{SOURCE0} $RPM_BUILD_ROOT%{_localstatedir}/svc/manifest/application/mpdscrib
 %{_mandir}/man1/mpdscribble.1
 %defattr(-,root,sys)
 %dir %{_sysconfdir}
-%attr(640,root,nobody) %config %{_sysconfdir}/mpdscribble.conf
+%attr(600,mpdscribble,mpdscribble) %config %{_sysconfdir}/mpdscribble.conf
 %dir %{_localstatedir}
 %attr(755,root,root) %dir %{_localstatedir}/cache
-%attr(700,nobody,nobody) %dir %{_localstatedir}/cache/mpdscribble
+%attr(700,mpdscribble,mpdscribble) %dir %{_localstatedir}/cache/mpdscribble
 %dir %{_localstatedir}/svc
 %dir %{_localstatedir}/svc/manifest
 %dir %{_localstatedir}/svc/manifest/application
 %class(manifest) %attr(444,root,sys) %{_localstatedir}/svc/manifest/application/mpdscribble.xml
 
 %changelog
+* Tue Dec 28 2010 - jlee@thestaticvoid.com
+- Bump to 0.20
+- Create mpdscribble user
 * Sun Nov 29 2009 - jlee@thestaticvoid.com
 - Initial version
