@@ -10,7 +10,7 @@
 %include Solaris.inc
 
 Name:		argyll
-Version:	1.1.1
+Version:	1.3.2
 Summary:	Argyll Color Management System
 License:	AGPLv3
 Distribution:   OpenSolaris
@@ -25,14 +25,22 @@ Patch0:		argyll-00-solaris.diff
 %include default-depend.inc
 BuildRequires:	SUNWunzip
 BuildRequires:	ftjam
+BuildRequires:	SUNWxwinc
 BuildRequires:	SUNWxwplt
+BuildRequires:	SUNWxorg-headers
 BuildRequires:	SUNWxorg-clientlibs
 BuildRequires:	SUNWlibusb
+BuildRequires:  SUNWusbu
 BuildRequires:	SUNWTiff-devel
 Requires:	SUNWxwplt
 Requires:	SUNWxorg-clientlibs
 Requires:	SUNWlibusb
 Requires:	SUNWTiff
+
+# This package doesn't actually require gcc, and I used to build it with
+# Sun Studio, but I'm getting a weird '_mcount' undefined reference that
+# I don't feel like fighting with.
+BuildRequires:  SUNWgcc432
 
 Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):		Graeme Gill <graeme@argyllcms.com>
@@ -50,7 +58,7 @@ printers.
 %patch0 -p1
 
 %build
-jam -f Jambase
+CC="gcc-4.3.2" jam -f Jambase
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -72,6 +80,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/applycal
 %{_bindir}/average
 %{_bindir}/cb2ti3
+%{_bindir}/ccmxmake
 %{_bindir}/cctiff
 %{_bindir}/chartread
 %{_bindir}/collink
@@ -87,6 +96,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/iccdump
 %{_bindir}/iccgamut
 %{_bindir}/icclu
+%{_bindir}/illumread
 %{_bindir}/invprofcheck
 %{_bindir}/kodak2ti3
 %{_bindir}/mppcheck

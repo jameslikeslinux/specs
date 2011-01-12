@@ -1,29 +1,39 @@
-diff -ur Argyll_V1.1.1.old/Jamfile Argyll_V1.1.1/Jamfile
---- Argyll_V1.1.1.old/Jamfile	Sat Feb 20 22:28:50 2010
-+++ Argyll_V1.1.1/Jamfile	Fri Apr 23 00:40:20 2010
-@@ -42,7 +42,3 @@
- 	SubInclude jcnf ;
- 	SubInclude ucmm ;
+diff -ur Argyll_V1.3.2.old/Jamfile Argyll_V1.3.2/Jamfile
+--- Argyll_V1.3.2.old/Jamfile	2010-11-03 05:18:04.000000000 -0400
++++ Argyll_V1.3.2/Jamfile	2011-01-03 17:37:41.644817066 -0500
+@@ -35,17 +35,6 @@
+ 	SubInclude tiff ;
  }
--if $(UNIX) {
--	SubInclude libusb ;
+ 
+-if $(USE_LIBUSB1) = true {
+-	SubInclude libusb1 ;
+-} else {
+-	if $(NT) {
+-		SubInclude libusbw ;
+-	}
+-	if $(UNIX) {
+-		SubInclude libusb ;
+-	}
 -}
 -
-diff -ur Argyll_V1.1.1.old/Jamtop Argyll_V1.1.1/Jamtop
---- Argyll_V1.1.1.old/Jamtop	Sat Feb 20 22:28:50 2010
-+++ Argyll_V1.1.1/Jamtop	Fri Apr 23 00:40:20 2010
-@@ -29,7 +29,7 @@
+ if $(UNIX) && $(OS) != MACOSX {
+ 	SubInclude jcnf ;
+ 	SubInclude ucmm ;
+diff -ur Argyll_V1.3.2.old/Jamtop Argyll_V1.3.2/Jamtop
+--- Argyll_V1.3.2.old/Jamtop	2010-11-03 05:18:04.000000000 -0400
++++ Argyll_V1.3.2/Jamtop	2011-01-03 17:36:29.072694056 -0500
+@@ -41,7 +41,7 @@
  		} else {
  			EXIT Unable to locate the X11 include files ;
  		}
--		LINKFLAGS += -L$(LibWinD) -ldl -lX11 -lXext -lXxf86vm -lXinerama -lXrandr -lXau -lXdmcp -lXss ;
-+		LINKFLAGS += -L$(LibWinD) -ldl -lX11 -lXext -lXxf86vm -lXinerama -lXrandr -lXau -lXdmcp -lXss -lusb ;
+-		LINKFLAGS += -L$(LibWinD) -ldl -lrt -lX11 -lXext -lXxf86vm -lXinerama -lXrandr -lXau -lXdmcp -lXss ;
++		LINKFLAGS += -L$(LibWinD) -ldl -lrt -lX11 -lXext -lXxf86vm -lXinerama -lXrandr -lXau -lXdmcp -lXss -lusb ;
  		# HDRS += $(LibWinH) ; 
  	}
  }
-diff -ur Argyll_V1.1.1.old/jcnf/jcnf.c Argyll_V1.1.1/jcnf/jcnf.c
---- Argyll_V1.1.1.old/jcnf/jcnf.c	Sat Feb 20 22:29:34 2010
-+++ Argyll_V1.1.1/jcnf/jcnf.c	Fri Apr 23 00:41:36 2010
+diff -ur Argyll_V1.3.2.old/jcnf/jcnf.c Argyll_V1.3.2/jcnf/jcnf.c
+--- Argyll_V1.3.2.old/jcnf/jcnf.c	2010-11-03 05:19:31.000000000 -0400
++++ Argyll_V1.3.2/jcnf/jcnf.c	2011-01-12 16:30:59.370109716 -0500
 @@ -726,18 +726,22 @@
  static jc_error jcnf_lock_file(jcnf *p) {
  #ifndef NT
@@ -51,9 +61,9 @@ diff -ur Argyll_V1.1.1.old/jcnf/jcnf.c Argyll_V1.1.1/jcnf/jcnf.c
  			break;
  		sleep(1);
  	}
-diff -ur Argyll_V1.1.1.old/jcnf/jcnf.h Argyll_V1.1.1/jcnf/jcnf.h
---- Argyll_V1.1.1.old/jcnf/jcnf.h	Sat Feb 20 22:29:34 2010
-+++ Argyll_V1.1.1/jcnf/jcnf.h	Fri Apr 23 00:40:20 2010
+diff -ur Argyll_V1.3.2.old/jcnf/jcnf.h Argyll_V1.3.2/jcnf/jcnf.h
+--- Argyll_V1.3.2.old/jcnf/jcnf.h	2010-11-03 05:19:31.000000000 -0400
++++ Argyll_V1.3.2/jcnf/jcnf.h	2011-01-03 17:42:04.787044048 -0500
 @@ -43,6 +43,10 @@
  
   */
@@ -65,9 +75,9 @@ diff -ur Argyll_V1.1.1.old/jcnf/jcnf.h Argyll_V1.1.1/jcnf/jcnf.h
  /* jcnf error codes */
  typedef enum {
  	jc_ok		    = 0,		/* No error */
-diff -ur Argyll_V1.1.1.old/numlib/numsup.c Argyll_V1.1.1/numlib/numsup.c
---- Argyll_V1.1.1.old/numlib/numsup.c	Sat Feb 20 22:28:51 2010
-+++ Argyll_V1.1.1/numlib/numsup.c	Fri Apr 23 00:40:20 2010
+diff -ur Argyll_V1.3.2.old/numlib/numsup.c Argyll_V1.3.2/numlib/numsup.c
+--- Argyll_V1.3.2.old/numlib/numsup.c	2010-11-03 05:18:05.000000000 -0400
++++ Argyll_V1.3.2/numlib/numsup.c	2011-01-03 17:42:21.878101167 -0500
 @@ -22,6 +22,7 @@
  #ifdef UNIX
  #include <unistd.h>
@@ -76,9 +86,9 @@ diff -ur Argyll_V1.1.1.old/numlib/numsup.c Argyll_V1.1.1/numlib/numsup.c
  #endif
  
  #include "numsup.h"
-diff -ur Argyll_V1.1.1.old/plot/Jamfile Argyll_V1.1.1/plot/Jamfile
---- Argyll_V1.1.1.old/plot/Jamfile	Sat Feb 20 22:29:15 2010
-+++ Argyll_V1.1.1/plot/Jamfile	Fri Apr 23 00:40:20 2010
+diff -ur Argyll_V1.3.2.old/plot/Jamfile Argyll_V1.3.2/plot/Jamfile
+--- Argyll_V1.3.2.old/plot/Jamfile	2010-11-03 05:18:57.000000000 -0400
++++ Argyll_V1.3.2/plot/Jamfile	2011-01-03 17:42:49.753243731 -0500
 @@ -5,6 +5,8 @@
  PREF_CCFLAGS	= $(CCDEBUGFLAG) ;		# Debugging flags
  PREF_LINKFLAGS	= $(LINKDEBUGFLAG) ;
@@ -86,100 +96,12 @@ diff -ur Argyll_V1.1.1.old/plot/Jamfile Argyll_V1.1.1/plot/Jamfile
 +LINKLIBS = ../numlib/libnum ;
 +
  # PLOT library
- Library libplot : plot.c : : : ../h ../numlib ;
+ Library libplot : plot.c : : : ../h ../numlib ../spectro ;
  if $(UNIX) && $(OS) != MACOSX {
-diff -ur Argyll_V1.1.1.old/ref/strange.cal Argyll_V1.1.1/ref/strange.cal
---- Argyll_V1.1.1.old/ref/strange.cal	Sat Feb 20 22:29:39 2010
-+++ Argyll_V1.1.1/ref/strange.cal	Fri Apr 23 00:40:20 2010
-@@ -2,7 +2,7 @@
- 
- DESCRIPTOR "Argyll Device Calibration Curves"
- ORIGINATOR "Argyll synthcal"
--CREATED "Sat Jan 16 23:01:10 2010"
-+CREATED "Thu Apr 22 21:49:05 2010"
- KEYWORD "DEVICE_CLASS"
- DEVICE_CLASS "DISPLAY"
- KEYWORD "COLOR_REP"
-@@ -17,26 +17,26 @@
- NUMBER_OF_SETS 256
- BEGIN_DATA
- 0.0000 0.0000 0.0000 0.0000 
--3.9216e-003 5.6752e-005 0.011879 0.018606 
--7.8431e-003 1.8439e-004 0.020682 0.030226 
--0.011765 3.6735e-004 0.028607 0.040147 
--0.015686 5.9908e-004 0.036009 0.049103 
--0.019608 8.7544e-004 0.043047 0.057404 
--0.023529 1.1935e-003 0.049807 0.065218 
--0.027451 1.5511e-003 0.056344 0.072650 
--0.031373 1.9464e-003 0.062696 0.079768 
--0.035294 2.3779e-003 0.068891 0.086623 
--0.039216 2.8443e-003 0.074949 0.093253 
--0.043137 3.3446e-003 0.080888 0.099687 
--0.047059 3.8778e-003 0.086719 0.10595 
--0.050980 4.4431e-003 0.092453 0.11205 
--0.054902 5.0396e-003 0.098100 0.11802 
--0.058824 5.6668e-003 0.10367 0.12386 
--0.062745 6.3239e-003 0.10916 0.12958 
--0.066667 7.0104e-003 0.11458 0.13520 
--0.070588 7.7258e-003 0.11995 0.14072 
--0.074510 8.4696e-003 0.12525 0.14615 
--0.078431 9.2413e-003 0.13049 0.15149 
-+3.9216e-03 5.6752e-05 0.011879 0.018606 
-+7.8431e-03 1.8439e-04 0.020682 0.030226 
-+0.011765 3.6735e-04 0.028607 0.040147 
-+0.015686 5.9908e-04 0.036009 0.049103 
-+0.019608 8.7544e-04 0.043047 0.057404 
-+0.023529 1.1935e-03 0.049807 0.065218 
-+0.027451 1.5511e-03 0.056344 0.072650 
-+0.031373 1.9464e-03 0.062696 0.079768 
-+0.035294 2.3779e-03 0.068891 0.086623 
-+0.039216 2.8443e-03 0.074949 0.093253 
-+0.043137 3.3446e-03 0.080888 0.099687 
-+0.047059 3.8778e-03 0.086719 0.10595 
-+0.050980 4.4431e-03 0.092453 0.11205 
-+0.054902 5.0396e-03 0.098100 0.11802 
-+0.058824 5.6668e-03 0.10367 0.12386 
-+0.062745 6.3239e-03 0.10916 0.12958 
-+0.066667 7.0104e-03 0.11458 0.13520 
-+0.070588 7.7258e-03 0.11995 0.14072 
-+0.074510 8.4696e-03 0.12525 0.14615 
-+0.078431 9.2413e-03 0.13049 0.15149 
- 0.082353 0.010040 0.13569 0.15675 
- 0.086275 0.010867 0.14083 0.16194 
- 0.090196 0.011720 0.14593 0.16706 
-diff -ur Argyll_V1.1.1.old/spectro/Jamfile Argyll_V1.1.1/spectro/Jamfile
---- Argyll_V1.1.1.old/spectro/Jamfile	Sat Feb 20 22:29:23 2010
-+++ Argyll_V1.1.1/spectro/Jamfile	Fri Apr 23 00:40:20 2010
-@@ -12,7 +12,6 @@
- if $(UNIX) {
- 	IOFILE = unixio.c ;
- 	CONVFILE = pollem.c ;
--	LIBUSB = ../libusb ;
- }
- 
- #Products
-@@ -36,7 +35,7 @@
- }
- 
- HDRS = ../h ../numlib ../icc ../cgats ../rspl ../xicc ../gamut ../spectro
--       ../plot $(LIBUSB) $(CMMHDRS) ;
-+       ../plot $(CMMHDRS) ;
- 
- # Instrument access library library
- Library libinst : inst.c insttypes.c dtp20.c dtp22.c dtp41.c dtp51.c dtp92.c i1disp.c i1pro.c i1pro_imp.c munki.c munki_imp.c ss.c ss_imp.c hcfr.c spyd2.c huey.c $(IOFILE) usbio.c hidio.c ;
-@@ -55,7 +54,7 @@
- # Support file
- #Object alphix : ../target/alphix.c ;
- 
--LINKLIBS = libinst $(LIBUSB)/libusb
-+LINKLIBS = libinst
-            ../xicc/libxcolorants ../xicc/libxicc
-            ../gamut/libgamut
-            ../rspl/librspl ../cgats/libcgats
-diff -ur Argyll_V1.1.1.old/spectro/hidio.c Argyll_V1.1.1/spectro/hidio.c
---- Argyll_V1.1.1.old/spectro/hidio.c	Sat Feb 20 22:29:25 2010
-+++ Argyll_V1.1.1/spectro/hidio.c	Fri Apr 23 00:40:20 2010
-@@ -54,6 +54,8 @@
+diff -ur Argyll_V1.3.2.old/spectro/hidio.c Argyll_V1.3.2/spectro/hidio.c
+--- Argyll_V1.3.2.old/spectro/hidio.c	2010-11-03 05:19:14.000000000 -0400
++++ Argyll_V1.3.2/spectro/hidio.c	2011-01-03 17:48:42.497006429 -0500
+@@ -58,6 +58,8 @@
  #if defined(__FreeBSD__) || defined(__FreeBSD_kernel__)
  #include <sys/types.h> 
  #include <usbhid.h> 
@@ -188,69 +110,53 @@ diff -ur Argyll_V1.1.1.old/spectro/hidio.c Argyll_V1.1.1/spectro/hidio.c
  #else	/* assume Linux */ 
  #include <asm/types.h>
  #include <linux/hiddev.h>
-diff -ur Argyll_V1.1.1.old/spectro/strange.cal Argyll_V1.1.1/spectro/strange.cal
---- Argyll_V1.1.1.old/spectro/strange.cal	Sat Feb 20 22:29:26 2010
-+++ Argyll_V1.1.1/spectro/strange.cal	Fri Apr 23 00:40:20 2010
-@@ -2,7 +2,7 @@
+diff -ur Argyll_V1.3.2.old/spectro/Jamfile Argyll_V1.3.2/spectro/Jamfile
+--- Argyll_V1.3.2.old/spectro/Jamfile	2010-11-03 05:19:11.000000000 -0400
++++ Argyll_V1.3.2/spectro/Jamfile	2011-01-03 17:46:40.355598830 -0500
+@@ -27,21 +27,6 @@
+ 	IOFILE = ntio.c ;
+ }
+ if $(UNIX) {
+-	if $(USE_LIBUSB1) = true {
+-		LIBUSBDIR = ../libusb1 ;
+-		LIBUSBHDRS = ../libusb1 ;
+-		if $(LIBUSB_IS_DLL) = true {
+-			LIBUSB = $(LIBUSB1NAME)$(SUFIMPLIB) ;
+-			LIBUSBSH = $(LIBUSB1NAME)$(SUFSHLIB) ;
+-		} else {
+-			LIBUSB = $(LIBUSB1NAME)$(SUFLIB) ;
+-		}
+-		DEFINES += USE_LIBUSB1 ;
+-	} else {
+-		LIBUSBDIR = ../libusb ;
+-		LIBUSBHDRS = ../libusb ;
+-		LIBUSB = libusb ;
+-	}
+ 	IOFILE = unixio.c ;
+ 	CONVFILE = pollem.c ;
+ }
+@@ -67,7 +52,7 @@
+ }
  
- DESCRIPTOR "Argyll Device Calibration Curves"
- ORIGINATOR "Argyll synthcal"
--CREATED "Thu Feb 18 15:22:43 2010"
-+CREATED "Thu Apr 22 21:49:05 2010"
- KEYWORD "DEVICE_CLASS"
- DEVICE_CLASS "DISPLAY"
- KEYWORD "COLOR_REP"
-@@ -17,26 +17,26 @@
- NUMBER_OF_SETS 256
- BEGIN_DATA
- 0.0000 0.0000 0.0000 0.0000 
--3.9216e-003 5.6752e-005 0.011879 0.018606 
--7.8431e-003 1.8439e-004 0.020682 0.030226 
--0.011765 3.6735e-004 0.028607 0.040147 
--0.015686 5.9908e-004 0.036009 0.049103 
--0.019608 8.7544e-004 0.043047 0.057404 
--0.023529 1.1935e-003 0.049807 0.065218 
--0.027451 1.5511e-003 0.056344 0.072650 
--0.031373 1.9464e-003 0.062696 0.079768 
--0.035294 2.3779e-003 0.068891 0.086623 
--0.039216 2.8443e-003 0.074949 0.093253 
--0.043137 3.3446e-003 0.080888 0.099687 
--0.047059 3.8778e-003 0.086719 0.10595 
--0.050980 4.4431e-003 0.092453 0.11205 
--0.054902 5.0396e-003 0.098100 0.11802 
--0.058824 5.6668e-003 0.10367 0.12386 
--0.062745 6.3239e-003 0.10916 0.12958 
--0.066667 7.0104e-003 0.11458 0.13520 
--0.070588 7.7258e-003 0.11995 0.14072 
--0.074510 8.4696e-003 0.12525 0.14615 
--0.078431 9.2413e-003 0.13049 0.15149 
-+3.9216e-03 5.6752e-05 0.011879 0.018606 
-+7.8431e-03 1.8439e-04 0.020682 0.030226 
-+0.011765 3.6735e-04 0.028607 0.040147 
-+0.015686 5.9908e-04 0.036009 0.049103 
-+0.019608 8.7544e-04 0.043047 0.057404 
-+0.023529 1.1935e-03 0.049807 0.065218 
-+0.027451 1.5511e-03 0.056344 0.072650 
-+0.031373 1.9464e-03 0.062696 0.079768 
-+0.035294 2.3779e-03 0.068891 0.086623 
-+0.039216 2.8443e-03 0.074949 0.093253 
-+0.043137 3.3446e-03 0.080888 0.099687 
-+0.047059 3.8778e-03 0.086719 0.10595 
-+0.050980 4.4431e-03 0.092453 0.11205 
-+0.054902 5.0396e-03 0.098100 0.11802 
-+0.058824 5.6668e-03 0.10367 0.12386 
-+0.062745 6.3239e-03 0.10916 0.12958 
-+0.066667 7.0104e-03 0.11458 0.13520 
-+0.070588 7.7258e-03 0.11995 0.14072 
-+0.074510 8.4696e-03 0.12525 0.14615 
-+0.078431 9.2413e-03 0.13049 0.15149 
- 0.082353 0.010040 0.13569 0.15675 
- 0.086275 0.010867 0.14083 0.16194 
- 0.090196 0.011720 0.14593 0.16706 
-diff -ur Argyll_V1.1.1.old/spectro/usbio.c Argyll_V1.1.1/spectro/usbio.c
---- Argyll_V1.1.1.old/spectro/usbio.c	Sat Feb 20 22:29:25 2010
-+++ Argyll_V1.1.1/spectro/usbio.c	Fri Apr 23 00:40:20 2010
-@@ -102,10 +102,6 @@
+ HDRS = ../h ../numlib ../icc ../cgats ../rspl ../xicc ../gamut ../spectro
+-       ../plot $(LIBUSBHDRS) $(CMMHDRS) ;
++       ../plot $(CMMHDRS) ;
+ 
+ # Instrument access library library
+ Library libinst : inst.c insttypes.c dtp20.c dtp22.c dtp41.c dtp51.c dtp92.c i1disp.c i1pro.c i1pro_imp.c munki.c munki_imp.c ss.c ss_imp.c hcfr.c spyd2.c huey.c $(IOFILE) usbio.c hidio.c ;
+@@ -98,8 +83,6 @@
+ 	File $(LIBUSBSH) : $(LIBUSBDIR)/$(LIBUSBSH) ;
+ 	# executable needs .so/.dll in same directory
+ 	NDepends $(Executables) : $(LIBUSBSH) ;
+-} else {
+-	LINKLIBS += $(LIBUSBDIR)/$(LIBUSB) ;
+ }
+ 
+ # General target reader program
+diff -ur Argyll_V1.3.2.old/spectro/usbio.c Argyll_V1.3.2/spectro/usbio.c
+--- Argyll_V1.3.2.old/spectro/usbio.c	2010-11-03 05:19:14.000000000 -0400
++++ Argyll_V1.3.2/spectro/usbio.c	2011-01-03 17:49:24.831257651 -0500
+@@ -178,10 +178,6 @@
  #ifdef ENABLE_USB
  	struct usb_bus *bus;
  
@@ -258,12 +164,12 @@ diff -ur Argyll_V1.1.1.old/spectro/usbio.c Argyll_V1.1.1/spectro/usbio.c
 -	if (usb_argyll_patched() < 2)
 -		error("usblib isn't up to date to work with this version of Argyll");
 -
- // ~~99
- //	if (p->debug)
- //		usb_set_debug(p->debug);
-diff -ur Argyll_V1.1.1.old/ucmm/ucmm.c Argyll_V1.1.1/ucmm/ucmm.c
---- Argyll_V1.1.1.old/ucmm/ucmm.c	Sat Feb 20 22:29:34 2010
-+++ Argyll_V1.1.1/ucmm/ucmm.c	Fri Apr 23 00:40:20 2010
+ 	if (p->debug > 8)
+ 		usb_set_debug(p->debug);
+ 
+diff -ur Argyll_V1.3.2.old/ucmm/ucmm.c Argyll_V1.3.2/ucmm/ucmm.c
+--- Argyll_V1.3.2.old/ucmm/ucmm.c	2010-11-03 05:19:30.000000000 -0400
++++ Argyll_V1.3.2/ucmm/ucmm.c	2011-01-03 17:49:52.389631267 -0500
 @@ -763,7 +763,7 @@
  				}
  				if ((pp = jc_get_nth_elem(key, 3)) == NULL)
