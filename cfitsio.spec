@@ -102,5 +102,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/drvrsmem.h
 
 %changelog
+* Wed Jan 12 2011 - jlee@thestaticvoid.com
+- Bump to verison 3.25
 * Fri Apr 23 2010 - jlee@thestaticvoid.com
 - Initial version

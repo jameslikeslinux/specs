@@ -8,8 +8,8 @@
 #
 
 Name:		cfitsio
-Version:	3.24
-Source0:	ftp://heasarc.gsfc.nasa.gov/software/fitsio/c/cfitsio3240.tar.gz
+Version:	3.25
+Source0:	ftp://heasarc.gsfc.nasa.gov/software/fitsio/c/cfitsio3250.tar.gz
 Patch0:		cfitsio-00-ldflags.diff
 
 %prep
