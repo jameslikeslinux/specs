@@ -22,7 +22,7 @@ SUNW_Copyright: %{name}.copyright
 Source0:	http://downloads.sourceforge.net/project/freetype/ftjam/%{version}/ftjam-%{version}.tar.bz2
 
 %include default-depend.inc
-BuildRequires:	SUNWgcc
+BuildRequires:	SUNWgcc432
 BuildRequires:	SUNWgmake
 
 Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
@@ -40,7 +40,7 @@ advanced features at will.
 
 %prep
 %setup -q
-CC=gcc ./configure --prefix=%{_prefix}
+CC=gcc-4.3.2 ./configure --prefix=%{_prefix}
 
 %build
 gmake
