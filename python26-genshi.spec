@@ -9,9 +9,9 @@
 
 %include Solaris.inc
 
-%define python_version 2.4
+%define python_version 2.6
 
-Name:		python-genshi
+Name:		python26-genshi
 Version:	0.6
 Summary:	Python toolkit for generation of output for the web
 License:	BSD
@@ -24,8 +24,8 @@ SUNW_Copyright: %{name}.copyright
 Source0:	ftp://ftp.edgewall.org/pub/genshi/Genshi-%{version}.tar.gz
 
 %include default-depend.inc
-BuildRequires:	SUNWpython-setuptools
-Requires:	SUNWpython-setuptools
+BuildRequires:	SUNWpython26-setuptools
+Requires:	SUNWpython26-setuptools
 
 Meta(info.maintainer):          James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):            Edgewall Software <trac-dev@googlegroups.com>
@@ -67,6 +67,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/python%{python_version}/vendor-packages/Genshi-0.6-py%{python_version}.egg-info
 
 %changelog
+* Wed Jan 12 2011 - jlee@thestaticvoid.com
+- Move to Python 2.6
 * Fri Jul 23 2010 - jlee@thestaticvoid.com
 - Bump to version 0.6
 * Sun May 31 2009 - jlee@thestaticvoid.com

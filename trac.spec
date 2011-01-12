@@ -9,7 +9,7 @@
 
 %include Solaris.inc
 
-%define python_version 2.4
+%define python_version 2.6
 
 Name:           trac
 Version:        0.12
@@ -25,12 +25,12 @@ Source0:        ftp://ftp.edgewall.org/pub/trac/Trac-%{version}.tar.gz
 Source1:	tracd.xml
 
 %include default-depend.inc
-BuildRequires:	SUNWpython-setuptools
-Requires:	SUNWpython-setuptools
+BuildRequires:	SUNWpython26-setuptools
+Requires:	SUNWpython26-setuptools
 Requires:	SUNWsvn-python 
-Requires:	SUNWpysqlite
-Requires:	python-genshi
-Requires:	python-pygments
+Requires:	python26-genshi
+Requires:	python26-pygments
+Requires:   python26-beaker
 
 Meta(info.maintainer):          James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):            Edgewall Software <trac-dev@googlegroups.com>
@@ -90,6 +90,8 @@ rm -rf $RPM_BUILD_ROOT
 %class(manifest) %attr(444,root,sys) %{_localstatedir}/svc/manifest/network/tracd.xml
 
 %changelog
+* Wed Jan 12 2011 - jlee@thestaticvoid.com
+- Move to Python 2.6
 * Fri Jul 23 2010 - jlee@thestaticvoid.com
 - Bump to version 0.12
 * Sun May 31 2009 - jlee@thestaticvoid.com

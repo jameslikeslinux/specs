@@ -9,7 +9,7 @@
 
 %include Solaris.inc
 
-%define python_version 2.4
+%define python_version 2.6
 
 Name:		trac-accountmanagerplugin
 Version:	0.11
@@ -25,8 +25,8 @@ SUNW_Copyright: %{name}.copyright
 Source0:	http://thestaticvoid.com/packages/AccountManagerPlugin-%{version}.tar.gz
 
 %include default-depend.inc
-BuildRequires:	SUNWpython-setuptools
-Requires:	SUNWpython-setuptools
+BuildRequires:	SUNWpython26-setuptools
+Requires:	SUNWpython26-setuptools
 Requires:	trac
 
 Meta(info.maintainer):          James Lee <jlee@thestaticvoid.com>
@@ -62,6 +62,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/python%{python_version}/vendor-packages/
 
 %changelog
+* Wed Jan 12 2011 - jlee@thestaticvoid.com
+- Move to Python 2.6
 * Sun May 31 2009 - jlee@thestaticvoid.com
 - Add header
 * Sun May 31 2009 - jlee@thestaticvoid.com
