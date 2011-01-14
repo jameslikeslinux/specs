@@ -8,7 +8,7 @@
 #
 
 Name:		exiv2
-Version:	0.19
+Version:	0.21
 Source0:	http://www.exiv2.org/exiv2-%{version}.tar.gz
 Patch0:		exiv2-00-sunstudio.diff
 
@@ -22,7 +22,9 @@ export CFLAGS="%{optflags}"
 export CXXFLAGS="%{cxx_optflags}"
 export LDFLAGS="%{_ldflags}"
 ./configure --prefix=%{_prefix} --bindir=%{_bindir} --libdir=%{_libdir} --disable-dependency-tracking --disable-visibility --disable-static
-gmake
+
+# Makefiles seem broken...make install performs a compilation regardless
+#gmake
 
 %install
 gmake DESTDIR=$RPM_BUILD_ROOT install

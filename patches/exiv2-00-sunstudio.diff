@@ -1,7 +1,6 @@
-Only in exiv2-0.19: Makefile
-diff -ur exiv2-0.19.old/config/config.mk.in exiv2-0.19/config/config.mk.in
---- exiv2-0.19.old/config/config.mk.in	Fri Nov 27 06:39:59 2009
-+++ exiv2-0.19/config/config.mk.in	Sat Apr 24 01:30:20 2010
+diff -ur exiv2-0.21.old/config/config.mk.in exiv2-0.21/config/config.mk.in
+--- exiv2-0.21.old/config/config.mk.in	2010-04-03 03:53:30.000000000 -0400
++++ exiv2-0.21/config/config.mk.in	2011-01-12 17:35:26.711674551 -0500
 @@ -153,7 +153,7 @@
  COMPILE.c = $(CC) $(CFLAGS) $(CPPFLAGS) -c
  # LINK.cc does not need $(LIBS), libtool's dark magic takes care of that
@@ -11,22 +10,10 @@ diff -ur exiv2-0.19.old/config/config.mk.in exiv2-0.19/config/config.mk.in
  
  # **********************************************************************
  # Installation programs
-diff -ur exiv2-0.19.old/src/Makefile exiv2-0.19/src/Makefile
---- exiv2-0.19.old/src/Makefile	Fri Nov 27 00:59:23 2009
-+++ exiv2-0.19/src/Makefile	Sat Apr 24 01:26:48 2010
-@@ -172,7 +172,7 @@
- EXECUTABLE = $(BINSRC:.cpp=$(EXEEXT))
- 
- EXIV2OBJ = $(EXIV2MAIN:.cpp=.o) $(EXIV2SRC:.cpp=.o)
--EXIV2COBJ = $(EXIVCSRC:.c=.o)
-+EXIV2COBJ = $(EXIVCSRC:.c=.lo)
- EXIV2BIN = $(EXIV2MAIN:.cpp=)
- EXIV2EXE = $(EXIV2MAIN:.cpp=$(EXEEXT))
- 
-diff -ur exiv2-0.19.old/src/basicio.cpp exiv2-0.19/src/basicio.cpp
---- exiv2-0.19.old/src/basicio.cpp	Tue Dec 29 10:24:40 2009
-+++ exiv2-0.19/src/basicio.cpp	Fri Apr 23 23:56:34 2010
-@@ -261,7 +261,7 @@
+diff -ur exiv2-0.21.old/src/basicio.cpp exiv2-0.21/src/basicio.cpp
+--- exiv2-0.21.old/src/basicio.cpp	2010-09-10 10:02:09.000000000 -0400
++++ exiv2-0.21/src/basicio.cpp	2011-01-12 17:35:26.706520850 -0500
+@@ -269,7 +269,7 @@
          int rc = 0;
          if (p_->pMappedArea_ != 0) {
  #if defined EXV_HAVE_MMAP && defined EXV_HAVE_MUNMAP
@@ -35,10 +22,10 @@ diff -ur exiv2-0.19.old/src/basicio.cpp exiv2-0.19/src/basicio.cpp
                  rc = 1;
              }
  #elif defined WIN32 && !defined __CYGWIN__
-diff -ur exiv2-0.19.old/src/convert.cpp exiv2-0.19/src/convert.cpp
---- exiv2-0.19.old/src/convert.cpp	Mon Dec 28 09:47:58 2009
-+++ exiv2-0.19/src/convert.cpp	Sat Apr 24 00:08:01 2010
-@@ -583,7 +583,8 @@
+diff -ur exiv2-0.21.old/src/convert.cpp exiv2-0.21/src/convert.cpp
+--- exiv2-0.21.old/src/convert.cpp	2010-09-10 10:02:09.000000000 -0400
++++ exiv2-0.21/src/convert.cpp	2011-01-12 17:35:26.694955907 -0500
+@@ -578,7 +578,8 @@
              double dhour = pos->toFloat(0);
              double dmin = pos->toFloat(1);
              // Hack: Need Value::toDouble
@@ -48,11 +35,11 @@ diff -ur exiv2-0.19.old/src/convert.cpp exiv2-0.19/src/convert.cpp
              double dsec = static_cast<double>(r.first)/r.second;
  
              if (!pos->value().ok()) {
-diff -ur exiv2-0.19.old/src/crwimage.cpp exiv2-0.19/src/crwimage.cpp
---- exiv2-0.19.old/src/crwimage.cpp	Fri Nov 27 00:59:23 2009
-+++ exiv2-0.19/src/crwimage.cpp	Sat Apr 24 00:09:09 2010
-@@ -1034,7 +1034,8 @@
-         if (ifdId == canonSiIfdId) {
+diff -ur exiv2-0.21.old/src/crwimage.cpp exiv2-0.21/src/crwimage.cpp
+--- exiv2-0.21.old/src/crwimage.cpp	2010-08-30 15:33:07.000000000 -0400
++++ exiv2-0.21/src/crwimage.cpp	2011-01-12 17:35:26.706138604 -0500
+@@ -1035,7 +1035,8 @@
+         if (ifdId == canonSiId) {
              // Exif.Photo.FNumber
              float f = fnumber(canonEv(aperture));
 -            URational ur = floatToRationalCast(f);
@@ -61,10 +48,82 @@ diff -ur exiv2-0.19.old/src/crwimage.cpp exiv2-0.19/src/crwimage.cpp
              URationalValue fn;
              fn.value_.push_back(ur);
              image.exifData().add(ExifKey("Exif.Photo.FNumber"), &fn);
-diff -ur exiv2-0.19.old/src/exiv2.cpp exiv2-0.19/src/exiv2.cpp
---- exiv2-0.19.old/src/exiv2.cpp	Mon Dec 28 09:47:58 2009
-+++ exiv2-0.19/src/exiv2.cpp	Sat Apr 24 00:34:14 2010
-@@ -52,6 +52,10 @@
+diff -ur exiv2-0.21.old/src/error.cpp exiv2-0.21/src/error.cpp
+--- exiv2-0.21.old/src/error.cpp	2010-09-21 11:45:07.000000000 -0400
++++ exiv2-0.21/src/error.cpp	2011-01-12 18:02:10.351601909 -0500
+@@ -26,7 +26,7 @@
+  */
+ // *****************************************************************************
+ #include "rcsid_int.hpp"
+-EXIV2_RCSID("@(#) $Id: error.cpp 2353 2010-09-21 15:45:07Z ahuggel $")
++//EXIV2_RCSID("@(#) $Id: error.cpp 2353 2010-09-21 15:45:07Z ahuggel $")
+ 
+ // *****************************************************************************
+ // included header files
+diff -ur exiv2-0.21.old/src/error.hpp exiv2-0.21/src/error.hpp
+--- exiv2-0.21.old/src/error.hpp	2010-09-10 10:02:09.000000000 -0400
++++ exiv2-0.21/src/error.hpp	2011-01-14 13:21:32.747473251 -0500
+@@ -99,6 +99,13 @@
+         }
+         //@}
+ 
++        // Fix bug in warnings called from tiffcomposite.cpp
++        LogMsg& operator<<(std::ios_base& (*pf)(std::ios_base&))
++        {
++            pf(os_);
++            return *this;
++        }
++
+         /*!
+           @brief Set the log level. Only log messages with a level greater or
+                  equal \em level are sent to the log message handler. Default
+diff -ur exiv2-0.21.old/src/exif.cpp exiv2-0.21/src/exif.cpp
+--- exiv2-0.21.old/src/exif.cpp	2010-09-21 11:45:07.000000000 -0400
++++ exiv2-0.21/src/exif.cpp	2011-01-14 13:02:23.629631433 -0500
+@@ -599,14 +599,37 @@
+         exifMetadata_.clear();
+     }
+ 
++    template <class T, class S>
++    void sort(std::list<T>& list, bool (*cmp)(const S& t1, const S& t2)) {
++        bool swapped = true;
++        int j = 0;
++
++        while (swapped) {
++            swapped = false;
++            j++;
++            std::list<T>::iterator it = list.begin();
++            for (int i = 0; i < list.size() - j; i++) {
++                std::list<T>::iterator next = it;
++                next++;
++                if (cmp(*next, *it)) {
++                    list.insert(it, *next);
++                    list.erase(next);
++                    swapped = true;
++                } else {
++                    it++;
++                }
++            }
++        }
++    }
++
+     void ExifData::sortByKey()
+     {
+-        exifMetadata_.sort(cmpMetadataByKey);
++        sort(exifMetadata_, cmpMetadataByKey);
+     }
+ 
+     void ExifData::sortByTag()
+     {
+-        exifMetadata_.sort(cmpMetadataByTag);
++        sort(exifMetadata_, cmpMetadataByTag);
+     }
+ 
+     ExifData::iterator ExifData::erase(ExifData::iterator beg, ExifData::iterator end)
+diff -ur exiv2-0.21.old/src/exiv2.cpp exiv2-0.21/src/exiv2.cpp
+--- exiv2-0.21.old/src/exiv2.cpp	2010-11-06 09:53:15.000000000 -0400
++++ exiv2-0.21/src/exiv2.cpp	2011-01-12 17:35:26.703399750 -0500
+@@ -53,6 +53,10 @@
  #include <cassert>
  #include <cctype>
  
@@ -75,7 +134,7 @@ diff -ur exiv2-0.19.old/src/exiv2.cpp exiv2-0.19/src/exiv2.cpp
  // *****************************************************************************
  // local declarations
  namespace {
-@@ -125,7 +129,7 @@
+@@ -131,7 +135,7 @@
  int main(int argc, char* const argv[])
  {
  #ifdef EXV_ENABLE_NLS
@@ -84,9 +143,9 @@ diff -ur exiv2-0.19.old/src/exiv2.cpp exiv2-0.19/src/exiv2.cpp
      bindtextdomain(EXV_PACKAGE, EXV_LOCALEDIR);
      textdomain(EXV_PACKAGE);
  #endif
-diff -ur exiv2-0.19.old/src/jpgimage.cpp exiv2-0.19/src/jpgimage.cpp
---- exiv2-0.19.old/src/jpgimage.cpp	Mon Dec 28 09:11:23 2009
-+++ exiv2-0.19/src/jpgimage.cpp	Sat Apr 24 00:26:10 2010
+diff -ur exiv2-0.21.old/src/jpgimage.cpp exiv2-0.21/src/jpgimage.cpp
+--- exiv2-0.21.old/src/jpgimage.cpp	2010-09-10 10:02:09.000000000 -0400
++++ exiv2-0.21/src/jpgimage.cpp	2011-01-12 17:35:26.707518967 -0500
 @@ -782,7 +782,7 @@
              }
              else if (   skipApp1Exif == count
@@ -96,10 +155,22 @@ diff -ur exiv2-0.19.old/src/jpgimage.cpp exiv2-0.19/src/jpgimage.cpp
                       || skipCom      == count) {
                  --search;
                  io_->seek(size-bufRead, BasicIo::cur);
-diff -ur exiv2-0.19.old/xmpsdk/src/XMPCore_Impl.hpp exiv2-0.19/xmpsdk/src/XMPCore_Impl.hpp
---- exiv2-0.19.old/xmpsdk/src/XMPCore_Impl.hpp	Tue Jul  7 10:13:03 2009
-+++ exiv2-0.19/xmpsdk/src/XMPCore_Impl.hpp	Fri Apr 23 23:44:03 2010
-@@ -50,7 +50,7 @@
+diff -ur exiv2-0.21.old/src/Makefile exiv2-0.21/src/Makefile
+--- exiv2-0.21.old/src/Makefile	2010-11-22 10:44:15.000000000 -0500
++++ exiv2-0.21/src/Makefile	2011-01-12 17:35:26.694631229 -0500
+@@ -172,7 +172,7 @@
+ EXECUTABLE = $(BINSRC:.cpp=$(EXEEXT))
+ 
+ EXIV2OBJ = $(EXIV2MAIN:.cpp=.o) $(EXIV2SRC:.cpp=.o)
+-EXIV2COBJ = $(EXIVCSRC:.c=.o)
++EXIV2COBJ = $(EXIVCSRC:.c=.lo)
+ EXIV2BIN = $(EXIV2MAIN:.cpp=)
+ EXIV2EXE = $(EXIV2MAIN:.cpp=$(EXEEXT))
+ 
+diff -ur exiv2-0.21.old/xmpsdk/src/XMPCore_Impl.hpp exiv2-0.21/xmpsdk/src/XMPCore_Impl.hpp
+--- exiv2-0.21.old/xmpsdk/src/XMPCore_Impl.hpp	2010-06-13 10:21:05.000000000 -0400
++++ exiv2-0.21/xmpsdk/src/XMPCore_Impl.hpp	2011-01-12 17:35:26.760612331 -0500
+@@ -52,7 +52,7 @@
  typedef XMP_VarString::iterator			XMP_VarStringPos;
  typedef XMP_VarString::const_iterator	XMP_cVarStringPos;
  
@@ -108,17 +179,3 @@ diff -ur exiv2-0.19.old/xmpsdk/src/XMPCore_Impl.hpp exiv2-0.19/xmpsdk/src/XMPCor
  
  typedef std::map < XMP_VarString, XMP_VarString > XMP_StringMap;
  typedef XMP_StringMap::iterator			XMP_StringMapPos;
-diff -ur exiv2-0.19.old/xmpsdk/src/XMPMeta.cpp exiv2-0.19/xmpsdk/src/XMPMeta.cpp
---- exiv2-0.19.old/xmpsdk/src/XMPMeta.cpp	Sun Dec 27 10:30:07 2009
-+++ exiv2-0.19/xmpsdk/src/XMPMeta.cpp	Fri Apr 23 23:53:49 2010
-@@ -1075,8 +1075,8 @@
- 		XMP_StringPair	newNS ( nsURI, uniqPrefix );
- 		uriPos = sNamespaceURIToPrefixMap->insert ( sNamespaceURIToPrefixMap->end(), newNS );
- 		
--		newNS.first.swap ( newNS.second );
--		(void) sNamespacePrefixToURIMap->insert ( sNamespacePrefixToURIMap->end(), newNS );
-+		XMP_StringPair	reverseNS ( uniqPrefix, nsURI );
-+		(void) sNamespacePrefixToURIMap->insert ( sNamespacePrefixToURIMap->end(), reverseNS );
- 
- 	}
- 	

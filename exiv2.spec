@@ -92,8 +92,8 @@ ln -s ../lib/isaexec exiv2
 %defattr(-,root,bin)
 %ifarch amd64 sparcv9
 %{_bindir}/%{_arch64}/exiv2
-%{_libdir}/%{_arch64}/libexiv2.so.6.0.0
-%{_libdir}/%{_arch64}/libexiv2.so.6
+%{_libdir}/%{_arch64}/libexiv2.so.10.0.0
+%{_libdir}/%{_arch64}/libexiv2.so.10
 %endif
 %if %can_isaexec
 %{_bindir}/%{base_isa}/exiv2
@@ -101,8 +101,8 @@ ln -s ../lib/isaexec exiv2
 %else
 %{_bindir}/exiv2
 %endif
-%{_libdir}/libexiv2.so.6.0.0
-%{_libdir}/libexiv2.so.6
+%{_libdir}/libexiv2.so.10.0.0
+%{_libdir}/libexiv2.so.10
 %attr(755,root,sys) %dir %{_datadir}
 %dir %{_mandir}
 %dir %{_mandir}/man1
@@ -120,11 +120,8 @@ ln -s ../lib/isaexec exiv2
 %attr(-,root,other) %dir %{_libdir}/pkgconfig
 %{_libdir}/pkgconfig/exiv2.pc
 %{_includedir}/exiv2/exv_conf.h
-%{_includedir}/exiv2/mn.hpp
-%{_includedir}/exiv2/rcsid.hpp
 %{_includedir}/exiv2/basicio.hpp
 %{_includedir}/exiv2/bmpimage.hpp
-%{_includedir}/exiv2/canonmn.hpp
 %{_includedir}/exiv2/convert.hpp
 %{_includedir}/exiv2/cr2image.hpp
 %{_includedir}/exiv2/crwimage.hpp
@@ -132,20 +129,16 @@ ln -s ../lib/isaexec exiv2
 %{_includedir}/exiv2/easyaccess.hpp
 %{_includedir}/exiv2/error.hpp
 %{_includedir}/exiv2/exif.hpp
+%{_includedir}/exiv2/exiv2.hpp
 %{_includedir}/exiv2/futils.hpp
-%{_includedir}/exiv2/fujimn.hpp
 %{_includedir}/exiv2/gifimage.hpp
 %{_includedir}/exiv2/image.hpp
 %{_includedir}/exiv2/iptc.hpp
 %{_includedir}/exiv2/jp2image.hpp
 %{_includedir}/exiv2/jpgimage.hpp
 %{_includedir}/exiv2/metadatum.hpp
-%{_includedir}/exiv2/minoltamn.hpp
 %{_includedir}/exiv2/mrwimage.hpp
-%{_includedir}/exiv2/nikonmn.hpp
-%{_includedir}/exiv2/olympusmn.hpp
 %{_includedir}/exiv2/orfimage.hpp
-%{_includedir}/exiv2/panasonicmn.hpp
 %{_includedir}/exiv2/pgfimage.hpp
 %{_includedir}/exiv2/pngimage.hpp
 %{_includedir}/exiv2/preview.hpp
@@ -153,9 +146,6 @@ ln -s ../lib/isaexec exiv2
 %{_includedir}/exiv2/psdimage.hpp
 %{_includedir}/exiv2/rafimage.hpp
 %{_includedir}/exiv2/rw2image.hpp
-%{_includedir}/exiv2/sigmamn.hpp
-%{_includedir}/exiv2/pentaxmn.hpp
-%{_includedir}/exiv2/sonymn.hpp
 %{_includedir}/exiv2/tags.hpp
 %{_includedir}/exiv2/tgaimage.hpp
 %{_includedir}/exiv2/tiffimage.hpp
@@ -166,5 +156,7 @@ ln -s ../lib/isaexec exiv2
 %{_includedir}/exiv2/xmpsidecar.hpp
 
 %changelog
+* Fri Jan 14 2011 - jlee@thestaticvoid.com
+- Bump to version 0.21
 * Fri Apr 24 2010 - jlee@thestaticvoid.com
 - Initial version
