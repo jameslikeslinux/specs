@@ -104,10 +104,12 @@ rm -rf $RPM_BUILD_ROOT
 mkdir $RPM_BUILD_ROOT%{_bindir}/%{base_isa}
 mv $RPM_BUILD_ROOT%{_bindir}/ffmpeg $RPM_BUILD_ROOT%{_bindir}/%{base_isa}
 mv $RPM_BUILD_ROOT%{_bindir}/ffplay $RPM_BUILD_ROOT%{_bindir}/%{base_isa}
+mv $RPM_BUILD_ROOT%{_bindir}/ffprobe $RPM_BUILD_ROOT%{_bindir}/%{base_isa}
 mv $RPM_BUILD_ROOT%{_bindir}/ffserver $RPM_BUILD_ROOT%{_bindir}/%{base_isa}
 cd $RPM_BUILD_ROOT%{_bindir}
 ln -s ../lib/isaexec ffmpeg
 ln -s ../lib/isaexec ffplay
+ln -s ../lib/isaexec ffprobe
 ln -s ../lib/isaexec ffserver
 %endif
 
@@ -116,48 +118,52 @@ ln -s ../lib/isaexec ffserver
 %ifarch amd64 sparcv9
 %{_bindir}/%{_arch64}/ffmpeg
 %{_bindir}/%{_arch64}/ffplay
+%{_bindir}/%{_arch64}/ffprobe
 %{_bindir}/%{_arch64}/ffserver
 %{_libdir}/%{_arch64}/libavcodec.so.52
-%{_libdir}/%{_arch64}/libavcodec.so.52.53.0
+%{_libdir}/%{_arch64}/libavcodec.so.52.72.2
 %{_libdir}/%{_arch64}/libavdevice.so.52
 %{_libdir}/%{_arch64}/libavdevice.so.52.2.0
 %{_libdir}/%{_arch64}/libavfilter.so.1
-%{_libdir}/%{_arch64}/libavfilter.so.1.17.0
+%{_libdir}/%{_arch64}/libavfilter.so.1.19.0
 %{_libdir}/%{_arch64}/libavformat.so.52
-%{_libdir}/%{_arch64}/libavformat.so.52.52.0
+%{_libdir}/%{_arch64}/libavformat.so.52.64.2
 %{_libdir}/%{_arch64}/libavutil.so.50
-%{_libdir}/%{_arch64}/libavutil.so.50.9.0
+%{_libdir}/%{_arch64}/libavutil.so.50.15.1
 %{_libdir}/%{_arch64}/libpostproc.so.51
 %{_libdir}/%{_arch64}/libpostproc.so.51.2.0
 %{_libdir}/%{_arch64}/libswscale.so.0
-%{_libdir}/%{_arch64}/libswscale.so.0.10.0
+%{_libdir}/%{_arch64}/libswscale.so.0.11.0
 %endif
 %if %can_isaexec
 %{_bindir}/%{base_isa}/ffmpeg
 %{_bindir}/%{base_isa}/ffplay
+%{_bindir}/%{base_isa}/ffprobe
 %{_bindir}/%{base_isa}/ffserver
 %hard %{_bindir}/ffmpeg
 %hard %{_bindir}/ffplay
+%hard %{_bindir}/ffprobe
 %hard %{_bindir}/ffserver
 %else
 %{_bindir}/ffmpeg
 %{_bindir}/ffplay
+%{_bindir}/ffprobe
 %{_bindir}/ffserver
 %endif
 %{_libdir}/libavcodec.so.52
-%{_libdir}/libavcodec.so.52.53.0
+%{_libdir}/libavcodec.so.52.72.2
 %{_libdir}/libavdevice.so.52
 %{_libdir}/libavdevice.so.52.2.0
 %{_libdir}/libavfilter.so.1
-%{_libdir}/libavfilter.so.1.17.0
+%{_libdir}/libavfilter.so.1.19.0
 %{_libdir}/libavformat.so.52
-%{_libdir}/libavformat.so.52.52.0
+%{_libdir}/libavformat.so.52.64.2
 %{_libdir}/libavutil.so.50
-%{_libdir}/libavutil.so.50.9.0
+%{_libdir}/libavutil.so.50.15.1
 %{_libdir}/libpostproc.so.51
 %{_libdir}/libpostproc.so.51.2.0
 %{_libdir}/libswscale.so.0
-%{_libdir}/libswscale.so.0.10.0
+%{_libdir}/libswscale.so.0.11.0
 %attr(-,root,sys) %dir %{_datadir}
 %{_datadir}/ffmpeg/libx264-lossless_max.ffpreset
 %{_datadir}/ffmpeg/libx264-baseline.ffpreset
@@ -175,8 +181,29 @@ ln -s ../lib/isaexec ffserver
 %{_datadir}/ffmpeg/libx264-lossless_medium.ffpreset
 %{_datadir}/ffmpeg/libx264-ipod320.ffpreset
 %{_datadir}/ffmpeg/libx264-lossless_slow.ffpreset
+%{_datadir}/ffmpeg/libx264-superfast_firstpass.ffpreset
+%{_datadir}/ffmpeg/libx264-veryfast_firstpass.ffpreset
+%{_datadir}/ffmpeg/libx264-veryslow.ffpreset
+%{_datadir}/ffmpeg/libx264-medium.ffpreset
+%{_datadir}/ffmpeg/libx264-slower.ffpreset
+%{_datadir}/ffmpeg/libx264-superfast.ffpreset
+%{_datadir}/ffmpeg/libx264-slow_firstpass.ffpreset
+%{_datadir}/ffmpeg/libx264-placebo_firstpass.ffpreset
+%{_datadir}/ffmpeg/libx264-fast.ffpreset
+%{_datadir}/ffmpeg/libx264-faster_firstpass.ffpreset
+%{_datadir}/ffmpeg/libx264-faster.ffpreset
+%{_datadir}/ffmpeg/libx264-ultrafast.ffpreset
+%{_datadir}/ffmpeg/libx264-placebo.ffpreset
+%{_datadir}/ffmpeg/libx264-ultrafast_firstpass.ffpreset
+%{_datadir}/ffmpeg/libx264-slower_firstpass.ffpreset
+%{_datadir}/ffmpeg/libx264-veryfast.ffpreset
+%{_datadir}/ffmpeg/libx264-medium_firstpass.ffpreset
+%{_datadir}/ffmpeg/libx264-slow.ffpreset
+%{_datadir}/ffmpeg/libx264-veryslow_firstpass.ffpreset
+%{_datadir}/ffmpeg/libx264-fast_firstpass.ffpreset
 %{_mandir}/man1/ffmpeg.1
 %{_mandir}/man1/ffplay.1
+%{_mandir}/man1/ffprobe.1
 %{_mandir}/man1/ffserver.1
 
 %files devel
@@ -234,8 +261,11 @@ ln -s ../lib/isaexec ffserver
 %{_includedir}/libavutil/lzo.h
 %{_includedir}/libavutil/common.h
 %{_includedir}/libavutil/crc.h
+%{_includedir}/libavutil/attributes.h
+%{_includedir}/libavutil/error.h
 %{_includedir}/libavfilter/avfilter.h
 %{_includedir}/libpostproc/postprocess.h
+%{_includedir}/libavcodec/avfft.h
 %{_includedir}/libavcodec/vdpau.h
 %{_includedir}/libavcodec/dxva2.h
 %{_includedir}/libavcodec/xvmc.h
@@ -246,5 +276,7 @@ ln -s ../lib/isaexec ffserver
 %{_includedir}/libavformat/avformat.h
 
 %changelog
+* Fri Jan 14 2011 - jlee@thestaticvoid.com
+- Bump to 0.6.1
 * Thu Feb 11 2010 - jlee@thestaticvoid.com
 - Initial version

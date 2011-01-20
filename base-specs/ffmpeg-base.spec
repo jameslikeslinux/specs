@@ -8,17 +8,19 @@
 #
 
 Name:		ffmpeg
-Version:	0.5.20100211
-Source0:	http://ffmpeg.org/releases/ffmpeg-export-snapshot.tar.bz2
+Version:	0.6.1
+Source0:	http://ffmpeg.org/releases/ffmpeg-%{version}.tar.bz2
 Patch0:		ffmpeg-00-mlib.diff
 Patch1:		ffmpeg-01-configure-doc.diff
+Patch2:     ffmpeg-02-configure-install.diff
 
 %prep
-%setup -q -n ffmpeg-export-2010-02-11
+%setup -q
 
 # see http://blogs.sun.com/siva/entry/some_updates_ruby_dtrace_ffmpeg
 %patch0
 %patch1
+%patch2
 
 %build
 CPUS=`/usr/sbin/psrinfo | grep on-line | wc -l | tr -d ' '`
@@ -34,7 +36,7 @@ export PATH=/usr/perl5/bin:$PATH
 	    --libdir=%{_libdir} \
 	    --shlibdir=%{_libdir} \
 	    --cc=gcc-4.3.2 \
-            --extra-cflags="%{optflags}" \
+        --extra-cflags="%{optflags}" \
 	    --extra-ldflags="%{optflags} %{_ldflags}" \
 	    --disable-static \
 	    --enable-shared \
@@ -53,8 +55,6 @@ export PATH=/usr/perl5/bin:$PATH
 gmake -j $CPUS
 
 %install
-# force usage of ginstall instead of solaris install
-gsed -i 's/\tinstall/\tginstall/' Makefile subdir.mak
 gmake DESTDIR=$RPM_BUILD_ROOT install
 
 %clean
