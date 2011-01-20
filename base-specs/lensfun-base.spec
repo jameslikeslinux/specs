@@ -27,6 +27,8 @@ chmod +x configure
 %patch1
 
 %build
+export CC=cc
+export CXX=CC
 export LD=$CXX
 export CFLAGS="%{optflags}"
 export CXXFLAGS="%{cxx_optflags} -xarch=sse2"
