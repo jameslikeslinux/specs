@@ -30,6 +30,7 @@ SUNW_Copyright:	%{name}.copyright
 BuildRequires:	SUNWgmake
 BuildRequires:	SUNWggrp
 BuildRequires:	SUNWgtk2-devel
+BuildRequires:  SUNWgnome-common-devel
 Requires:	SUNWgtk2
 
 Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
