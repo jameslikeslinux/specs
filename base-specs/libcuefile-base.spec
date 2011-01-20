@@ -15,7 +15,7 @@ Source0:	http://files.musepack.net/source/libcuefile_r%{version}.tar.gz
 %setup -q -n libcuefile_r%{version}
 
 %build
-$CC -shared -Iinclude -Isrc %{optflags} %{_ldflags} src/*.c -o libcuefile.so
+cc -shared -Iinclude -Isrc %{optflags} %{_ldflags} src/*.c -o libcuefile.so
 
 %install
 mkdir -p $RPM_BUILD_ROOT%{_includedir}
