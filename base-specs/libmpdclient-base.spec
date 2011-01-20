@@ -8,7 +8,7 @@
 #
 
 Name:		libmpdclient
-Version:	2.3
+Version:	2.4
 Source0:	http://downloads.sourceforge.net/project/musicpd/libmpdclient/%{version}/libmpdclient-%{version}.tar.bz2
 
 %prep

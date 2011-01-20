@@ -100,5 +100,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/mpd
 
 %changelog
+* Thu Jan 20 2011 - jlee@thestaticvoid.com
+- Bump to version 2.4
 * Tue Dec 28 2010 - jlee@thestaticvoid.com
 - Initial version
