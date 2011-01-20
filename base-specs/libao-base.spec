@@ -8,8 +8,8 @@
 #
 
 Name:		libao
-Version:	0.8.8
-Source0:	http://downloads.xiph.org/releases/ao/libao-0.8.8.tar.gz
+Version:	1.0.0
+Source0:	http://downloads.xiph.org/releases/ao/libao-1.0.0.tar.gz
 
 %prep
 %setup -q
