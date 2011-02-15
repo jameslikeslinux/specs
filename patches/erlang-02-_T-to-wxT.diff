@@ -1,0 +1,11 @@
+--- lib/wx/c_src/gen/wxe_funcs.cpp.old	2011-01-22 18:29:03.666089106 -0500
++++ lib/wx/c_src/gen/wxe_funcs.cpp	2011-01-22 18:29:20.178964156 -0500
+@@ -4486,7 +4486,7 @@
+  break;
+ }
+ case wxGridCellBoolEditor_UseStringValues: { // wxGridCellBoolEditor::UseStringValues
+- wxString valueTrue= _T("1");
++ wxString valueTrue= wxT("1");
+  wxString valueFalse= wxEmptyString;
+  while( * (int*) bp) { switch (* (int*) bp) {
+   case 1: {bp += 4;

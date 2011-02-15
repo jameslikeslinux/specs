@@ -1,0 +1,32 @@
+--- configure.in.old	2011-02-14 13:00:03.093319257 -0500
++++ configure.in	2011-02-14 13:54:48.523830926 -0500
+@@ -66,6 +66,9 @@
+ AC_PROG_RANLIB
+ AC_PROG_CPP
+ 
++CC=cc
++CXX=CC
++
+ AC_MSG_NOTICE(Building for [$host_os])
+ MIXED_CYGWIN=no
+ WXERL_CAN_BUILD_DRIVER=true
+@@ -174,7 +177,7 @@
+ 	GL_LIBS="-lglu32 -lOpengl32"
+ 	;;
+     *)
+-	LDFLAGS="-shared -fPIC $LDFLAGS"
++	LDFLAGS="-G -Kpic -lCstd -lCrun -lc $LDFLAGS"
+ 	GL_LIBS="-lGL -lGLU"
+ 	;;
+ esac
+@@ -193,8 +196,8 @@
+ 	CFLAGS="-g -Wall -O2 $CFLAGS"
+ 	;;
+     *)
+-	DEBUG_CFLAGS="-g -Wall -fPIC -DDEBUG $CFLAGS"
+-	CFLAGS="-g -Wall -O2 -fPIC -fomit-frame-pointer -fno-strict-aliasing $CFLAGS"
++	DEBUG_CFLAGS="-g -Kpic -DDEBUG $CFLAGS"
++	CFLAGS="-g -xO3 -Kpic -xregs=no%frameptr $CFLAGS"
+ 	;;
+ esac
+ 
