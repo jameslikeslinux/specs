@@ -8,13 +8,11 @@
 #
 
 Name:		wavpack
-Version:	4.60.0
+Version:	4.60.1
 Source0:	http://www.wavpack.com/wavpack-%{version}.tar.bz2
-Patch0:		wavpack-00-sunproc.diff
 
 %prep
 %setup -q
-%patch0
 
 %build
 export CFLAGS="%{optflags}"

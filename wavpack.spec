@@ -94,13 +94,13 @@ ln -s ../lib/isaexec wvgain
 %defattr(-,root,bin)
 %ifarch amd64 sparcv9
 %{_libdir}/%{_arch64}/libwavpack.so.1
-%{_libdir}/%{_arch64}/libwavpack.so.1.1.3
+%{_libdir}/%{_arch64}/libwavpack.so.1.1.4
 %{_bindir}/%{_arch64}/wavpack
 %{_bindir}/%{_arch64}/wvunpack
 %{_bindir}/%{_arch64}/wvgain
 %endif
 %{_libdir}/libwavpack.so.1
-%{_libdir}/libwavpack.so.1.1.3
+%{_libdir}/libwavpack.so.1.1.4
 %if %can_isaexec
 %{_bindir}/%{base_isa}/wavpack
 %{_bindir}/%{base_isa}/wvunpack
@@ -113,6 +113,11 @@ ln -s ../lib/isaexec wvgain
 %{_bindir}/wvunpack
 %{_bindir}/wvgain
 %endif
+%attr(755,root,sys) %dir %{_datadir}
+%{_mandir}/man1/wavpack.1
+%{_mandir}/man1/wvunpack.1
+%{_mandir}/man1/wvgain.1
+
 
 %files devel
 %defattr(-,root,bin)
@@ -129,5 +134,7 @@ ln -s ../lib/isaexec wvgain
 %{_includedir}/wavpack/wavpack.h
 
 %changelog
+* Thu Jan 20 2011 - jlee@thestaticvoid.com
+- Bump to 4.60.1
 * Sun Nov 29 2009 - jlee@thestaticvoid.com
 - Initial version
