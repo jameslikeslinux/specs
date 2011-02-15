@@ -1,0 +1,20 @@
+--- configure.ac.old	2011-01-24 13:41:55.774158286 -0500
++++ configure.ac	2011-01-24 13:46:46.600490517 -0500
+@@ -4,7 +4,7 @@
+ 
+ AC_PROG_CC
+ AM_PROG_CC_C_O
+-CFLAGS="$CFLAGS -Wall -W"
++CFLAGS="$CFLAGS"
+ LIBS=
+ AC_SEARCH_LIBS(dlsym, [dl])
+ sshnodelay_libs=$LIBS
+@@ -37,7 +37,7 @@
+ AM_CONDITIONAL(SSH_NODELAY_SO, test "$enable_sshnodelay" = "yes")
+ 
+ export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
+-PKG_CHECK_MODULES(SSHFS, [fuse >= 2.2 glib-2.0 gthread-2.0])
++PKG_CHECK_MODULES(SSHFS, [glib-2.0 gthread-2.0])
+ have_fuse_opt_parse=no
+ oldlibs="$LIBS"
+ LIBS="$LIBS $SSHFS_LIBS"
