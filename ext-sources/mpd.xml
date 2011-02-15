@@ -41,7 +41,7 @@
 		exec='/usr/bin/mpd "%{options/config}"'
 		timeout_seconds='60'>
 		<method_context>
-			<method_credential user='nobody' group='nobody' />
+			<method_credential user='mpd' group='mpd' />
 		</method_context>
 	</exec_method>
 

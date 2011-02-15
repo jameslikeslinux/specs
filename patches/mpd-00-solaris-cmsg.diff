@@ -1,0 +1,12 @@
+--- src/fd_util.c.old	2011-01-20 16:32:43.093602840 -0500
++++ src/fd_util.c	2011-01-20 16:32:50.456364297 -0500
+@@ -42,6 +42,9 @@
+ #include <ws2tcpip.h>
+ #include <winsock2.h>
+ #else
++#ifdef __sun
++#define _XPG4_2
++#endif
+ #include <sys/socket.h>
+ #endif
+ 

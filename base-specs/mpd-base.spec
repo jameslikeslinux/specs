@@ -8,11 +8,13 @@
 #
 
 Name:		mpd
-Version:	0.15.6
+Version:	0.16.1
 Source0:	http://downloads.sourceforge.net/project/musicpd/mpd/%{version}/mpd-%{version}.tar.bz2
+Patch0:		mpd-00-solaris-cmsg.diff
 
 %prep
 %setup -q
+%patch0
 
 %build
 export CFLAGS="%{optflags}"

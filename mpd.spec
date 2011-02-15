@@ -125,6 +125,10 @@ cp %{SOURCE1} $RPM_BUILD_ROOT%{_localstatedir}/svc/manifest/application/mpd.xml
 %iclass manifest -f i.manifest
 %endif
 
+%actions
+group groupname="mpd"
+user username="mpd" group="mpd" gcos-field="Music Player Daemon User"
+
 %files
 %defattr(-,root,bin)
 %ifarch amd64 sparcv9
@@ -143,17 +147,20 @@ cp %{SOURCE1} $RPM_BUILD_ROOT%{_localstatedir}/svc/manifest/application/mpd.xml
 %{_mandir}/man5/mpd.conf.5
 %defattr(-,root,sys)
 %dir %{_sysconfdir}
-%attr(640,root,nobody) %config %{_sysconfdir}/mpd.conf
+%attr(600,mpd,mpd) %config %{_sysconfdir}/mpd.conf
 %dir %{_localstatedir}
 %attr(755,root,other) %dir %{_localstatedir}/lib
-%attr(755,nobody,nobody) %dir %{_localstatedir}/lib/mpd
-%attr(755,nobody,nobody) %dir %{_localstatedir}/lib/mpd/music
-%attr(755,nobody,nobody) %dir %{_localstatedir}/lib/mpd/playlists
+%attr(755,mpd,mpd) %dir %{_localstatedir}/lib/mpd
+%attr(755,mpd,mpd) %dir %{_localstatedir}/lib/mpd/music
+%attr(755,mpd,mpd) %dir %{_localstatedir}/lib/mpd/playlists
 %dir %{_localstatedir}/svc
 %dir %{_localstatedir}/svc/manifest
 %dir %{_localstatedir}/svc/manifest/application
 %class(manifest) %attr(444,root,sys) %{_localstatedir}/svc/manifest/application/mpd.xml
 
 %changelog
+* Thu Jan 20 2011 - jlee@thestaticvoid.com
+- Bump to 0.16.1
+- Create mpd user
 * Sun Nov 29 2009 - jlee@thestaticvoid.com
 - Initial version
