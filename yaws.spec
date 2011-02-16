@@ -8,9 +8,10 @@
 #
 
 %include Solaris.inc
+%include base.inc
 
 Name:		yaws
-Version:	1.87
+Version:	1.89
 Summary:	Yet Another Web Server
 License:	BSD
 Distribution:   OpenSolaris
@@ -21,12 +22,14 @@ SUNW_Copyright: %{name}.copyright
 
 Source0:	http://yaws.hyber.org/download/yaws-%{version}.tar.gz
 Source1:	http-yaws.xml
+Source2:	http-yaws
+Patch0:		yaws-00-configure-erlbindir.diff
 
 %include default-depend.inc
 BuildRequires:	SUNWggrp
 BuildRequires:	SUNWgmake
-BuildRequires:	SUNWerlang
-Requires:	SUNWerlang
+BuildRequires:	erlang
+Requires:	erlang
 
 Meta(info.maintainer):		James Lee <jlee@thestaticvoid.com>
 Meta(info.upstream):		Claes Wikström <klacke@hyber.org>
@@ -41,7 +44,9 @@ process is used to handle each client.
 
 %prep
 %setup -q
-./configure --prefix=%{_prefix} --sysconfdir=%{_sysconfdir} --localstatedir=%{_localstatedir}
+%patch0
+autoconf
+ERL=%{_bindir}/%{base_isa}/erl ./configure --prefix=%{_prefix} --sysconfdir=%{_sysconfdir} --localstatedir=%{_localstatedir}
 
 %build
 gmake
@@ -51,6 +56,8 @@ rm -rf $RPM_BUILD_ROOT
 gmake DESTDIR=$RPM_BUILD_ROOT install
 mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/svc/manifest/network
 cp %{SOURCE1} $RPM_BUILD_ROOT%{_localstatedir}/svc/manifest/network/http-yaws.xml
+mkdir -p $RPM_BUILD_ROOT/lib/svc/method
+cp %{SOURCE2} $RPM_BUILD_ROOT/lib/svc/method/http-yaws
 
 rm -f $RPM_BUILD_ROOT%{_sysconfdir}/yaws/yaws-cert.pem
 rm -f $RPM_BUILD_ROOT%{_sysconfdir}/yaws/yaws-key.pem
@@ -62,6 +69,12 @@ rm -rf $RPM_BUILD_ROOT%{_prefix}/etc
 sed '/<server localhost>/,//d; s/<server .*>/<server localhost>/; s@/usr/var/log/yaws@/var/log/yaws@' $RPM_BUILD_ROOT%{_sysconfdir}/yaws/yaws.conf > $RPM_BUILD_ROOT%{_sysconfdir}/yaws/yaws.conf.new
 mv -f $RPM_BUILD_ROOT%{_sysconfdir}/yaws/yaws.conf.new $RPM_BUILD_ROOT%{_sysconfdir}/yaws/yaws.conf
 
+# move epam to correct directory
+mv -f $RPM_BUILD_ROOT%{_libdir}/yaws/priv/lib/epam $RPM_BUILD_ROOT%{_libdir}/yaws/priv/
+
+# create empty directory for erlang pipes
+mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/yaws
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -71,6 +84,10 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,bin)
+%dir /lib
+%dir /lib/svc
+%dir /lib/svc/method
+%attr(555,root,bin) /lib/svc/method/http-yaws
 %attr(755,root,sys) %dir %{_prefix}
 %dir %{_bindir}
 %{_bindir}/yaws
@@ -84,7 +101,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/yaws/priv/soap.xsd
 %dir %{_libdir}/yaws/priv/lib
 %{_libdir}/yaws/priv/lib/setuid_drv.so
-%dir %{_libdir}/yaws/priv/lib/epam
+%attr(4755,root,bin) %{_libdir}/yaws/priv/epam
 %{_libdir}/yaws/priv/envelope.xsd
 %dir %{_libdir}/yaws/ebin
 %{_libdir}/yaws/ebin/yaws_app.beam
@@ -129,12 +146,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/yaws/ebin/yaws_dav.beam
 %{_libdir}/yaws/ebin/yaws_multipart.beam
 %{_libdir}/yaws/ebin/yaws_appmod_fcgi.beam
+%{_libdir}/yaws/ebin/yaws_websockets.beam
 %dir %{_libdir}/yaws/include
 %{_libdir}/yaws/include/yaws_api.hrl
 %{_libdir}/yaws/include/yaws.hrl
 %{_libdir}/yaws/include/yaws_dav.hrl
 %{_libdir}/yaws/include/soap.hrl
-%{_libdir}/yaws/include/erlsom.hrl
 %attr(755,root,other) %dir %{_libdir}/pkgconfig
 %{_libdir}/pkgconfig/yaws.pc
 %attr(755,root,sys) %dir %{_datadir}
@@ -149,16 +166,22 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,sys)
 %dir %{_sysconfdir}
 %dir %{_sysconfdir}/yaws
-%config %{_sysconfdir}/yaws/yaws.conf
+%attr(640,root,webservd) %config %{_sysconfdir}/yaws/yaws.conf
 %dir %{_localstatedir}/log
-%dir %{_localstatedir}/log/yaws
+%attr(755,webservd,webservd) %dir %{_localstatedir}/log/yaws
 %{_localstatedir}/yaws
+%dir %{_localstatedir}/run
+%attr(755,webservd,webservd) %dir %{_localstatedir}/run/yaws
 %dir %{_localstatedir}/svc
 %dir %{_localstatedir}/svc/manifest
 %dir %{_localstatedir}/svc/manifest/network
 %class(manifest) %attr(444,root,sys) %{_localstatedir}/svc/manifest/network/http-yaws.xml
 
 %changelog
+* Tue Feb 15 2011 - jlee@thestaticvoid.com
+- Bump to version 1.89
+- Run under 'webservd' user
+- Require my version of Erlang
 * Thu Jan 21 2010 - jlee@thestaticvoid.com
 - Bump to version 1.87
 * Mon Dec 28 2009 - jlee@thestaticvoid.com

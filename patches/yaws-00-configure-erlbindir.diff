@@ -1,0 +1,32 @@
+--- configure.in.old	2011-02-16 12:49:22.791394961 -0500
++++ configure.in	2011-02-16 12:50:47.121835149 -0500
+@@ -11,13 +11,10 @@
+ AC_ERLANG_NEED_ERL
+ AC_PATH_PROG(ERL, erl)
+ AC_PATH_PROG(ERLC, erlc)
+-ERLBINDIR=`dirname "$ERL"` ; ERLBINDIR=`dirname "$ERLBINDIR"`/lib/erlang/bin
+ 
+ AC_SUBST(ERL)
+ AC_SUBST(ERLC)
+ 
+-AC_SUBST(ERLBINDIR)
+-
+ AC_ARG_WITH(defaultcharset,
+ AS_HELP_STRING([--with-defaultcharset=String], [specify default charset, i.e UTF-8]))
+ 
+@@ -80,6 +77,7 @@
+ 
+ 
+ ERLDIR=`"${ERL}" -noshell -eval 'io:format("~s",[[code:root_dir()]]), erlang:halt().'`
++ERLBINDIR="${ERLDIR}/bin"
+ ERL_DLL_LIB="${ERLDIR}/usr/lib/erl_dll.lib"
+ 
+ 
+@@ -87,6 +85,7 @@
+         AC_MSG_ERROR([Broken Erlang installation, $ERLDIR does not exist!])
+ fi
+ AC_SUBST(ERLDIR)
++AC_SUBST(ERLBINDIR)
+ AC_SUBST(ERL_DLL_LIB)
+ 
+ erts_vsn=`ls "${ERLDIR}" | grep ^erts | tail -1 | sed 's/erts-//'`

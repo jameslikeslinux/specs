@@ -45,31 +45,39 @@
 			    value='file://localhost/etc/yaws/yaws.conf' />
 		</dependency>
 
-		<dependent
-			name='http-yaws_multi-user'
-			grouping='optional_all'
-			restart_on='none'>
-				<service_fmri
-				    value='svc:/milestone/multi-user' />
-		</dependent>
-
 		<exec_method
 			type='method'
 			name='start'
-			exec='/usr/bin/yaws --daemon'
-			timeout_seconds='60' />
+			exec='/lib/svc/method/http-yaws start'
+			timeout_seconds='60'>
+	                <method_context>
+        	                <method_credential user='webservd' group='webservd' privileges="basic,net_privaddr" />
+	                </method_context>
+		</exec_method>
 
 		<exec_method
 			type='method'
 			name='stop'
-			exec='/usr/bin/yaws --stop'
-			timeout_seconds='60' />
+			exec='/lib/svc/method/http-yaws stop'
+			timeout_seconds='60'>
+	                <method_context>
+        	                <method_credential user='webservd' group='webservd' />
+	                </method_context>
+		</exec_method>
 
 		<exec_method
 			type='method'
 			name='refresh'
-			exec='/usr/bin/yaws --hup'
-			timeout_seconds='60' />
+			exec='/lib/svc/method/http-yaws refresh'
+			timeout_seconds='60'>
+	                <method_context>
+        	                <method_credential user='webservd' group='webservd' />
+	                </method_context>
+		</exec_method>
+
+		<property_group name='options' type='application'>
+			<propval name='io_pipe_name' type='astring' value='svc' />
+		</property_group>
 
 		<template>
 			<common_name>
