@@ -10,7 +10,7 @@
 %include Solaris.inc
 
 Name:		ufraw
-Version:	0.17
+Version:	0.18
 Summary:	Unidentified Flying Raw
 License:	GPLv2
 Distribution:   OpenSolaris
@@ -20,7 +20,6 @@ SUNW_Basedir:	%{_basedir}
 SUNW_Copyright: %{name}.copyright
 
 Source0:	http://downloads.sourceforge.net/project/ufraw/ufraw/ufraw-%{version}/ufraw-%{version}.tar.gz
-Patch0:		ufraw-00-sunstudio.diff
 
 %include default-depend.inc
 BuildRequires:	SUNWgtk2-devel
@@ -62,7 +61,6 @@ apply color profiles.
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
 ./configure --prefix=%{_prefix}

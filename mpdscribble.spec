@@ -107,7 +107,7 @@ user username="mpdscribble" group="mpdscribble" gcos-field="mpdscribble User"
 %{_mandir}/man1/mpdscribble.1
 %defattr(-,root,sys)
 %dir %{_sysconfdir}
-%attr(600,mpdscribble,mpdscribble) %config %{_sysconfdir}/mpdscribble.conf
+%attr(640,root,mpdscribble) %config %{_sysconfdir}/mpdscribble.conf
 %dir %{_localstatedir}
 %attr(755,root,root) %dir %{_localstatedir}/cache
 %attr(700,mpdscribble,mpdscribble) %dir %{_localstatedir}/cache/mpdscribble
@@ -117,6 +117,8 @@ user username="mpdscribble" group="mpdscribble" gcos-field="mpdscribble User"
 %class(manifest) %attr(444,root,sys) %{_localstatedir}/svc/manifest/application/mpdscribble.xml
 
 %changelog
+* Tue Feb 15 2011 - jlee@thestaticvoid.com
+- Config file owned by root
 * Tue Dec 28 2010 - jlee@thestaticvoid.com
 - Bump to 0.20
 - Create mpdscribble user

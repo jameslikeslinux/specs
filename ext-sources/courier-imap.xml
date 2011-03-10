@@ -97,14 +97,6 @@
 			<service_fmri value='svc:/network/authdaemond' />
 		</dependency>
 		
-		<dependent
-			name='courier-imap-imapd_multi-user'
-			grouping='optional_all'
-			restart_on='none'>
-				<service_fmri
-				    value='svc:/milestone/multi-user' />
-		</dependent>
-
 		<exec_method
 			type='method'
 			name='start'
@@ -176,14 +168,6 @@
 			<service_fmri value='svc:/network/authdaemond' />
 		</dependency>
 		
-		<dependent
-			name='courier-imap-imapd-ssl_multi-user'
-			grouping='optional_all'
-			restart_on='none'>
-				<service_fmri
-				    value='svc:/milestone/multi-user' />
-		</dependent>
-
 		<exec_method
 			type='method'
 			name='start'
@@ -255,14 +239,6 @@
 			<service_fmri value='svc:/network/authdaemond' />
 		</dependency>
 		
-		<dependent
-			name='courier-imap-pop3d_multi-user'
-			grouping='optional_all'
-			restart_on='none'>
-				<service_fmri
-				    value='svc:/milestone/multi-user' />
-		</dependent>
-
 		<exec_method
 			type='method'
 			name='start'
@@ -334,14 +310,6 @@
 			<service_fmri value='svc:/network/authdaemond' />
 		</dependency>
 		
-		<dependent
-			name='courier-imap-pop3d-ssl_multi-user'
-			grouping='optional_all'
-			restart_on='none'>
-				<service_fmri
-				    value='svc:/milestone/multi-user' />
-		</dependent>
-
 		<exec_method
 			type='method'
 			name='start'

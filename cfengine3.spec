@@ -10,7 +10,7 @@
 %include Solaris.inc
 
 Name:		cfengine3
-Version:	3.0.5
+Version:	3.1.2
 Summary:	Cfengine 3
 License:	GPLv3
 Distribution:   OpenSolaris
@@ -106,6 +106,8 @@ rm -rf $RPM_BUILD_ROOT
 %class(manifest) %attr(444,root,sys) %{_localstatedir}/svc/manifest/application/cfengine3.xml
 
 %changelog
+* Wed Jan 12 2011 - jlee@thestaticvoid.com
+- Bump to version 3.1.2
 * Thu Jun 17 2010 - jlee@thestaticvoid.com
 - Bump to version 3.0.5
 * Thu Feb 17 2010 - jlee@thestaticvoid.com

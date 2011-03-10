@@ -147,7 +147,7 @@ user username="mpd" group="mpd" gcos-field="Music Player Daemon User"
 %{_mandir}/man5/mpd.conf.5
 %defattr(-,root,sys)
 %dir %{_sysconfdir}
-%attr(600,mpd,mpd) %config %{_sysconfdir}/mpd.conf
+%attr(640,root,mpd) %config %{_sysconfdir}/mpd.conf
 %dir %{_localstatedir}
 %attr(755,root,other) %dir %{_localstatedir}/lib
 %attr(755,mpd,mpd) %dir %{_localstatedir}/lib/mpd
@@ -159,6 +159,8 @@ user username="mpd" group="mpd" gcos-field="Music Player Daemon User"
 %class(manifest) %attr(444,root,sys) %{_localstatedir}/svc/manifest/application/mpd.xml
 
 %changelog
+* Tue Feb 15 2011 - jlee@thestaticvoid.com
+- Config file owned by root
 * Thu Jan 20 2011 - jlee@thestaticvoid.com
 - Bump to 0.16.1
 - Create mpd user

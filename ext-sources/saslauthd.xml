@@ -51,14 +51,6 @@
 		<service_fmri value='svc:/system/system-log' />
 	</dependency>
 
-	<dependent
-		name='saslauthd_multi-user'
-		grouping='optional_all'
-		restart_on='none'>
-			<service_fmri
-			    value='svc:/milestone/multi-user' />
-	</dependent>
-
 	<exec_method
 		type='method'
 		name='start'
