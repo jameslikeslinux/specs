@@ -20,6 +20,7 @@ SUNW_Basedir:	%{_basedir}
 SUNW_Copyright: %{name}.copyright
 
 Source0:	http://downloads.sourceforge.net/project/ufraw/ufraw/ufraw-%{version}/ufraw-%{version}.tar.gz
+Patch0:		ufraw-00-dcraw-openmp.diff
 
 %include default-depend.inc
 BuildRequires:	SUNWgtk2-devel
@@ -61,6 +62,7 @@ apply color profiles.
 
 %prep
 %setup -q
+%patch0
 
 %build
 ./configure --prefix=%{_prefix}
@@ -85,5 +87,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(-,root,other) %{_datadir}/locale
 
 %changelog
+* Thu Mar 10 2011 - jlee@thestaticvoid.com
+- Bump to 0.18
 * Fri Apr 30 2010 - jlee@thestaticvoid.com
 - Initial version
