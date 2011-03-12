@@ -18,7 +18,7 @@
 
 Name:		flickcurl
 Version:	%{flickcurl.version}
-Summary:	Cross Platform Audio Library
+Summary:	Flickr API Utilities and Library
 License:	LGPLv2.1/GPLv2
 Distribution:   OpenSolaris
 Vendor:         OpenSolaris Community
