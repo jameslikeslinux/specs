@@ -92,7 +92,7 @@ ln -s ../lib/isaexec exiv2
 %defattr(-,root,bin)
 %ifarch amd64 sparcv9
 %{_bindir}/%{_arch64}/exiv2
-%{_libdir}/%{_arch64}/libexiv2.so.10.0.0
+%{_libdir}/%{_arch64}/libexiv2.so.10.0.1
 %{_libdir}/%{_arch64}/libexiv2.so.10
 %endif
 %if %can_isaexec
@@ -101,7 +101,7 @@ ln -s ../lib/isaexec exiv2
 %else
 %{_bindir}/exiv2
 %endif
-%{_libdir}/libexiv2.so.10.0.0
+%{_libdir}/libexiv2.so.10.0.1
 %{_libdir}/libexiv2.so.10
 %attr(755,root,sys) %dir %{_datadir}
 %dir %{_mandir}
@@ -156,6 +156,8 @@ ln -s ../lib/isaexec exiv2
 %{_includedir}/exiv2/xmpsidecar.hpp
 
 %changelog
+* Sat Mar 12 2011 - jlee@thestaticvoid.com
+- Bump to version 0.21.1
 * Fri Jan 14 2011 - jlee@thestaticvoid.com
 - Bump to version 0.21
 * Fri Apr 24 2010 - jlee@thestaticvoid.com

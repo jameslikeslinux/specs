@@ -8,7 +8,7 @@
 #
 
 Name:		exiv2
-Version:	0.21
+Version:	0.21.1
 Source0:	http://www.exiv2.org/exiv2-%{version}.tar.gz
 Patch0:		exiv2-00-sunstudio.diff
 
@@ -18,8 +18,8 @@ Patch0:		exiv2-00-sunstudio.diff
 
 %build
 export CXX=/opt/sunstudio12.1/bin/CC
-export CFLAGS="%{optflags}"
-export CXXFLAGS="%{cxx_optflags}"
+export CFLAGS="%{optflags} -g"
+export CXXFLAGS="%{cxx_optflags} -g"
 export LDFLAGS="%{_ldflags}"
 ./configure --prefix=%{_prefix} --bindir=%{_bindir} --libdir=%{_libdir} --disable-dependency-tracking --disable-visibility --disable-static
 
