@@ -1,0 +1,1127 @@
+diff -ur darktable-0.8.old/src/CMakeLists.txt darktable-0.8/src/CMakeLists.txt
+--- darktable-0.8.old/src/CMakeLists.txt	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/CMakeLists.txt	2011-03-12 13:50:49.852158328 -0500
+@@ -65,7 +65,6 @@
+ 
+ # initial compiler flags
+ add_definitions("-DHAVE_CONFIG_H")
+-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99")
+ 
+ # Check for openmp
+ find_package(OpenMP)
+@@ -195,25 +194,36 @@
+ #
+ # Set default compile flags for GCC
+ #
+-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -fno-strict-aliasing")
+-# c++ code doesn't like -Werror (libraw)
+-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fno-strict-aliasing")
+-
+-if(NOT APPLE)
+-  # apple build fails on deprecated warnings..
+-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror")
+-endif(NOT APPLE)
+-
+-if(NOT WIN32)
+-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pthread")
+-endif(NOT WIN32)
+-
+-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -msse2 -mfpmath=sse -march=native -g")
+-set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O3 -ffast-math -fexpensive-optimizations")
+-set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O0 -g -D_DEBUG")
+-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse2 -mfpmath=sse -march=native -g")
+-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -ffast-math -fexpensive-optimizations")
+-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -g -D_DEBUG")
++if(CMAKE_COMPILER_IS_GNUCC)
++  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99 -Wall -fno-strict-aliasing")
++  # c++ code doesn't like -Werror (libraw)
++  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fno-strict-aliasing")
++  
++  if(NOT APPLE)
++    # apple build fails on deprecated warnings..
++    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror")
++  endif(NOT APPLE)
++  
++  if(NOT WIN32)
++    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pthread")
++  endif(NOT WIN32)
++  
++  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -msse2 -mfpmath=sse -march=native -g")
++  set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O3 -ffast-math -fexpensive-optimizations")
++  set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O0 -g -D_DEBUG")
++  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse2 -mfpmath=sse -march=native -g")
++  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -ffast-math -fexpensive-optimizations")
++  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -g -D_DEBUG")
++endif(CMAKE_COMPILER_IS_GNUCC)
++
++
++#
++# Set default compile flags for Sun Studio 
++#
++if("${CMAKE_C_COMPILER_ID} ${CMAKE_CXX_COMPILER_ID}" MATCHES SunPro)
++  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -xc99 -features=extensions -xarch=sse2 -D__SSE2__ -fast")
++  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -features=extensions -xarch=sse2 -D__SSE2__ -fast")
++endif("${CMAKE_C_COMPILER_ID} ${CMAKE_CXX_COMPILER_ID}" MATCHES SunPro)
+   
+ 
+ #
+@@ -247,7 +257,7 @@
+   set_target_properties(lib_darktable PROPERTIES INSTALL_NAME_DIR "@executable_path/../lib/darktable")
+ endif(APPLE)
+ set_target_properties(lib_darktable PROPERTIES OUTPUT_NAME darktable)
+-set_target_properties(lib_darktable PROPERTIES LINKER_LANGUAGE C)
++set_target_properties(lib_darktable PROPERTIES LINKER_LANGUAGE CXX)
+ 
+ 
+ #
+diff -ur darktable-0.8.old/src/control/jobs/control_jobs.c darktable-0.8/src/control/jobs/control_jobs.c
+--- darktable-0.8.old/src/control/jobs/control_jobs.c	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/control/jobs/control_jobs.c	2011-03-12 14:27:27.335868752 -0500
+@@ -447,12 +447,15 @@
+   dt_gui_background_jobs_can_cancel (j,job);
+ 
+   double fraction=0;
++
++  // Sun Studio won't accpet 'stderr' in openmp directive, so redefine it
++  FILE *tmp_stderr = stderr;
+ #ifdef _OPENMP
+   // limit this to num threads = num full buffers - 1 (keep one for darkroom mode)
+   // use min of user request and mipmap cache entries
+   const int full_entries = dt_conf_get_int ("mipmap_cache_full_images");
+-  const int num_threads = MAX(1, MIN(full_entries, darktable.mipmap_cache->num_entries[DT_IMAGE_FULL]) - 1);
+-#pragma omp parallel default(none) private(imgid, size) shared(j, fraction, stderr, w, h, mformat, mstorage, t, sdata, job) num_threads(num_threads)
++  int num_threads = MAX(1, MIN(full_entries, darktable.mipmap_cache->num_entries[DT_IMAGE_FULL]) - 1);
++#pragma omp parallel default(none) private(imgid, size) shared(j, fraction, tmp_stderr, w, h, mformat, mstorage, t, sdata, job) num_threads(num_threads)
+   {
+ #endif
+     // get a thread-safe fdata struct (one jpeg struct per thread etc):
+@@ -481,7 +484,7 @@
+         if(!g_file_test(imgfilename, G_FILE_TEST_IS_REGULAR))
+         {
+           dt_control_log(_("image `%s' is currently unavailable"), image->filename);
+-          fprintf(stderr, _("image `%s' is currently unavailable"), imgfilename);
++          fprintf(tmp_stderr, _("image `%s' is currently unavailable"), imgfilename);
+           // dt_image_remove(imgid);
+           dt_image_cache_release(image, 'r');
+         }
+diff -ur darktable-0.8.old/src/iop/atrous.c darktable-0.8/src/iop/atrous.c
+--- darktable-0.8.old/src/iop/atrous.c	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/iop/atrous.c	2011-03-12 13:41:45.324078191 -0500
+@@ -26,7 +26,7 @@
+ #include "control/control.h"
+ #include <memory.h>
+ #include <stdlib.h>
+-#include <xmmintrin.h>
++#include <emmintrin.h>
+ // SSE4 actually not used yet.
+ // #include <smmintrin.h>
+ 
+@@ -134,7 +134,7 @@
+   const float filter[5] = {1.0f/16.0f, 4.0f/16.0f, 6.0f/16.0f, 4.0f/16.0f, 1.0f/16.0f};
+ 
+ #ifdef _OPENMP
+-#pragma omp parallel for default(none) schedule(static)
++#pragma omp parallel for default(none) schedule(static) shared(filter)
+ #endif
+   for(int j=0; j<height; j++)
+   {
+diff -ur darktable-0.8.old/src/iop/bilateral.cc darktable-0.8/src/iop/bilateral.cc
+--- darktable-0.8.old/src/iop/bilateral.cc	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/iop/bilateral.cc	2011-03-12 13:41:45.324621185 -0500
+@@ -265,12 +265,14 @@
+     module->priority = 270;
+     module->params_size = sizeof(dt_iop_bilateral_params_t);
+     module->gui_data = NULL;
+-    dt_iop_bilateral_params_t tmp = (dt_iop_bilateral_params_t)
+-    {
+-      {
+-        15.0, 15.0, 0.005, 0.005, 0.005
+-      }
+-    };
++
++    dt_iop_bilateral_params_t tmp;
++    tmp.sigma[0] = 15.0;
++    tmp.sigma[1] = 15.0;
++    tmp.sigma[2] = 0.005;
++    tmp.sigma[3] = 0.005;
++    tmp.sigma[4] = 0.005;
++
+     memcpy(module->params, &tmp, sizeof(dt_iop_bilateral_params_t));
+     memcpy(module->default_params, &tmp, sizeof(dt_iop_bilateral_params_t));
+   }
+Only in darktable-0.8/src/iop: bilateral.cc.orig
+diff -ur darktable-0.8.old/src/iop/demosaic.c darktable-0.8/src/iop/demosaic.c
+--- darktable-0.8.old/src/iop/demosaic.c	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/iop/demosaic.c	2011-03-12 14:34:13.503529110 -0500
+@@ -175,7 +175,7 @@
+   for (int pass=0; pass < num_passes; pass++)
+   {
+ #ifdef _OPENMP
+-#pragma omp parallel for default(none) shared(out) schedule(static)
++#pragma omp parallel for default(none) shared(out,lim) schedule(static)
+ #endif
+     for (int row=3; row<roi->height-3; row++)
+     {
+@@ -464,7 +464,11 @@
+       float *color = (float *)&col;
+       // fill all four pixels with correctly interpolated stuff: r/b for green1/2
+       // b for r and r for b
++#ifdef __GNUC__
+       if(__builtin_expect(c & 1, 1)) // c == 1 || c == 3)
++#else
++      if(c & 1)
++#endif
+       {
+         // calculate red and blue for green pixels:
+         // need 4-nbhood:
+diff -ur darktable-0.8.old/src/iop/temperature.c darktable-0.8/src/iop/temperature.c
+--- darktable-0.8.old/src/iop/temperature.c	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/iop/temperature.c	2011-03-12 13:41:45.325774653 -0500
+@@ -169,7 +169,7 @@
+   {
+     const float coeffsi[3] = {d->coeffs[0]/65535.0f, d->coeffs[1]/65535.0f, d->coeffs[2]/65535.0f};
+ #ifdef _OPENMP
+-#pragma omp parallel for default(none) shared(roi_out, ivoid, ovoid, d) schedule(static)
++#pragma omp parallel for default(none) shared(roi_out, ivoid, ovoid, d, coeffsi) schedule(static)
+ #endif
+     for(int j=0; j<roi_out->height; j++)
+     {
+diff -ur darktable-0.8.old/src/iop/tonemap.cc darktable-0.8/src/iop/tonemap.cc
+--- darktable-0.8.old/src/iop/tonemap.cc	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/iop/tonemap.cc	2011-03-12 13:41:45.326178268 -0500
+@@ -219,10 +219,10 @@
+     else
+       module->default_enabled = 0;
+ 
+-    dt_iop_tonemapping_params_t tmp = (dt_iop_tonemapping_params_t)
+-    {
+-      2.5,0.1
+-    };
++    dt_iop_tonemapping_params_t tmp;
++    tmp.contrast = 2.5;
++    tmp.Fsize = 0.1;
++
+     memcpy(module->params, &tmp, sizeof(dt_iop_tonemapping_params_t));
+     memcpy(module->default_params, &tmp, sizeof(dt_iop_tonemapping_params_t));
+   }
+diff -ur darktable-0.8.old/src/LibRaw/CMakeLists.txt darktable-0.8/src/LibRaw/CMakeLists.txt
+--- darktable-0.8.old/src/LibRaw/CMakeLists.txt	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/LibRaw/CMakeLists.txt	2011-03-12 13:41:45.318644397 -0500
+@@ -5,7 +5,14 @@
+ #
+ # build liblibraw_r
+ #
+-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
++if(CMAKE_COMPILER_IS_GNUCC)
++  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
++endif(CMAKE_COMPILER_IS_GNUCC)
++
++
++if("${CMAKE_C_COMPILER_ID} ${CMAKE_CXX_COMPILER_ID}" MATCHES SunPro)
++  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Kpic")
++endif("${CMAKE_C_COMPILER_ID} ${CMAKE_CXX_COMPILER_ID}" MATCHES SunPro)
+ 
+ add_library(libraw_r STATIC ${LIBRAW_SOURCES})
+ target_link_libraries(libraw_r)
+diff -ur darktable-0.8.old/src/LibRaw/libraw/libraw_datastream.h darktable-0.8/src/LibRaw/libraw/libraw_datastream.h
+--- darktable-0.8.old/src/LibRaw/libraw/libraw_datastream.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/LibRaw/libraw/libraw_datastream.h	2011-03-12 13:41:45.319284705 -0500
+@@ -93,7 +93,7 @@
+             std::auto_ptr<std::filebuf> buf(new std::filebuf());
+             buf->open(filename, std::ios_base::in | std::ios_base::binary);
+             if (buf->is_open()) {
+-                f = buf;
++                f = std::auto_ptr<std::streambuf>(buf.release());
+             }
+         }
+     }
+@@ -172,7 +172,7 @@
+             f = saved_f;
+             return ENOENT;
+         } else {
+-            f = buf;
++            f = std::auto_ptr<std::streambuf>(buf.release());
+         }
+ 
+         return 0;
+diff -ur darktable-0.8.old/src/rawspeed/CMakeLists.txt darktable-0.8/src/rawspeed/CMakeLists.txt
+--- darktable-0.8.old/src/rawspeed/CMakeLists.txt	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/CMakeLists.txt	2011-03-12 13:41:45.326503620 -0500
+@@ -48,7 +48,14 @@
+ #
+ # build librawspeed
+ #
+-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
++if(CMAKE_COMPILER_IS_GNUCC)
++  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
++endif(CMAKE_COMPILER_IS_GNUCC)
++
++
++if("${CMAKE_C_COMPILER_ID} ${CMAKE_CXX_COMPILER_ID}" MATCHES SunPro)
++  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Kpic")
++endif("${CMAKE_C_COMPILER_ID} ${CMAKE_CXX_COMPILER_ID}" MATCHES SunPro)
+ 
+ add_library(rawspeed STATIC ${RAWSPEED_SOURCES})
+ target_link_libraries(rawspeed)
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/ArwDecoder.h darktable-0.8/src/rawspeed/RawSpeed/ArwDecoder.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/ArwDecoder.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/ArwDecoder.h	2011-03-12 13:41:45.326912416 -0500
+@@ -19,7 +19,9 @@
+ 
+     http://www.klauspost.com
+ */
+-#pragma once
++#ifndef ARW_DECODER_H
++#define ARW_DECODER_H
++
+ #include "RawDecoder.h"
+ #include "LJpegPlain.h"
+ #include "TiffIFD.h"
+@@ -46,3 +48,5 @@
+ };
+ 
+ } // namespace RawSpeed
++
++#endif
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/BitPumpJPEG.h darktable-0.8/src/rawspeed/RawSpeed/BitPumpJPEG.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/BitPumpJPEG.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/BitPumpJPEG.h	2011-03-12 13:41:45.327599310 -0500
+@@ -19,7 +19,9 @@
+ 
+     http://www.klauspost.com
+ */
+-#pragma once
++#ifndef BIT_PUMP_JPEG_H
++#define BIT_PUMP_JPEG_H
++
+ #include "ByteStream.h"
+ #include "IOException.h"
+ 
+@@ -117,3 +119,5 @@
+ };
+ 
+ } // namespace RawSpeed
++
++#endif
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/BitPumpMSB.h darktable-0.8/src/rawspeed/RawSpeed/BitPumpMSB.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/BitPumpMSB.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/BitPumpMSB.h	2011-03-12 13:41:45.328533671 -0500
+@@ -19,7 +19,9 @@
+ 
+     http://www.klauspost.com
+ */
+-#pragma once
++#ifndef BIT_PUMP_MSB_H
++#define BIT_PUMP_MSB_H
++
+ #include "ByteStream.h"
+ 
+ #define BITS_PER_LONG (8*sizeof(uint32))
+@@ -152,3 +154,5 @@
+ };
+ 
+ } // namespace RawSpeed
++
++#endif
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/BitPumpMSB32.h darktable-0.8/src/rawspeed/RawSpeed/BitPumpMSB32.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/BitPumpMSB32.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/BitPumpMSB32.h	2011-03-12 13:41:45.328931406 -0500
+@@ -19,7 +19,9 @@
+ 
+     http://www.klauspost.com
+ */
+-#pragma once
++#ifndef BIT_PUMP_MSB32_H
++#define BIT_PUMP_MSB32_H
++
+ #include "ByteStream.h"
+ 
+ #ifdef MIN_GET_BITS
+@@ -74,3 +76,5 @@
+ };
+ 
+ } // namespace RawSpeed
++
++#endif
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/BitPumpPlain.h darktable-0.8/src/rawspeed/RawSpeed/BitPumpPlain.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/BitPumpPlain.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/BitPumpPlain.h	2011-03-12 13:41:45.329306875 -0500
+@@ -19,7 +19,9 @@
+ 
+     http://www.klauspost.com
+ */
+-#pragma once
++#ifndef BIT_PUMP_PLAIN_H
++#define BIT_PUMP_PLAIN_H
++
+ #include "ByteStream.h"
+ 
+ namespace RawSpeed {
+@@ -54,3 +56,5 @@
+ };
+ 
+ } // namespace RawSpeed
++
++#endif
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/BlackArea.h darktable-0.8/src/rawspeed/RawSpeed/BlackArea.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/BlackArea.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/BlackArea.h	2011-03-12 13:41:45.329640643 -0500
+@@ -1,4 +1,6 @@
+-#pragma once
++#ifndef BLACK_AREA_H
++#define BLACK_AREA_H
++
+ /* 
+     RawSpeed - RAW file decoder.
+ 
+@@ -33,3 +35,5 @@
+ };
+ 
+ } // namespace RawSpeed
++
++#endif
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/ByteStream.h darktable-0.8/src/rawspeed/RawSpeed/ByteStream.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/ByteStream.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/ByteStream.h	2011-03-12 13:41:45.330361702 -0500
+@@ -19,7 +19,9 @@
+ 
+     http://www.klauspost.com
+ */
+-#pragma once
++#ifndef BYTE_STREAM_H
++#define BYTE_STREAM_H
++
+ #include "IOException.h"
+ 
+ namespace RawSpeed {
+@@ -48,3 +50,5 @@
+ };
+ 
+ } // namespace RawSpeed
++
++#endif
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/ByteStreamSwap.h darktable-0.8/src/rawspeed/RawSpeed/ByteStreamSwap.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/ByteStreamSwap.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/ByteStreamSwap.h	2011-03-12 13:41:45.330874818 -0500
+@@ -1,4 +1,6 @@
+-#pragma once
++#ifndef BYTE_STREAM_SWAP_H
++#define BYTE_STREAM_SWAP_H
++
+ #include "ByteStream.h"
+ 
+ #include "IOException.h"
+@@ -17,3 +19,5 @@
+ };
+ 
+ } // namespace RawSpeed
++
++#endif
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/Camera.cpp darktable-0.8/src/rawspeed/RawSpeed/Camera.cpp
+--- darktable-0.8.old/src/rawspeed/RawSpeed/Camera.cpp	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/Camera.cpp	2011-03-12 13:41:45.331406147 -0500
+@@ -223,7 +223,7 @@
+ int Camera::StringToInt(const xmlChar *in, const xmlChar *tag, const char* attribute) {
+   int i;
+ 
+-#if defined(__unix__) || defined(__MINGW32__)
++#if defined(unix) || defined(__MINGW32__)
+   if (EOF == sscanf((const char*)in, "%d", &i))
+ #else
+   if (EOF == sscanf_s((const char*)in, "%d", &i))
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/Camera.h darktable-0.8/src/rawspeed/RawSpeed/Camera.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/Camera.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/Camera.h	2011-03-12 13:41:45.331846479 -0500
+@@ -1,4 +1,6 @@
+-#pragma once
++#ifndef CAMERA_H
++#define CAMERA_H
++
+ #include "ColorFilterArray.h"
+ #include <libxml/parser.h>
+ #include "BlackArea.h"
+@@ -58,3 +60,5 @@
+ };
+ 
+ } // namespace RawSpeed
++
++#endif
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/CameraMetaData.h darktable-0.8/src/rawspeed/RawSpeed/CameraMetaData.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/CameraMetaData.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/CameraMetaData.h	2011-03-12 13:41:45.332258457 -0500
+@@ -1,4 +1,6 @@
+-#pragma once
++#ifndef CAMERA_META_DATA_H
++#define CAMERA_META_DATA_H
++
+ #include <libxml/xmlmemory.h>
+ #include <libxml/parser.h>
+ #include <libxml/xmlschemas.h>
+@@ -41,3 +43,5 @@
+ };
+ 
+ } // namespace RawSpeed
++
++#endif
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/CameraMetadataException.cpp darktable-0.8/src/rawspeed/RawSpeed/CameraMetadataException.cpp
+--- darktable-0.8.old/src/rawspeed/RawSpeed/CameraMetadataException.cpp	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/CameraMetadataException.cpp	2011-03-12 13:41:45.332696616 -0500
+@@ -28,7 +28,7 @@
+   va_list val;
+   va_start(val, fmt);
+   char buf[8192];
+-#if defined(__unix__) || defined(__MINGW32__)
++#if defined(unix) || defined(__MINGW32__)
+   vsnprintf(buf, 8192, fmt, val);
+ #else
+   vsprintf_s(buf, 8192, fmt, val);
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/CameraMetadataException.h darktable-0.8/src/rawspeed/RawSpeed/CameraMetadataException.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/CameraMetadataException.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/CameraMetadataException.h	2011-03-12 13:41:45.333447770 -0500
+@@ -19,7 +19,9 @@
+ 
+     http://www.klauspost.com
+ */
+-#pragma once
++#ifndef CAMERA_METADATA_EXCEPTION_H
++#define CAMERA_METADATA_EXCEPTION_H
++
+ 
+ namespace RawSpeed {
+ 
+@@ -33,3 +35,5 @@
+ };
+ 
+ } // namespace RawSpeed
++
++#endif
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/ColorFilterArray.h darktable-0.8/src/rawspeed/RawSpeed/ColorFilterArray.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/ColorFilterArray.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/ColorFilterArray.h	2011-03-12 13:41:45.333919689 -0500
+@@ -1,4 +1,6 @@
+-#pragma once
++#ifndef COLOR_FILTER_ARRAY_H
++#define COLOR_FILTER_ARRAY_H
++
+ #include "RawDecoderException.h"
+ /* 
+     RawSpeed - RAW file decoder.
+@@ -66,3 +68,5 @@
+ };
+ 
+ } // namespace RawSpeed
++
++#endif
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/Common.cpp darktable-0.8/src/rawspeed/RawSpeed/Common.cpp
+--- darktable-0.8.old/src/rawspeed/RawSpeed/Common.cpp	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/Common.cpp	2011-03-12 13:41:45.334300032 -0500
+@@ -22,7 +22,7 @@
+     http://www.klauspost.com
+ */
+ 
+-#if defined(__unix__) || defined(__MINGW32__)
++#if defined(unix) || defined(__MINGW32__)
+ 
+ void* _aligned_malloc(size_t bytes, size_t alignment) {
+   void* ret= NULL;
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/Common.h darktable-0.8/src/rawspeed/RawSpeed/Common.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/Common.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/Common.h	2011-03-12 13:41:45.334758142 -0500
+@@ -19,9 +19,11 @@
+ 
+     http://www.klauspost.com
+ */
+-#pragma once
++#ifndef COMMON_H
++#define COMMON_H
+ 
+-#if !defined(__unix__) && !defined(__MINGW32__)
++
++#if !defined(unix) && !defined(__MINGW32__)
+ #include <intrin.h>
+ #pragma intrinsic(_ReturnAddress)
+ #define MIN(a,b) min(a,b)
+@@ -48,7 +50,7 @@
+ #ifndef __MINGW32__
+ typedef char* LPCWSTR;
+ #endif
+-#endif // __unix__
++#endif // unix
+ 
+ #ifndef TRUE
+ #define TRUE 1
+@@ -121,3 +123,5 @@
+ 
+ 
+ } // namespace RawSpeed
++
++#endif
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/Cr2Decoder.h darktable-0.8/src/rawspeed/RawSpeed/Cr2Decoder.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/Cr2Decoder.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/Cr2Decoder.h	2011-03-12 13:41:45.335157589 -0500
+@@ -1,4 +1,6 @@
+-#pragma once
++#ifndef CR2_DECODER_H
++#define CR2_DECODER_H
++
+ #include "RawDecoder.h"
+ #include "LJpegPlain.h"
+ #include "TiffIFD.h"
+@@ -55,4 +57,5 @@
+   uint32 count;
+ };
+ 
+-} // namespace RawSpeed
+\ No newline at end of file
++} // namespace RawSpeed
++#endif
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/DngDecoder.h darktable-0.8/src/rawspeed/RawSpeed/DngDecoder.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/DngDecoder.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/DngDecoder.h	2011-03-12 13:41:45.335838684 -0500
+@@ -1,4 +1,6 @@
+-#pragma once
++#ifndef DNG_DECODER_H
++#define DNG_DECODER_H
++
+ #include "LJpegPlain.h"
+ #include "TiffIFD.h"
+ #include "DngDecoderSlices.h"
+@@ -52,3 +54,5 @@
+ };
+ 
+ } // namespace RawSpeed
++
++#endif
+Only in darktable-0.8/src/rawspeed/RawSpeed: DngDecoder.h.orig
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/DngDecoderSlices.h darktable-0.8/src/rawspeed/RawSpeed/DngDecoderSlices.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/DngDecoderSlices.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/DngDecoderSlices.h	2011-03-12 13:41:45.336227959 -0500
+@@ -1,4 +1,6 @@
+-#pragma once
++#ifndef DNG_DECODER_SLICES_H
++#define DNG_DECODER_SLICES_H
++
+ #include "RawDecoder.h"
+ #include <queue>
+ #include "LJpegPlain.h"
+@@ -72,3 +74,5 @@
+ };
+ 
+ } // namespace RawSpeed
++
++#endif
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/FileIOException.h darktable-0.8/src/rawspeed/RawSpeed/FileIOException.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/FileIOException.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/FileIOException.h	2011-03-12 13:41:45.336550526 -0500
+@@ -21,7 +21,9 @@
+ 
+     http://www.klauspost.com
+ */
+-#pragma once
++#ifndef FILE_IOEXCEPTION_H
++#define FILE_IOEXCEPTION_H
++
+ 
+ namespace RawSpeed {
+ 
+@@ -34,3 +36,5 @@
+ };
+ 
+ } // namespace RawSpeed
++
++#endif
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/FileMap.h darktable-0.8/src/rawspeed/RawSpeed/FileMap.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/FileMap.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/FileMap.h	2011-03-12 13:41:45.336874032 -0500
+@@ -1,4 +1,6 @@
+-#pragma once
++#ifndef FILE_MAP_H
++#define FILE_MAP_H
++
+ #include "FileIOException.h"
+ /* 
+     RawSpeed - RAW file decoder.
+@@ -55,3 +57,5 @@
+ };
+ 
+ } // namespace RawSpeed
++
++#endif
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/FileReader.cpp darktable-0.8/src/rawspeed/RawSpeed/FileReader.cpp
+--- darktable-0.8.old/src/rawspeed/RawSpeed/FileReader.cpp	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/FileReader.cpp	2011-03-12 13:41:45.337266063 -0500
+@@ -1,12 +1,12 @@
+ #include "StdAfx.h"
+ #include "FileReader.h"
+-#ifdef __unix__
++#ifdef unix
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <unistd.h>
+ #include <fcntl.h>
+ //#include <sys/mman.h>
+-#endif // __unix__
++#endif // unix
+ /*
+     RawSpeed - RAW file decoder.
+ 
+@@ -35,7 +35,7 @@
+ }
+ 
+ FileMap* FileReader::readFile() {
+-#ifdef __unix__
++#ifdef unix
+   int bytes_read = 0;
+   FILE *file;
+   char *dest;
+@@ -70,7 +70,7 @@
+   }
+ #endif
+ 
+-#else // __unix__
++#else // unix
+   HANDLE file_h;  // File handle
+   file_h = CreateFile(mFilename, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+   if (file_h == INVALID_HANDLE_VALUE) {
+@@ -90,7 +90,7 @@
+   }
+   CloseHandle(file_h);
+ 
+-#endif // __unix__
++#endif // unix
+   return fileData;
+ }
+ 
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/FileReader.h darktable-0.8/src/rawspeed/RawSpeed/FileReader.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/FileReader.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/FileReader.h	2011-03-12 13:41:45.337585807 -0500
+@@ -19,7 +19,9 @@
+ 
+     http://www.klauspost.com
+ */
+-#pragma once
++#ifndef FILE_READER_H
++#define FILE_READER_H
++
+ #include "FileIOException.h"
+ #include "FileMap.h"
+ 
+@@ -39,3 +41,5 @@
+ };
+ 
+ } // namespace RawSpeed
++
++#endif
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/IOException.h darktable-0.8/src/rawspeed/RawSpeed/IOException.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/IOException.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/IOException.h	2011-03-12 13:41:45.337970320 -0500
+@@ -21,7 +21,9 @@
+ 
+     http://www.klauspost.com
+ */
+-#pragma once
++#ifndef IOEXCEPTION_H
++#define IOEXCEPTION_H
++
+ 
+ namespace RawSpeed {
+ 
+@@ -36,3 +38,5 @@
+ };
+ 
+ } // namespace RawSpeed
++
++#endif
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/LJpegDecompressor.h darktable-0.8/src/rawspeed/RawSpeed/LJpegDecompressor.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/LJpegDecompressor.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/LJpegDecompressor.h	2011-03-12 13:41:45.338426175 -0500
+@@ -1,4 +1,6 @@
+-#pragma once
++#ifndef LJPEG_DECOMPRESSOR_H
++#define LJPEG_DECOMPRESSOR_H
++
+ #include "RawDecoder.h"
+ #include "BitPumpMSB.h"
+ /* 
+@@ -194,3 +196,5 @@
+ };
+ 
+ } // namespace RawSpeed
++
++#endif
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/LJpegPlain.h darktable-0.8/src/rawspeed/RawSpeed/LJpegPlain.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/LJpegPlain.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/LJpegPlain.h	2011-03-12 13:41:45.338833043 -0500
+@@ -1,4 +1,6 @@
+-#pragma once
++#ifndef LJPEG_PLAIN_H
++#define LJPEG_PLAIN_H
++
+ #include "LJpegDecompressor.h"
+ #include "BitPumpMSB.h"
+ /* 
+@@ -49,3 +51,5 @@
+ };
+ 
+ } // namespace RawSpeed
++
++#endif
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/NefDecoder.h darktable-0.8/src/rawspeed/RawSpeed/NefDecoder.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/NefDecoder.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/NefDecoder.h	2011-03-12 13:41:45.339198117 -0500
+@@ -1,4 +1,6 @@
+-#pragma once
++#ifndef NEF_DECODER_H
++#define NEF_DECODER_H
++
+ #include "RawDecoder.h"
+ #include "LJpegPlain.h"
+ #include "TiffIFD.h"
+@@ -55,4 +57,5 @@
+   uint32 count;
+ };
+ 
+-} // namespace RawSpeed
+\ No newline at end of file
++} // namespace RawSpeed
++#endif
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/NikonDecompressor.h darktable-0.8/src/rawspeed/RawSpeed/NikonDecompressor.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/NikonDecompressor.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/NikonDecompressor.h	2011-03-12 13:41:45.339533297 -0500
+@@ -1,4 +1,6 @@
+-#pragma once
++#ifndef NIKON_DECOMPRESSOR_H
++#define NIKON_DECOMPRESSOR_H
++
+ #include "LJpegDecompressor.h"
+ #include "BitPumpMSB.h"
+ /* 
+@@ -55,3 +57,5 @@
+   7,6,8,5,9,4,10,3,11,12,2,0,1,13,14 } };
+   
+ } // namespace RawSpeed
++
++#endif
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/OrfDecoder.cpp darktable-0.8/src/rawspeed/RawSpeed/OrfDecoder.cpp
+--- darktable-0.8.old/src/rawspeed/RawSpeed/OrfDecoder.cpp	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/OrfDecoder.cpp	2011-03-12 13:41:45.340224971 -0500
+@@ -1,7 +1,7 @@
+ #include "StdAfx.h"
+ #include "OrfDecoder.h"
+ #include "TiffParserOlympus.h"
+-#ifdef __unix__
++#ifdef unix
+ #include <stdlib.h>
+ #endif
+ /*
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/OrfDecoder.h darktable-0.8/src/rawspeed/RawSpeed/OrfDecoder.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/OrfDecoder.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/OrfDecoder.h	2011-03-12 13:41:45.340735160 -0500
+@@ -1,4 +1,6 @@
+-#pragma once
++#ifndef ORF_DECODER_H
++#define ORF_DECODER_H
++
+ #include "RawDecoder.h"
+ #include "LJpegPlain.h"
+ #include "TiffIFD.h"
+@@ -43,3 +45,5 @@
+ };
+ 
+ } // namespace RawSpeed
++
++#endif
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/PefDecoder.h darktable-0.8/src/rawspeed/RawSpeed/PefDecoder.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/PefDecoder.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/PefDecoder.h	2011-03-12 13:41:45.341812925 -0500
+@@ -1,4 +1,6 @@
+-#pragma once
++#ifndef PEF_DECODER_H
++#define PEF_DECODER_H
++
+ #include "RawDecoder.h"
+ #include "TiffIFD.h"
+ #include "PentaxDecompressor.h"
+@@ -39,3 +41,5 @@
+ };
+ 
+ } // namespace RawSpeed
++
++#endif
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/PentaxDecompressor.h darktable-0.8/src/rawspeed/RawSpeed/PentaxDecompressor.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/PentaxDecompressor.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/PentaxDecompressor.h	2011-03-12 13:41:45.342654369 -0500
+@@ -1,4 +1,6 @@
+-#pragma once
++#ifndef PENTAX_DECOMPRESSOR_H
++#define PENTAX_DECOMPRESSOR_H
++
+ #include "LJpegDecompressor.h"
+ #include "BitPumpMSB.h"
+ #include "TiffIFD.h"
+@@ -39,3 +41,5 @@
+ };
+ 
+ } // namespace RawSpeed
++
++#endif
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/RawDecoder.h darktable-0.8/src/rawspeed/RawSpeed/RawDecoder.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/RawDecoder.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/RawDecoder.h	2011-03-12 13:41:45.343135195 -0500
+@@ -1,4 +1,6 @@
+-#pragma once
++#ifndef RAW_DECODER_H
++#define RAW_DECODER_H
++
+ #include "RawDecoderException.h"
+ #include "FileMap.h"
+ #include "BitPumpJPEG.h" // Includes bytestream
+@@ -147,3 +149,5 @@
+ };
+ 
+ } // namespace RawSpeed
++
++#endif
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/RawDecoderException.h darktable-0.8/src/rawspeed/RawSpeed/RawDecoderException.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/RawDecoderException.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/RawDecoderException.h	2011-03-12 13:41:45.343461221 -0500
+@@ -1,4 +1,6 @@
+-#pragma once
++#ifndef RAW_DECODER_EXCEPTION_H
++#define RAW_DECODER_EXCEPTION_H
++
+ /* 
+     RawSpeed - RAW file decoder.
+ 
+@@ -34,3 +36,5 @@
+ };
+ 
+ } // namespace RawSpeed
++
++#endif
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/RawImage.h darktable-0.8/src/rawspeed/RawSpeed/RawImage.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/RawImage.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/RawImage.h	2011-03-12 13:41:45.343898009 -0500
+@@ -1,4 +1,6 @@
+-#pragma once
++#ifndef RAW_IMAGE_H
++#define RAW_IMAGE_H
++
+ #include "ColorFilterArray.h"
+ #include "BlackArea.h"
+ 
+@@ -86,3 +88,5 @@
+ { return new RawImageData(dim, bytesPerPixel, componentsPerPixel); }
+ 
+ } // namespace RawSpeed
++
++#endif
+Only in darktable-0.8/src/rawspeed/RawSpeed: RawImage.h.orig
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/Rw2Decoder.h darktable-0.8/src/rawspeed/RawSpeed/Rw2Decoder.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/Rw2Decoder.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/Rw2Decoder.h	2011-03-12 13:41:45.344201453 -0500
+@@ -1,4 +1,6 @@
+-#pragma once
++#ifndef RW2_DECODER_H
++#define RW2_DECODER_H
++
+ #include "RawDecoder.h"
+ #include "TiffIFD.h"
+ #include "BitPumpPlain.h"
+@@ -60,3 +62,5 @@
+ };
+ 
+ } // namespace RawSpeed
++
++#endif
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/StdAfx.h darktable-0.8/src/rawspeed/RawSpeed/StdAfx.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/StdAfx.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/StdAfx.h	2011-03-12 13:47:25.801106853 -0500
+@@ -30,7 +30,7 @@
+ 
+ #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
+ #include <stdio.h>
+-#ifndef __unix__
++#ifndef unix
+ #include <tchar.h>
+ #include <io.h>
+ #include <Windows.h>
+@@ -54,7 +54,7 @@
+ #include <exception>
+ #include <string.h>
+ #include <assert.h>
+-#endif // __unix__
++#endif // unix
+ #include <malloc.h>
+ #include <math.h>
+ #include "pthread.h"
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/TiffEntry.h darktable-0.8/src/rawspeed/RawSpeed/TiffEntry.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/TiffEntry.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/TiffEntry.h	2011-03-12 13:41:45.346159340 -0500
+@@ -1,4 +1,6 @@
+-#pragma once
++#ifndef TIFF_ENTRY_H
++#define TIFF_ENTRY_H
++
+ #include "TiffParserException.h"
+ #include "FileMap.h"
+ 
+@@ -92,3 +94,5 @@
+ };
+ 
+ } // namespace RawSpeed
++
++#endif
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/TiffEntryBE.h darktable-0.8/src/rawspeed/RawSpeed/TiffEntryBE.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/TiffEntryBE.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/TiffEntryBE.h	2011-03-12 13:41:45.346487417 -0500
+@@ -1,4 +1,6 @@
+-#pragma once
++#ifndef TIFF_ENTRY_BE_H
++#define TIFF_ENTRY_BE_H
++
+ #include "TiffEntry.h"
+ 
+ /* 
+@@ -41,3 +43,5 @@
+ };
+ 
+ } // namespace RawSpeed
++
++#endif
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/TiffIFD.h darktable-0.8/src/rawspeed/RawSpeed/TiffIFD.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/TiffIFD.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/TiffIFD.h	2011-03-12 13:41:45.346800349 -0500
+@@ -1,4 +1,6 @@
+-#pragma once
++#ifndef TIFF_IFD_H
++#define TIFF_IFD_H
++
+ #include "FileMap.h"
+ #include "TiffEntry.h"
+ #include "TiffParserException.h"
+@@ -68,3 +70,5 @@
+ }
+ 
+ } // namespace RawSpeed
++
++#endif
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/TiffIFDBE.h darktable-0.8/src/rawspeed/RawSpeed/TiffIFDBE.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/TiffIFDBE.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/TiffIFDBE.h	2011-03-12 13:41:45.347096118 -0500
+@@ -1,4 +1,6 @@
+-#pragma once
++#ifndef TIFF_IFDBE_H
++#define TIFF_IFDBE_H
++
+ #include "TiffIFD.h"
+ /* 
+     RawSpeed - RAW file decoder.
+@@ -34,3 +36,5 @@
+ };
+ 
+ } // namespace RawSpeed
++
++#endif
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/TiffParser.h darktable-0.8/src/rawspeed/RawSpeed/TiffParser.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/TiffParser.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/TiffParser.h	2011-03-12 13:41:45.347489903 -0500
+@@ -20,7 +20,9 @@
+     http://www.klauspost.com
+ */
+ 
+-#pragma once
++#ifndef TIFF_PARSER_H
++#define TIFF_PARSER_H
++
+ #include "FileMap.h"
+ #include "TiffIFD.h"
+ #include "TiffIFDBE.h"
+@@ -54,3 +56,5 @@
+ };
+ 
+ } // namespace RawSpeed
++
++#endif
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/TiffParserException.h darktable-0.8/src/rawspeed/RawSpeed/TiffParserException.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/TiffParserException.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/TiffParserException.h	2011-03-12 13:41:45.348052941 -0500
+@@ -19,7 +19,9 @@
+ 
+     http://www.klauspost.com
+ */
+-#pragma once
++#ifndef TIFF_PARSER_EXCEPTION_H
++#define TIFF_PARSER_EXCEPTION_H
++
+ 
+ namespace RawSpeed {
+ 
+@@ -32,3 +34,5 @@
+ };
+ 
+ } // namespace RawSpeed
++
++#endif
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/TiffParserHeaderless.h darktable-0.8/src/rawspeed/RawSpeed/TiffParserHeaderless.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/TiffParserHeaderless.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/TiffParserHeaderless.h	2011-03-12 13:41:45.348524742 -0500
+@@ -1,4 +1,6 @@
+-#pragma once
++#ifndef TIFF_PARSER_HEADERLESS_H
++#define TIFF_PARSER_HEADERLESS_H
++
+ #include "TiffParser.h"
+ /* 
+     RawSpeed - RAW file decoder.
+@@ -35,3 +37,5 @@
+ };
+ 
+ } // namespace RawSpeed
++
++#endif
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/TiffParserOlympus.h darktable-0.8/src/rawspeed/RawSpeed/TiffParserOlympus.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/TiffParserOlympus.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/TiffParserOlympus.h	2011-03-12 13:41:45.348820786 -0500
+@@ -1,4 +1,6 @@
+-#pragma once
++#ifndef TIFF_PARSER_OLYMPUS_H
++#define TIFF_PARSER_OLYMPUS_H
++
+ #include "TiffParser.h"
+ /* 
+     RawSpeed - RAW file decoder.
+@@ -34,3 +36,5 @@
+ };
+ 
+ } // namespace RawSpeed
++
++#endif
+diff -ur darktable-0.8.old/tools/create_metadata.sh darktable-0.8/tools/create_metadata.sh
+--- darktable-0.8.old/tools/create_metadata.sh	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/tools/create_metadata.sh	2011-03-12 13:41:45.349150061 -0500
+@@ -5,7 +5,7 @@
+ outputheader=metadata_gen.h
+ outputbody=metadata_gen.c
+ 
+-headerdefine=__$(echo -n $outputheader | tr '[:lower:].' '[:upper:]_')__
++headerdefine=__$(printf $outputheader | tr '[:lower:].' '[:upper:]_')__
+ # header of the .h file
+ cat > $outputdir/$outputheader << EOF
+ /** generated file, do not edit! */
+@@ -31,12 +31,12 @@
+ # iterate over the input
+ first=0
+ for line in $(cat $inputfile | grep -v "^#"); do
+-    enum=DT_METADATA_$(echo -n $line | tr '[:lower:].' '[:upper:]_')
+-    length=$(echo -n $line | wc -c)
++    enum=DT_METADATA_$(printf $line | tr '[:lower:].' '[:upper:]_')
++    length=$(printf $line | wc -c)
+     if [ "$first" -ne 0 ]; then
+         echo "," >> $outputdir/$outputheader
+     fi
+-    echo -n "    $enum" >> $outputdir/$outputheader
++    printf "    $enum" >> $outputdir/$outputheader
+     first=1
+ 
+     cat >> $outputdir/$outputbody << EOF
