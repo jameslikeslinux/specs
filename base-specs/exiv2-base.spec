@@ -18,8 +18,8 @@ Patch0:		exiv2-00-sunstudio.diff
 
 %build
 export CXX=/opt/sunstudio12.1/bin/CC
-export CFLAGS="%{optflags} -g"
-export CXXFLAGS="%{cxx_optflags} -g"
+export CFLAGS="%{optflags}"
+export CXXFLAGS="%{cxx_optflags}"
 export LDFLAGS="%{_ldflags}"
 ./configure --prefix=%{_prefix} --bindir=%{_bindir} --libdir=%{_libdir} --disable-dependency-tracking --disable-visibility --disable-static
 

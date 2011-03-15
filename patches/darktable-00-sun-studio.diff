@@ -1,6 +1,6 @@
 diff -ur darktable-0.8.old/src/CMakeLists.txt darktable-0.8/src/CMakeLists.txt
 --- darktable-0.8.old/src/CMakeLists.txt	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/CMakeLists.txt	2011-03-12 13:50:49.852158328 -0500
++++ darktable-0.8/src/CMakeLists.txt	2011-03-15 17:51:17.246546339 -0400
 @@ -65,7 +65,6 @@
  
  # initial compiler flags
@@ -59,8 +59,8 @@ diff -ur darktable-0.8.old/src/CMakeLists.txt darktable-0.8/src/CMakeLists.txt
 +# Set default compile flags for Sun Studio 
 +#
 +if("${CMAKE_C_COMPILER_ID} ${CMAKE_CXX_COMPILER_ID}" MATCHES SunPro)
-+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -xc99 -features=extensions -xarch=sse2 -D__SSE2__ -fast")
-+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -features=extensions -xarch=sse2 -D__SSE2__ -fast")
++  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -xc99 -features=extensions -fast -xarch=sse2 -D__SSE2__ -D__unix__")
++  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -features=extensions -fast -xarch=sse2 -D__SSE2__ -D__unix__")
 +endif("${CMAKE_C_COMPILER_ID} ${CMAKE_CXX_COMPILER_ID}" MATCHES SunPro)
    
  
@@ -127,7 +127,7 @@ diff -ur darktable-0.8.old/src/iop/atrous.c darktable-0.8/src/iop/atrous.c
    {
 diff -ur darktable-0.8.old/src/iop/bilateral.cc darktable-0.8/src/iop/bilateral.cc
 --- darktable-0.8.old/src/iop/bilateral.cc	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/iop/bilateral.cc	2011-03-12 13:41:45.324621185 -0500
++++ darktable-0.8/src/iop/bilateral.cc	2011-03-15 18:06:16.232431108 -0400
 @@ -265,12 +265,14 @@
      module->priority = 270;
      module->params_size = sizeof(dt_iop_bilateral_params_t);
@@ -417,18 +417,6 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/ByteStreamSwap.h darktable-0.8/
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/Camera.cpp darktable-0.8/src/rawspeed/RawSpeed/Camera.cpp
---- darktable-0.8.old/src/rawspeed/RawSpeed/Camera.cpp	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/Camera.cpp	2011-03-12 13:41:45.331406147 -0500
-@@ -223,7 +223,7 @@
- int Camera::StringToInt(const xmlChar *in, const xmlChar *tag, const char* attribute) {
-   int i;
- 
--#if defined(__unix__) || defined(__MINGW32__)
-+#if defined(unix) || defined(__MINGW32__)
-   if (EOF == sscanf((const char*)in, "%d", &i))
- #else
-   if (EOF == sscanf_s((const char*)in, "%d", &i))
 diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/Camera.h darktable-0.8/src/rawspeed/RawSpeed/Camera.h
 --- darktable-0.8.old/src/rawspeed/RawSpeed/Camera.h	2011-02-15 05:58:16.000000000 -0500
 +++ darktable-0.8/src/rawspeed/RawSpeed/Camera.h	2011-03-12 13:41:45.331846479 -0500
@@ -463,18 +451,6 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/CameraMetaData.h darktable-0.8/
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/CameraMetadataException.cpp darktable-0.8/src/rawspeed/RawSpeed/CameraMetadataException.cpp
---- darktable-0.8.old/src/rawspeed/RawSpeed/CameraMetadataException.cpp	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/CameraMetadataException.cpp	2011-03-12 13:41:45.332696616 -0500
-@@ -28,7 +28,7 @@
-   va_list val;
-   va_start(val, fmt);
-   char buf[8192];
--#if defined(__unix__) || defined(__MINGW32__)
-+#if defined(unix) || defined(__MINGW32__)
-   vsnprintf(buf, 8192, fmt, val);
- #else
-   vsprintf_s(buf, 8192, fmt, val);
 diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/CameraMetadataException.h darktable-0.8/src/rawspeed/RawSpeed/CameraMetadataException.h
 --- darktable-0.8.old/src/rawspeed/RawSpeed/CameraMetadataException.h	2011-02-15 05:58:16.000000000 -0500
 +++ darktable-0.8/src/rawspeed/RawSpeed/CameraMetadataException.h	2011-03-12 13:41:45.333447770 -0500
@@ -512,44 +488,20 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/ColorFilterArray.h darktable-0.
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/Common.cpp darktable-0.8/src/rawspeed/RawSpeed/Common.cpp
---- darktable-0.8.old/src/rawspeed/RawSpeed/Common.cpp	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/Common.cpp	2011-03-12 13:41:45.334300032 -0500
-@@ -22,7 +22,7 @@
-     http://www.klauspost.com
- */
- 
--#if defined(__unix__) || defined(__MINGW32__)
-+#if defined(unix) || defined(__MINGW32__)
- 
- void* _aligned_malloc(size_t bytes, size_t alignment) {
-   void* ret= NULL;
 diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/Common.h darktable-0.8/src/rawspeed/RawSpeed/Common.h
 --- darktable-0.8.old/src/rawspeed/RawSpeed/Common.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/Common.h	2011-03-12 13:41:45.334758142 -0500
-@@ -19,9 +19,11 @@
++++ darktable-0.8/src/rawspeed/RawSpeed/Common.h	2011-03-15 17:49:54.079236402 -0400
+@@ -19,7 +19,9 @@
  
      http://www.klauspost.com
  */
 -#pragma once
 +#ifndef COMMON_H
 +#define COMMON_H
- 
--#if !defined(__unix__) && !defined(__MINGW32__)
 +
-+#if !defined(unix) && !defined(__MINGW32__)
- #include <intrin.h>
- #pragma intrinsic(_ReturnAddress)
- #define MIN(a,b) min(a,b)
-@@ -48,7 +50,7 @@
- #ifndef __MINGW32__
- typedef char* LPCWSTR;
- #endif
--#endif // __unix__
-+#endif // unix
  
- #ifndef TRUE
- #define TRUE 1
+ #if !defined(__unix__) && !defined(__MINGW32__)
+ #include <intrin.h>
 @@ -121,3 +123,5 @@
  
  
@@ -647,51 +599,6 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/FileMap.h darktable-0.8/src/raw
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/FileReader.cpp darktable-0.8/src/rawspeed/RawSpeed/FileReader.cpp
---- darktable-0.8.old/src/rawspeed/RawSpeed/FileReader.cpp	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/FileReader.cpp	2011-03-12 13:41:45.337266063 -0500
-@@ -1,12 +1,12 @@
- #include "StdAfx.h"
- #include "FileReader.h"
--#ifdef __unix__
-+#ifdef unix
- #include <sys/types.h>
- #include <sys/stat.h>
- #include <unistd.h>
- #include <fcntl.h>
- //#include <sys/mman.h>
--#endif // __unix__
-+#endif // unix
- /*
-     RawSpeed - RAW file decoder.
- 
-@@ -35,7 +35,7 @@
- }
- 
- FileMap* FileReader::readFile() {
--#ifdef __unix__
-+#ifdef unix
-   int bytes_read = 0;
-   FILE *file;
-   char *dest;
-@@ -70,7 +70,7 @@
-   }
- #endif
- 
--#else // __unix__
-+#else // unix
-   HANDLE file_h;  // File handle
-   file_h = CreateFile(mFilename, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
-   if (file_h == INVALID_HANDLE_VALUE) {
-@@ -90,7 +90,7 @@
-   }
-   CloseHandle(file_h);
- 
--#endif // __unix__
-+#endif // unix
-   return fileData;
- }
- 
 diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/FileReader.h darktable-0.8/src/rawspeed/RawSpeed/FileReader.h
 --- darktable-0.8.old/src/rawspeed/RawSpeed/FileReader.h	2011-02-15 05:58:16.000000000 -0500
 +++ darktable-0.8/src/rawspeed/RawSpeed/FileReader.h	2011-03-12 13:41:45.337585807 -0500
@@ -802,18 +709,6 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/NikonDecompressor.h darktable-0
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/OrfDecoder.cpp darktable-0.8/src/rawspeed/RawSpeed/OrfDecoder.cpp
---- darktable-0.8.old/src/rawspeed/RawSpeed/OrfDecoder.cpp	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/OrfDecoder.cpp	2011-03-12 13:41:45.340224971 -0500
-@@ -1,7 +1,7 @@
- #include "StdAfx.h"
- #include "OrfDecoder.h"
- #include "TiffParserOlympus.h"
--#ifdef __unix__
-+#ifdef unix
- #include <stdlib.h>
- #endif
- /*
 diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/OrfDecoder.h darktable-0.8/src/rawspeed/RawSpeed/OrfDecoder.h
 --- darktable-0.8.old/src/rawspeed/RawSpeed/OrfDecoder.h	2011-02-15 05:58:16.000000000 -0500
 +++ darktable-0.8/src/rawspeed/RawSpeed/OrfDecoder.h	2011-03-12 13:41:45.340735160 -0500
@@ -865,6 +760,18 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/PentaxDecompressor.h darktable-
  } // namespace RawSpeed
 +
 +#endif
+diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/Point.h darktable-0.8/src/rawspeed/RawSpeed/Point.h
+--- darktable-0.8.old/src/rawspeed/RawSpeed/Point.h	2011-02-15 05:58:16.000000000 -0500
++++ darktable-0.8/src/rawspeed/RawSpeed/Point.h	2011-03-15 17:51:58.542111850 -0400
+@@ -24,7 +24,7 @@
+ #ifndef SS_Point_H
+ #define SS_Point_H
+ 
+-#ifdef __unix
++#ifdef __unix__
+ #include <stdlib.h>
+ #endif
+ 
 diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/RawDecoder.h darktable-0.8/src/rawspeed/RawSpeed/RawDecoder.h
 --- darktable-0.8.old/src/rawspeed/RawSpeed/RawDecoder.h	2011-02-15 05:58:16.000000000 -0500
 +++ darktable-0.8/src/rawspeed/RawSpeed/RawDecoder.h	2011-03-12 13:41:45.343135195 -0500
@@ -936,25 +843,16 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/Rw2Decoder.h darktable-0.8/src/
 +#endif
 diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/StdAfx.h darktable-0.8/src/rawspeed/RawSpeed/StdAfx.h
 --- darktable-0.8.old/src/rawspeed/RawSpeed/StdAfx.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/StdAfx.h	2011-03-12 13:47:25.801106853 -0500
-@@ -30,7 +30,7 @@
- 
- #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
- #include <stdio.h>
--#ifndef __unix__
-+#ifndef unix
- #include <tchar.h>
- #include <io.h>
- #include <Windows.h>
-@@ -54,7 +54,7 @@
- #include <exception>
- #include <string.h>
- #include <assert.h>
--#endif // __unix__
-+#endif // unix
- #include <malloc.h>
- #include <math.h>
- #include "pthread.h"
++++ darktable-0.8/src/rawspeed/RawSpeed/StdAfx.h	2011-03-15 17:49:54.010284974 -0400
+@@ -39,7 +39,7 @@
+ #else
+ #include <stdexcept>
+ #endif
+-#else // if unix
++#else // if __unix__
+ #ifdef _XOPEN_SOURCE
+ #if (_XOPEN_SOURCE < 600)
+ #undef _XOPEN_SOURCE
 diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/TiffEntry.h darktable-0.8/src/rawspeed/RawSpeed/TiffEntry.h
 --- darktable-0.8.old/src/rawspeed/RawSpeed/TiffEntry.h	2011-02-15 05:58:16.000000000 -0500
 +++ darktable-0.8/src/rawspeed/RawSpeed/TiffEntry.h	2011-03-12 13:41:45.346159340 -0500
