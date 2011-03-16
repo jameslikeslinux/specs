@@ -1,4 +1,4 @@
-From 61a09608225418c3b1cd2392f36a8b2812255dba Mon Sep 17 00:00:00 2001
+From 2fb7f79ac9dd008f51233f6415eb4cb5712cc70c Mon Sep 17 00:00:00 2001
 From: James Lee <jlee@thestaticvoid.com>
 Date: Fri, 11 Mar 2011 23:01:02 -0500
 Subject: [PATCH] Fixes for Sun Studio compilation.
@@ -47,7 +47,6 @@ Subject: [PATCH] Fixes for Sun Studio compilation.
  src/rawspeed/RawSpeed/RawDecoderException.h     |    6 ++-
  src/rawspeed/RawSpeed/RawImage.h                |    6 ++-
  src/rawspeed/RawSpeed/Rw2Decoder.h              |    6 ++-
- src/rawspeed/RawSpeed/StdAfx.h                  |    2 +-
  src/rawspeed/RawSpeed/TiffEntry.h               |    6 ++-
  src/rawspeed/RawSpeed/TiffEntryBE.h             |    6 ++-
  src/rawspeed/RawSpeed/TiffIFD.h                 |    6 ++-
@@ -57,7 +56,7 @@ Subject: [PATCH] Fixes for Sun Studio compilation.
  src/rawspeed/RawSpeed/TiffParserHeaderless.h    |    6 ++-
  src/rawspeed/RawSpeed/TiffParserOlympus.h       |    6 ++-
  tools/create_metadata.sh                        |    8 +-
- 53 files changed, 293 insertions(+), 95 deletions(-)
+ 52 files changed, 292 insertions(+), 94 deletions(-)
 
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
 index 7aa3d68..c1cd81e 100644
@@ -987,19 +986,6 @@ index a6cea5b..435b236 100644
  } // namespace RawSpeed
 +
 +#endif
-diff --git a/src/rawspeed/RawSpeed/StdAfx.h b/src/rawspeed/RawSpeed/StdAfx.h
-index abf954b..28abace 100644
---- a/src/rawspeed/RawSpeed/StdAfx.h
-+++ b/src/rawspeed/RawSpeed/StdAfx.h
-@@ -40,7 +40,7 @@
- #include <stdexcept>
- #endif
- #include <malloc.h>
--#else // if unix
-+#else // if __unix__
- #ifdef _XOPEN_SOURCE
- #if (_XOPEN_SOURCE < 600)
- #undef _XOPEN_SOURCE
 diff --git a/src/rawspeed/RawSpeed/TiffEntry.h b/src/rawspeed/RawSpeed/TiffEntry.h
 index 69ba86a..58fae2f 100644
 --- a/src/rawspeed/RawSpeed/TiffEntry.h
