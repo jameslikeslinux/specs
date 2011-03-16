@@ -1,7 +1,68 @@
-diff -ur darktable-0.8.old/src/CMakeLists.txt darktable-0.8/src/CMakeLists.txt
---- darktable-0.8.old/src/CMakeLists.txt	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/CMakeLists.txt	2011-03-15 17:51:17.246546339 -0400
-@@ -65,7 +65,6 @@
+From dfd1b3bd2cc553d645a6c78c0bbe7255f12d9607 Mon Sep 17 00:00:00 2001
+From: James Lee <jlee@thestaticvoid.com>
+Date: Fri, 11 Mar 2011 23:01:02 -0500
+Subject: [PATCH] Fixes for Sun Studio compilation.
+
+---
+ src/CMakeLists.txt                              |   60 +++++++++++++---------
+ src/LibRaw/CMakeLists.txt                       |    9 +++-
+ src/LibRaw/libraw/libraw_datastream.h           |    4 +-
+ src/common/darktable.c                          |    4 +-
+ src/control/jobs/control_jobs.c                 |    9 ++-
+ src/iop/atrous.c                                |    4 +-
+ src/iop/bilateral.cc                            |   14 +++--
+ src/iop/demosaic.c                              |    6 ++-
+ src/iop/temperature.c                           |    2 +-
+ src/iop/tonemap.cc                              |    8 ++--
+ src/rawspeed/CMakeLists.txt                     |    9 +++-
+ src/rawspeed/RawSpeed/ArwDecoder.h              |    6 ++-
+ src/rawspeed/RawSpeed/BitPumpJPEG.h             |    6 ++-
+ src/rawspeed/RawSpeed/BitPumpMSB.h              |    6 ++-
+ src/rawspeed/RawSpeed/BitPumpMSB32.h            |    6 ++-
+ src/rawspeed/RawSpeed/BitPumpPlain.h            |    6 ++-
+ src/rawspeed/RawSpeed/BlackArea.h               |    6 ++-
+ src/rawspeed/RawSpeed/ByteStream.h              |    6 ++-
+ src/rawspeed/RawSpeed/ByteStreamSwap.h          |    6 ++-
+ src/rawspeed/RawSpeed/Camera.h                  |    6 ++-
+ src/rawspeed/RawSpeed/CameraMetaData.h          |    6 ++-
+ src/rawspeed/RawSpeed/CameraMetadataException.h |    6 ++-
+ src/rawspeed/RawSpeed/ColorFilterArray.h        |    6 ++-
+ src/rawspeed/RawSpeed/Common.h                  |    6 ++-
+ src/rawspeed/RawSpeed/Cr2Decoder.h              |    7 ++-
+ src/rawspeed/RawSpeed/DngDecoder.h              |    6 ++-
+ src/rawspeed/RawSpeed/DngDecoderSlices.h        |    6 ++-
+ src/rawspeed/RawSpeed/FileIOException.h         |    6 ++-
+ src/rawspeed/RawSpeed/FileMap.h                 |    6 ++-
+ src/rawspeed/RawSpeed/FileReader.h              |    6 ++-
+ src/rawspeed/RawSpeed/IOException.h             |    6 ++-
+ src/rawspeed/RawSpeed/LJpegDecompressor.h       |    6 ++-
+ src/rawspeed/RawSpeed/LJpegPlain.h              |    6 ++-
+ src/rawspeed/RawSpeed/NefDecoder.h              |    7 ++-
+ src/rawspeed/RawSpeed/NikonDecompressor.h       |    6 ++-
+ src/rawspeed/RawSpeed/OrfDecoder.h              |    6 ++-
+ src/rawspeed/RawSpeed/PefDecoder.h              |    6 ++-
+ src/rawspeed/RawSpeed/PentaxDecompressor.h      |    6 ++-
+ src/rawspeed/RawSpeed/RawDecoder.h              |    6 ++-
+ src/rawspeed/RawSpeed/RawDecoderException.h     |    6 ++-
+ src/rawspeed/RawSpeed/RawImage.h                |    6 ++-
+ src/rawspeed/RawSpeed/Rw2Decoder.h              |    6 ++-
+ src/rawspeed/RawSpeed/StdAfx.h                  |    2 +-
+ src/rawspeed/RawSpeed/TiffEntry.h               |    6 ++-
+ src/rawspeed/RawSpeed/TiffEntryBE.h             |    6 ++-
+ src/rawspeed/RawSpeed/TiffIFD.h                 |    6 ++-
+ src/rawspeed/RawSpeed/TiffIFDBE.h               |    6 ++-
+ src/rawspeed/RawSpeed/TiffParser.h              |    6 ++-
+ src/rawspeed/RawSpeed/TiffParserException.h     |    6 ++-
+ src/rawspeed/RawSpeed/TiffParserHeaderless.h    |    6 ++-
+ src/rawspeed/RawSpeed/TiffParserOlympus.h       |    6 ++-
+ tools/create_metadata.sh                        |    8 ++--
+ 52 files changed, 281 insertions(+), 94 deletions(-)
+
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 7aa3d68..b6f0033 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -65,7 +65,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/LibRaw)
  
  # initial compiler flags
  add_definitions("-DHAVE_CONFIG_H")
@@ -9,7 +70,7 @@ diff -ur darktable-0.8.old/src/CMakeLists.txt darktable-0.8/src/CMakeLists.txt
  
  # Check for openmp
  find_package(OpenMP)
-@@ -195,25 +194,36 @@
+@@ -195,32 +194,43 @@ endif(GPHOTO2_FOUND)
  #
  # Set default compile flags for GCC
  #
@@ -21,17 +82,6 @@ diff -ur darktable-0.8.old/src/CMakeLists.txt darktable-0.8/src/CMakeLists.txt
 -  # apple build fails on deprecated warnings..
 -  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror")
 -endif(NOT APPLE)
--
--if(NOT WIN32)
--  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pthread")
--endif(NOT WIN32)
--
--set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -msse2 -mfpmath=sse -march=native -g")
--set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O3 -ffast-math -fexpensive-optimizations")
--set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O0 -g -D_DEBUG")
--set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse2 -mfpmath=sse -march=native -g")
--set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -ffast-math -fexpensive-optimizations")
--set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -g -D_DEBUG")
 +if(CMAKE_COMPILER_IS_GNUCC)
 +  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99 -Wall -fno-strict-aliasing")
 +  # c++ code doesn't like -Werror (libraw)
@@ -46,15 +96,29 @@ diff -ur darktable-0.8.old/src/CMakeLists.txt darktable-0.8/src/CMakeLists.txt
 +    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pthread")
 +  endif(NOT WIN32)
 +  
-+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -msse2 -mfpmath=sse -march=native -g")
++  if(NOT BINARY_PACKAGE_BUILD)
++  	set(MARCH "-march=native")	
++  else()
++  	set(MARCH "-mtune=generic")
++  endif()
++  
++  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -msse2 -mfpmath=sse ${MARCH} -g")
 +  set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O3 -ffast-math -fexpensive-optimizations")
 +  set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O0 -g -D_DEBUG")
-+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse2 -mfpmath=sse -march=native -g")
++  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse2 -mfpmath=sse ${MARCH} -g")
 +  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -ffast-math -fexpensive-optimizations")
 +  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -g -D_DEBUG")
 +endif(CMAKE_COMPILER_IS_GNUCC)
-+
-+
+ 
+-if(NOT WIN32)
+-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pthread")
+-endif(NOT WIN32)
+ 
+-if(NOT BINARY_PACKAGE_BUILD)
+-	set(MARCH "-march=native")	
+-else()
+-	set(MARCH "-mtune=generic")
+-endif()
 +#
 +# Set default compile flags for Sun Studio 
 +#
@@ -62,10 +126,18 @@ diff -ur darktable-0.8.old/src/CMakeLists.txt darktable-0.8/src/CMakeLists.txt
 +  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -xc99 -features=extensions -fast -xarch=sse2 -D__SSE2__ -D__unix__")
 +  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -features=extensions -fast -xarch=sse2 -D__SSE2__ -D__unix__")
 +endif("${CMAKE_C_COMPILER_ID} ${CMAKE_CXX_COMPILER_ID}" MATCHES SunPro)
-   
+ 
+-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -msse2 -mfpmath=sse ${MARCH} -g")
+-set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O3 -ffast-math -fexpensive-optimizations")
+-set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O0 -g -D_DEBUG")
+-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse2 -mfpmath=sse ${MARCH} -g")
+-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -ffast-math -fexpensive-optimizations")
+-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -g -D_DEBUG")
+-  
  
  #
-@@ -247,7 +257,7 @@
+ # Generate config.h
+@@ -259,7 +269,7 @@ if(APPLE)
    set_target_properties(lib_darktable PROPERTIES INSTALL_NAME_DIR "@executable_path/../lib/darktable")
  endif(APPLE)
  set_target_properties(lib_darktable PROPERTIES OUTPUT_NAME darktable)
@@ -74,10 +146,68 @@ diff -ur darktable-0.8.old/src/CMakeLists.txt darktable-0.8/src/CMakeLists.txt
  
  
  #
-diff -ur darktable-0.8.old/src/control/jobs/control_jobs.c darktable-0.8/src/control/jobs/control_jobs.c
---- darktable-0.8.old/src/control/jobs/control_jobs.c	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/control/jobs/control_jobs.c	2011-03-12 14:27:27.335868752 -0500
-@@ -447,12 +447,15 @@
+diff --git a/src/LibRaw/CMakeLists.txt b/src/LibRaw/CMakeLists.txt
+index e5f7e18..1bf327f 100644
+--- a/src/LibRaw/CMakeLists.txt
++++ b/src/LibRaw/CMakeLists.txt
+@@ -5,7 +5,14 @@ set(LIBRAW_SOURCES internal/dcraw_common.cpp src/libraw_cxx.cpp internal/dcraw_f
+ #
+ # build liblibraw_r
+ #
+-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
++if(CMAKE_COMPILER_IS_GNUCC)
++  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
++endif(CMAKE_COMPILER_IS_GNUCC)
++
++
++if("${CMAKE_C_COMPILER_ID} ${CMAKE_CXX_COMPILER_ID}" MATCHES SunPro)
++  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Kpic")
++endif("${CMAKE_C_COMPILER_ID} ${CMAKE_CXX_COMPILER_ID}" MATCHES SunPro)
+ 
+ add_library(libraw_r STATIC ${LIBRAW_SOURCES})
+ target_link_libraries(libraw_r)
+diff --git a/src/LibRaw/libraw/libraw_datastream.h b/src/LibRaw/libraw/libraw_datastream.h
+index 00b370e..2ca2efb 100644
+--- a/src/LibRaw/libraw/libraw_datastream.h
++++ b/src/LibRaw/libraw/libraw_datastream.h
+@@ -93,7 +93,7 @@ class LibRaw_file_datastream: public LibRaw_abstract_datastream
+             std::auto_ptr<std::filebuf> buf(new std::filebuf());
+             buf->open(filename, std::ios_base::in | std::ios_base::binary);
+             if (buf->is_open()) {
+-                f = buf;
++                f = std::auto_ptr<std::streambuf>(buf.release());
+             }
+         }
+     }
+@@ -172,7 +172,7 @@ class LibRaw_file_datastream: public LibRaw_abstract_datastream
+             f = saved_f;
+             return ENOENT;
+         } else {
+-            f = buf;
++            f = std::auto_ptr<std::streambuf>(buf.release());
+         }
+ 
+         return 0;
+diff --git a/src/common/darktable.c b/src/common/darktable.c
+index 2d46bc2..c987681 100644
+--- a/src/common/darktable.c
++++ b/src/common/darktable.c
+@@ -65,8 +65,8 @@ static int usage(const char *argv0)
+ int dt_init(int argc, char *argv[])
+ {
+ #ifndef __SSE2__
+-  fprintf("[dt_init] unfortunately we depend on SSE2 instructions at this time.\n");
+-  fprintf("[dt_init] please contribute a backport patch (or buy a newer processor).\n");
++  fprintf(stderr, "[dt_init] unfortunately we depend on SSE2 instructions at this time.\n");
++  fprintf(stderr, "[dt_init] please contribute a backport patch (or buy a newer processor).\n");
+   return 1;
+ #endif
+   bindtextdomain (GETTEXT_PACKAGE, DARKTABLE_LOCALEDIR);
+diff --git a/src/control/jobs/control_jobs.c b/src/control/jobs/control_jobs.c
+index 9396b62..9f52862 100644
+--- a/src/control/jobs/control_jobs.c
++++ b/src/control/jobs/control_jobs.c
+@@ -448,14 +448,17 @@ int32_t dt_control_export_job_run(dt_job_t *job)
    dt_gui_background_jobs_can_cancel (j,job);
  
    double fraction=0;
@@ -88,14 +218,16 @@ diff -ur darktable-0.8.old/src/control/jobs/control_jobs.c darktable-0.8/src/con
    // limit this to num threads = num full buffers - 1 (keep one for darkroom mode)
    // use min of user request and mipmap cache entries
    const int full_entries = dt_conf_get_int ("mipmap_cache_full_images");
--  const int num_threads = MAX(1, MIN(full_entries, darktable.mipmap_cache->num_entries[DT_IMAGE_FULL]) - 1);
+   // GCC won't accept that this variable is used in a macro, considers
+   // it set but not used, which makes for instance Fedora break.
+-  const __attribute__((__unused__)) int num_threads = MAX(1, MIN(full_entries, darktable.mipmap_cache->num_entries[DT_IMAGE_FULL]) - 1);
 -#pragma omp parallel default(none) private(imgid, size) shared(j, fraction, stderr, w, h, mformat, mstorage, t, sdata, job) num_threads(num_threads)
-+  int num_threads = MAX(1, MIN(full_entries, darktable.mipmap_cache->num_entries[DT_IMAGE_FULL]) - 1);
++  __attribute__((__unused__)) int num_threads = MAX(1, MIN(full_entries, darktable.mipmap_cache->num_entries[DT_IMAGE_FULL]) - 1);
 +#pragma omp parallel default(none) private(imgid, size) shared(j, fraction, tmp_stderr, w, h, mformat, mstorage, t, sdata, job) num_threads(num_threads)
    {
  #endif
      // get a thread-safe fdata struct (one jpeg struct per thread etc):
-@@ -481,7 +484,7 @@
+@@ -484,7 +487,7 @@ int32_t dt_control_export_job_run(dt_job_t *job)
          if(!g_file_test(imgfilename, G_FILE_TEST_IS_REGULAR))
          {
            dt_control_log(_("image `%s' is currently unavailable"), image->filename);
@@ -104,9 +236,10 @@ diff -ur darktable-0.8.old/src/control/jobs/control_jobs.c darktable-0.8/src/con
            // dt_image_remove(imgid);
            dt_image_cache_release(image, 'r');
          }
-diff -ur darktable-0.8.old/src/iop/atrous.c darktable-0.8/src/iop/atrous.c
---- darktable-0.8.old/src/iop/atrous.c	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/iop/atrous.c	2011-03-12 13:41:45.324078191 -0500
+diff --git a/src/iop/atrous.c b/src/iop/atrous.c
+index 471400b..4a9226f 100644
+--- a/src/iop/atrous.c
++++ b/src/iop/atrous.c
 @@ -26,7 +26,7 @@
  #include "control/control.h"
  #include <memory.h>
@@ -116,7 +249,7 @@ diff -ur darktable-0.8.old/src/iop/atrous.c darktable-0.8/src/iop/atrous.c
  // SSE4 actually not used yet.
  // #include <smmintrin.h>
  
-@@ -134,7 +134,7 @@
+@@ -134,7 +134,7 @@ eaw_decompose (float *const out, const float *const in, float *const detail, con
    const float filter[5] = {1.0f/16.0f, 4.0f/16.0f, 6.0f/16.0f, 4.0f/16.0f, 1.0f/16.0f};
  
  #ifdef _OPENMP
@@ -125,10 +258,11 @@ diff -ur darktable-0.8.old/src/iop/atrous.c darktable-0.8/src/iop/atrous.c
  #endif
    for(int j=0; j<height; j++)
    {
-diff -ur darktable-0.8.old/src/iop/bilateral.cc darktable-0.8/src/iop/bilateral.cc
---- darktable-0.8.old/src/iop/bilateral.cc	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/iop/bilateral.cc	2011-03-15 18:06:16.232431108 -0400
-@@ -265,12 +265,14 @@
+diff --git a/src/iop/bilateral.cc b/src/iop/bilateral.cc
+index f4b5509..3089d93 100644
+--- a/src/iop/bilateral.cc
++++ b/src/iop/bilateral.cc
+@@ -269,12 +269,14 @@ int flags()
      module->priority = 270;
      module->params_size = sizeof(dt_iop_bilateral_params_t);
      module->gui_data = NULL;
@@ -149,11 +283,11 @@ diff -ur darktable-0.8.old/src/iop/bilateral.cc darktable-0.8/src/iop/bilateral.
      memcpy(module->params, &tmp, sizeof(dt_iop_bilateral_params_t));
      memcpy(module->default_params, &tmp, sizeof(dt_iop_bilateral_params_t));
    }
-Only in darktable-0.8/src/iop: bilateral.cc.orig
-diff -ur darktable-0.8.old/src/iop/demosaic.c darktable-0.8/src/iop/demosaic.c
---- darktable-0.8.old/src/iop/demosaic.c	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/iop/demosaic.c	2011-03-12 14:34:13.503529110 -0500
-@@ -175,7 +175,7 @@
+diff --git a/src/iop/demosaic.c b/src/iop/demosaic.c
+index 4b92263..197e986 100644
+--- a/src/iop/demosaic.c
++++ b/src/iop/demosaic.c
+@@ -175,7 +175,7 @@ pre_median_b(float *out, const float *const in, const dt_iop_roi_t *const roi, c
    for (int pass=0; pass < num_passes; pass++)
    {
  #ifdef _OPENMP
@@ -162,7 +296,7 @@ diff -ur darktable-0.8.old/src/iop/demosaic.c darktable-0.8/src/iop/demosaic.c
  #endif
      for (int row=3; row<roi->height-3; row++)
      {
-@@ -464,7 +464,11 @@
+@@ -464,7 +464,11 @@ demosaic_ppg(float *out, const float *in, dt_iop_roi_t *roi_out, const dt_iop_ro
        float *color = (float *)&col;
        // fill all four pixels with correctly interpolated stuff: r/b for green1/2
        // b for r and r for b
@@ -174,10 +308,11 @@ diff -ur darktable-0.8.old/src/iop/demosaic.c darktable-0.8/src/iop/demosaic.c
        {
          // calculate red and blue for green pixels:
          // need 4-nbhood:
-diff -ur darktable-0.8.old/src/iop/temperature.c darktable-0.8/src/iop/temperature.c
---- darktable-0.8.old/src/iop/temperature.c	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/iop/temperature.c	2011-03-12 13:41:45.325774653 -0500
-@@ -169,7 +169,7 @@
+diff --git a/src/iop/temperature.c b/src/iop/temperature.c
+index 8610637..62a7dad 100644
+--- a/src/iop/temperature.c
++++ b/src/iop/temperature.c
+@@ -169,7 +169,7 @@ void process (struct dt_iop_module_t *self, dt_dev_pixelpipe_iop_t *piece, void
    {
      const float coeffsi[3] = {d->coeffs[0]/65535.0f, d->coeffs[1]/65535.0f, d->coeffs[2]/65535.0f};
  #ifdef _OPENMP
@@ -186,10 +321,11 @@ diff -ur darktable-0.8.old/src/iop/temperature.c darktable-0.8/src/iop/temperatu
  #endif
      for(int j=0; j<roi_out->height; j++)
      {
-diff -ur darktable-0.8.old/src/iop/tonemap.cc darktable-0.8/src/iop/tonemap.cc
---- darktable-0.8.old/src/iop/tonemap.cc	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/iop/tonemap.cc	2011-03-12 13:41:45.326178268 -0500
-@@ -219,10 +219,10 @@
+diff --git a/src/iop/tonemap.cc b/src/iop/tonemap.cc
+index 4c58d23..53ce612 100644
+--- a/src/iop/tonemap.cc
++++ b/src/iop/tonemap.cc
+@@ -219,10 +219,10 @@ extern "C"
      else
        module->default_enabled = 0;
  
@@ -204,50 +340,11 @@ diff -ur darktable-0.8.old/src/iop/tonemap.cc darktable-0.8/src/iop/tonemap.cc
      memcpy(module->params, &tmp, sizeof(dt_iop_tonemapping_params_t));
      memcpy(module->default_params, &tmp, sizeof(dt_iop_tonemapping_params_t));
    }
-diff -ur darktable-0.8.old/src/LibRaw/CMakeLists.txt darktable-0.8/src/LibRaw/CMakeLists.txt
---- darktable-0.8.old/src/LibRaw/CMakeLists.txt	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/LibRaw/CMakeLists.txt	2011-03-12 13:41:45.318644397 -0500
-@@ -5,7 +5,14 @@
- #
- # build liblibraw_r
- #
--set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
-+if(CMAKE_COMPILER_IS_GNUCC)
-+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
-+endif(CMAKE_COMPILER_IS_GNUCC)
-+
-+
-+if("${CMAKE_C_COMPILER_ID} ${CMAKE_CXX_COMPILER_ID}" MATCHES SunPro)
-+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Kpic")
-+endif("${CMAKE_C_COMPILER_ID} ${CMAKE_CXX_COMPILER_ID}" MATCHES SunPro)
- 
- add_library(libraw_r STATIC ${LIBRAW_SOURCES})
- target_link_libraries(libraw_r)
-diff -ur darktable-0.8.old/src/LibRaw/libraw/libraw_datastream.h darktable-0.8/src/LibRaw/libraw/libraw_datastream.h
---- darktable-0.8.old/src/LibRaw/libraw/libraw_datastream.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/LibRaw/libraw/libraw_datastream.h	2011-03-12 13:41:45.319284705 -0500
-@@ -93,7 +93,7 @@
-             std::auto_ptr<std::filebuf> buf(new std::filebuf());
-             buf->open(filename, std::ios_base::in | std::ios_base::binary);
-             if (buf->is_open()) {
--                f = buf;
-+                f = std::auto_ptr<std::streambuf>(buf.release());
-             }
-         }
-     }
-@@ -172,7 +172,7 @@
-             f = saved_f;
-             return ENOENT;
-         } else {
--            f = buf;
-+            f = std::auto_ptr<std::streambuf>(buf.release());
-         }
- 
-         return 0;
-diff -ur darktable-0.8.old/src/rawspeed/CMakeLists.txt darktable-0.8/src/rawspeed/CMakeLists.txt
---- darktable-0.8.old/src/rawspeed/CMakeLists.txt	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/CMakeLists.txt	2011-03-12 13:41:45.326503620 -0500
-@@ -48,7 +48,14 @@
+diff --git a/src/rawspeed/CMakeLists.txt b/src/rawspeed/CMakeLists.txt
+index 16cf282..5316ca9 100644
+--- a/src/rawspeed/CMakeLists.txt
++++ b/src/rawspeed/CMakeLists.txt
+@@ -48,7 +48,14 @@ set(RAWSPEED_SOURCES
  #
  # build librawspeed
  #
@@ -263,9 +360,10 @@ diff -ur darktable-0.8.old/src/rawspeed/CMakeLists.txt darktable-0.8/src/rawspee
  
  add_library(rawspeed STATIC ${RAWSPEED_SOURCES})
  target_link_libraries(rawspeed)
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/ArwDecoder.h darktable-0.8/src/rawspeed/RawSpeed/ArwDecoder.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/ArwDecoder.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/ArwDecoder.h	2011-03-12 13:41:45.326912416 -0500
+diff --git a/src/rawspeed/RawSpeed/ArwDecoder.h b/src/rawspeed/RawSpeed/ArwDecoder.h
+index 6b2d45c..f1d701a 100644
+--- a/src/rawspeed/RawSpeed/ArwDecoder.h
++++ b/src/rawspeed/RawSpeed/ArwDecoder.h
 @@ -19,7 +19,9 @@
  
      http://www.klauspost.com
@@ -277,15 +375,16 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/ArwDecoder.h darktable-0.8/src/
  #include "RawDecoder.h"
  #include "LJpegPlain.h"
  #include "TiffIFD.h"
-@@ -46,3 +48,5 @@
+@@ -46,3 +48,5 @@ protected:
  };
  
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/BitPumpJPEG.h darktable-0.8/src/rawspeed/RawSpeed/BitPumpJPEG.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/BitPumpJPEG.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/BitPumpJPEG.h	2011-03-12 13:41:45.327599310 -0500
+diff --git a/src/rawspeed/RawSpeed/BitPumpJPEG.h b/src/rawspeed/RawSpeed/BitPumpJPEG.h
+index 3e2bc5c..1a31cec 100644
+--- a/src/rawspeed/RawSpeed/BitPumpJPEG.h
++++ b/src/rawspeed/RawSpeed/BitPumpJPEG.h
 @@ -19,7 +19,9 @@
  
      http://www.klauspost.com
@@ -297,15 +396,16 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/BitPumpJPEG.h darktable-0.8/src
  #include "ByteStream.h"
  #include "IOException.h"
  
-@@ -117,3 +119,5 @@
+@@ -117,3 +119,5 @@ private:
  };
  
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/BitPumpMSB.h darktable-0.8/src/rawspeed/RawSpeed/BitPumpMSB.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/BitPumpMSB.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/BitPumpMSB.h	2011-03-12 13:41:45.328533671 -0500
+diff --git a/src/rawspeed/RawSpeed/BitPumpMSB.h b/src/rawspeed/RawSpeed/BitPumpMSB.h
+index d6fb9c8..8c745cb 100644
+--- a/src/rawspeed/RawSpeed/BitPumpMSB.h
++++ b/src/rawspeed/RawSpeed/BitPumpMSB.h
 @@ -19,7 +19,9 @@
  
      http://www.klauspost.com
@@ -317,15 +417,16 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/BitPumpMSB.h darktable-0.8/src/
  #include "ByteStream.h"
  
  #define BITS_PER_LONG (8*sizeof(uint32))
-@@ -152,3 +154,5 @@
+@@ -152,3 +154,5 @@ private:
  };
  
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/BitPumpMSB32.h darktable-0.8/src/rawspeed/RawSpeed/BitPumpMSB32.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/BitPumpMSB32.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/BitPumpMSB32.h	2011-03-12 13:41:45.328931406 -0500
+diff --git a/src/rawspeed/RawSpeed/BitPumpMSB32.h b/src/rawspeed/RawSpeed/BitPumpMSB32.h
+index 208bcec..9aab7d8 100644
+--- a/src/rawspeed/RawSpeed/BitPumpMSB32.h
++++ b/src/rawspeed/RawSpeed/BitPumpMSB32.h
 @@ -19,7 +19,9 @@
  
      http://www.klauspost.com
@@ -337,15 +438,16 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/BitPumpMSB32.h darktable-0.8/sr
  #include "ByteStream.h"
  
  #ifdef MIN_GET_BITS
-@@ -74,3 +76,5 @@
+@@ -74,3 +76,5 @@ private:
  };
  
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/BitPumpPlain.h darktable-0.8/src/rawspeed/RawSpeed/BitPumpPlain.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/BitPumpPlain.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/BitPumpPlain.h	2011-03-12 13:41:45.329306875 -0500
+diff --git a/src/rawspeed/RawSpeed/BitPumpPlain.h b/src/rawspeed/RawSpeed/BitPumpPlain.h
+index 4fefdf8..07c063e 100644
+--- a/src/rawspeed/RawSpeed/BitPumpPlain.h
++++ b/src/rawspeed/RawSpeed/BitPumpPlain.h
 @@ -19,7 +19,9 @@
  
      http://www.klauspost.com
@@ -357,15 +459,16 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/BitPumpPlain.h darktable-0.8/sr
  #include "ByteStream.h"
  
  namespace RawSpeed {
-@@ -54,3 +56,5 @@
+@@ -54,3 +56,5 @@ private:
  };
  
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/BlackArea.h darktable-0.8/src/rawspeed/RawSpeed/BlackArea.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/BlackArea.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/BlackArea.h	2011-03-12 13:41:45.329640643 -0500
+diff --git a/src/rawspeed/RawSpeed/BlackArea.h b/src/rawspeed/RawSpeed/BlackArea.h
+index 6f6f6b9..73c92f6 100644
+--- a/src/rawspeed/RawSpeed/BlackArea.h
++++ b/src/rawspeed/RawSpeed/BlackArea.h
 @@ -1,4 +1,6 @@
 -#pragma once
 +#ifndef BLACK_AREA_H
@@ -374,15 +477,16 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/BlackArea.h darktable-0.8/src/r
  /* 
      RawSpeed - RAW file decoder.
  
-@@ -33,3 +35,5 @@
+@@ -33,3 +35,5 @@ public:
  };
  
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/ByteStream.h darktable-0.8/src/rawspeed/RawSpeed/ByteStream.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/ByteStream.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/ByteStream.h	2011-03-12 13:41:45.330361702 -0500
+diff --git a/src/rawspeed/RawSpeed/ByteStream.h b/src/rawspeed/RawSpeed/ByteStream.h
+index 03e743a..d1ca32e 100644
+--- a/src/rawspeed/RawSpeed/ByteStream.h
++++ b/src/rawspeed/RawSpeed/ByteStream.h
 @@ -19,7 +19,9 @@
  
      http://www.klauspost.com
@@ -394,15 +498,16 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/ByteStream.h darktable-0.8/src/
  #include "IOException.h"
  
  namespace RawSpeed {
-@@ -48,3 +50,5 @@
+@@ -48,3 +50,5 @@ protected:
  };
  
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/ByteStreamSwap.h darktable-0.8/src/rawspeed/RawSpeed/ByteStreamSwap.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/ByteStreamSwap.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/ByteStreamSwap.h	2011-03-12 13:41:45.330874818 -0500
+diff --git a/src/rawspeed/RawSpeed/ByteStreamSwap.h b/src/rawspeed/RawSpeed/ByteStreamSwap.h
+index fef0fc3..1b67eac 100644
+--- a/src/rawspeed/RawSpeed/ByteStreamSwap.h
++++ b/src/rawspeed/RawSpeed/ByteStreamSwap.h
 @@ -1,4 +1,6 @@
 -#pragma once
 +#ifndef BYTE_STREAM_SWAP_H
@@ -411,15 +516,16 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/ByteStreamSwap.h darktable-0.8/
  #include "ByteStream.h"
  
  #include "IOException.h"
-@@ -17,3 +19,5 @@
+@@ -17,3 +19,5 @@ public:
  };
  
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/Camera.h darktable-0.8/src/rawspeed/RawSpeed/Camera.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/Camera.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/Camera.h	2011-03-12 13:41:45.331846479 -0500
+diff --git a/src/rawspeed/RawSpeed/Camera.h b/src/rawspeed/RawSpeed/Camera.h
+index b8e9573..031ede3 100644
+--- a/src/rawspeed/RawSpeed/Camera.h
++++ b/src/rawspeed/RawSpeed/Camera.h
 @@ -1,4 +1,6 @@
 -#pragma once
 +#ifndef CAMERA_H
@@ -428,15 +534,16 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/Camera.h darktable-0.8/src/raws
  #include "ColorFilterArray.h"
  #include <libxml/parser.h>
  #include "BlackArea.h"
-@@ -58,3 +60,5 @@
+@@ -58,3 +60,5 @@ protected:
  };
  
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/CameraMetaData.h darktable-0.8/src/rawspeed/RawSpeed/CameraMetaData.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/CameraMetaData.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/CameraMetaData.h	2011-03-12 13:41:45.332258457 -0500
+diff --git a/src/rawspeed/RawSpeed/CameraMetaData.h b/src/rawspeed/RawSpeed/CameraMetaData.h
+index fd51c0c..c0d7dd2 100644
+--- a/src/rawspeed/RawSpeed/CameraMetaData.h
++++ b/src/rawspeed/RawSpeed/CameraMetaData.h
 @@ -1,4 +1,6 @@
 -#pragma once
 +#ifndef CAMERA_META_DATA_H
@@ -445,15 +552,16 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/CameraMetaData.h darktable-0.8/
  #include <libxml/xmlmemory.h>
  #include <libxml/parser.h>
  #include <libxml/xmlschemas.h>
-@@ -41,3 +43,5 @@
+@@ -41,3 +43,5 @@ protected:
  };
  
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/CameraMetadataException.h darktable-0.8/src/rawspeed/RawSpeed/CameraMetadataException.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/CameraMetadataException.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/CameraMetadataException.h	2011-03-12 13:41:45.333447770 -0500
+diff --git a/src/rawspeed/RawSpeed/CameraMetadataException.h b/src/rawspeed/RawSpeed/CameraMetadataException.h
+index 594e251..55a2814 100644
+--- a/src/rawspeed/RawSpeed/CameraMetadataException.h
++++ b/src/rawspeed/RawSpeed/CameraMetadataException.h
 @@ -19,7 +19,9 @@
  
      http://www.klauspost.com
@@ -465,15 +573,16 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/CameraMetadataException.h darkt
  
  namespace RawSpeed {
  
-@@ -33,3 +35,5 @@
+@@ -33,3 +35,5 @@ public:
  };
  
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/ColorFilterArray.h darktable-0.8/src/rawspeed/RawSpeed/ColorFilterArray.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/ColorFilterArray.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/ColorFilterArray.h	2011-03-12 13:41:45.333919689 -0500
+diff --git a/src/rawspeed/RawSpeed/ColorFilterArray.h b/src/rawspeed/RawSpeed/ColorFilterArray.h
+index 46a9c9b..2fc20a9 100644
+--- a/src/rawspeed/RawSpeed/ColorFilterArray.h
++++ b/src/rawspeed/RawSpeed/ColorFilterArray.h
 @@ -1,4 +1,6 @@
 -#pragma once
 +#ifndef COLOR_FILTER_ARRAY_H
@@ -482,15 +591,16 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/ColorFilterArray.h darktable-0.
  #include "RawDecoderException.h"
  /* 
      RawSpeed - RAW file decoder.
-@@ -66,3 +68,5 @@
+@@ -66,3 +68,5 @@ private:
  };
  
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/Common.h darktable-0.8/src/rawspeed/RawSpeed/Common.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/Common.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/Common.h	2011-03-15 17:49:54.079236402 -0400
+diff --git a/src/rawspeed/RawSpeed/Common.h b/src/rawspeed/RawSpeed/Common.h
+index f269894..d1e7708 100644
+--- a/src/rawspeed/RawSpeed/Common.h
++++ b/src/rawspeed/RawSpeed/Common.h
 @@ -19,7 +19,9 @@
  
      http://www.klauspost.com
@@ -502,15 +612,16 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/Common.h darktable-0.8/src/raws
  
  #if !defined(__unix__) && !defined(__MINGW32__)
  #include <intrin.h>
-@@ -121,3 +123,5 @@
+@@ -121,3 +123,5 @@ inline uint32 clampbits(int x, uint32 n) { uint32 _y_temp; if( (_y_temp=x>>n) )
  
  
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/Cr2Decoder.h darktable-0.8/src/rawspeed/RawSpeed/Cr2Decoder.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/Cr2Decoder.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/Cr2Decoder.h	2011-03-12 13:41:45.335157589 -0500
+diff --git a/src/rawspeed/RawSpeed/Cr2Decoder.h b/src/rawspeed/RawSpeed/Cr2Decoder.h
+index a75a44c..f534b90 100644
+--- a/src/rawspeed/RawSpeed/Cr2Decoder.h
++++ b/src/rawspeed/RawSpeed/Cr2Decoder.h
 @@ -1,4 +1,6 @@
 -#pragma once
 +#ifndef CR2_DECODER_H
@@ -519,7 +630,7 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/Cr2Decoder.h darktable-0.8/src/
  #include "RawDecoder.h"
  #include "LJpegPlain.h"
  #include "TiffIFD.h"
-@@ -55,4 +57,5 @@
+@@ -55,4 +57,5 @@ public:
    uint32 count;
  };
  
@@ -527,9 +638,10 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/Cr2Decoder.h darktable-0.8/src/
 \ No newline at end of file
 +} // namespace RawSpeed
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/DngDecoder.h darktable-0.8/src/rawspeed/RawSpeed/DngDecoder.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/DngDecoder.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/DngDecoder.h	2011-03-12 13:41:45.335838684 -0500
+diff --git a/src/rawspeed/RawSpeed/DngDecoder.h b/src/rawspeed/RawSpeed/DngDecoder.h
+index d5ff649..187deda 100644
+--- a/src/rawspeed/RawSpeed/DngDecoder.h
++++ b/src/rawspeed/RawSpeed/DngDecoder.h
 @@ -1,4 +1,6 @@
 -#pragma once
 +#ifndef DNG_DECODER_H
@@ -538,16 +650,16 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/DngDecoder.h darktable-0.8/src/
  #include "LJpegPlain.h"
  #include "TiffIFD.h"
  #include "DngDecoderSlices.h"
-@@ -52,3 +54,5 @@
+@@ -55,3 +57,5 @@ public:
  };
  
  } // namespace RawSpeed
 +
 +#endif
-Only in darktable-0.8/src/rawspeed/RawSpeed: DngDecoder.h.orig
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/DngDecoderSlices.h darktable-0.8/src/rawspeed/RawSpeed/DngDecoderSlices.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/DngDecoderSlices.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/DngDecoderSlices.h	2011-03-12 13:41:45.336227959 -0500
+diff --git a/src/rawspeed/RawSpeed/DngDecoderSlices.h b/src/rawspeed/RawSpeed/DngDecoderSlices.h
+index 126c99d..a915e3c 100644
+--- a/src/rawspeed/RawSpeed/DngDecoderSlices.h
++++ b/src/rawspeed/RawSpeed/DngDecoderSlices.h
 @@ -1,4 +1,6 @@
 -#pragma once
 +#ifndef DNG_DECODER_SLICES_H
@@ -556,15 +668,16 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/DngDecoderSlices.h darktable-0.
  #include "RawDecoder.h"
  #include <queue>
  #include "LJpegPlain.h"
-@@ -72,3 +74,5 @@
+@@ -72,3 +74,5 @@ public:
  };
  
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/FileIOException.h darktable-0.8/src/rawspeed/RawSpeed/FileIOException.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/FileIOException.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/FileIOException.h	2011-03-12 13:41:45.336550526 -0500
+diff --git a/src/rawspeed/RawSpeed/FileIOException.h b/src/rawspeed/RawSpeed/FileIOException.h
+index ced5dc0..6b61da1 100644
+--- a/src/rawspeed/RawSpeed/FileIOException.h
++++ b/src/rawspeed/RawSpeed/FileIOException.h
 @@ -21,7 +21,9 @@
  
      http://www.klauspost.com
@@ -576,15 +689,16 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/FileIOException.h darktable-0.8
  
  namespace RawSpeed {
  
-@@ -34,3 +36,5 @@
+@@ -34,3 +36,5 @@ public:
  };
  
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/FileMap.h darktable-0.8/src/rawspeed/RawSpeed/FileMap.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/FileMap.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/FileMap.h	2011-03-12 13:41:45.336874032 -0500
+diff --git a/src/rawspeed/RawSpeed/FileMap.h b/src/rawspeed/RawSpeed/FileMap.h
+index 93129c7..5c15918 100644
+--- a/src/rawspeed/RawSpeed/FileMap.h
++++ b/src/rawspeed/RawSpeed/FileMap.h
 @@ -1,4 +1,6 @@
 -#pragma once
 +#ifndef FILE_MAP_H
@@ -593,15 +707,16 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/FileMap.h darktable-0.8/src/raw
  #include "FileIOException.h"
  /* 
      RawSpeed - RAW file decoder.
-@@ -55,3 +57,5 @@
+@@ -55,3 +57,5 @@ private:
  };
  
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/FileReader.h darktable-0.8/src/rawspeed/RawSpeed/FileReader.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/FileReader.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/FileReader.h	2011-03-12 13:41:45.337585807 -0500
+diff --git a/src/rawspeed/RawSpeed/FileReader.h b/src/rawspeed/RawSpeed/FileReader.h
+index d245ff0..7448ec2 100644
+--- a/src/rawspeed/RawSpeed/FileReader.h
++++ b/src/rawspeed/RawSpeed/FileReader.h
 @@ -19,7 +19,9 @@
  
      http://www.klauspost.com
@@ -613,15 +728,16 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/FileReader.h darktable-0.8/src/
  #include "FileIOException.h"
  #include "FileMap.h"
  
-@@ -39,3 +41,5 @@
+@@ -39,3 +41,5 @@ private:
  };
  
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/IOException.h darktable-0.8/src/rawspeed/RawSpeed/IOException.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/IOException.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/IOException.h	2011-03-12 13:41:45.337970320 -0500
+diff --git a/src/rawspeed/RawSpeed/IOException.h b/src/rawspeed/RawSpeed/IOException.h
+index 85924dd..94ce381 100644
+--- a/src/rawspeed/RawSpeed/IOException.h
++++ b/src/rawspeed/RawSpeed/IOException.h
 @@ -21,7 +21,9 @@
  
      http://www.klauspost.com
@@ -633,15 +749,16 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/IOException.h darktable-0.8/src
  
  namespace RawSpeed {
  
-@@ -36,3 +38,5 @@
+@@ -36,3 +38,5 @@ public:
  };
  
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/LJpegDecompressor.h darktable-0.8/src/rawspeed/RawSpeed/LJpegDecompressor.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/LJpegDecompressor.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/LJpegDecompressor.h	2011-03-12 13:41:45.338426175 -0500
+diff --git a/src/rawspeed/RawSpeed/LJpegDecompressor.h b/src/rawspeed/RawSpeed/LJpegDecompressor.h
+index c031a49..24978eb 100644
+--- a/src/rawspeed/RawSpeed/LJpegDecompressor.h
++++ b/src/rawspeed/RawSpeed/LJpegDecompressor.h
 @@ -1,4 +1,6 @@
 -#pragma once
 +#ifndef LJPEG_DECOMPRESSOR_H
@@ -650,15 +767,16 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/LJpegDecompressor.h darktable-0
  #include "RawDecoder.h"
  #include "BitPumpMSB.h"
  /* 
-@@ -194,3 +196,5 @@
+@@ -194,3 +196,5 @@ protected:
  };
  
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/LJpegPlain.h darktable-0.8/src/rawspeed/RawSpeed/LJpegPlain.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/LJpegPlain.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/LJpegPlain.h	2011-03-12 13:41:45.338833043 -0500
+diff --git a/src/rawspeed/RawSpeed/LJpegPlain.h b/src/rawspeed/RawSpeed/LJpegPlain.h
+index 395658a..c186240 100644
+--- a/src/rawspeed/RawSpeed/LJpegPlain.h
++++ b/src/rawspeed/RawSpeed/LJpegPlain.h
 @@ -1,4 +1,6 @@
 -#pragma once
 +#ifndef LJPEG_PLAIN_H
@@ -667,15 +785,16 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/LJpegPlain.h darktable-0.8/src/
  #include "LJpegDecompressor.h"
  #include "BitPumpMSB.h"
  /* 
-@@ -49,3 +51,5 @@
+@@ -49,3 +51,5 @@ private:
  };
  
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/NefDecoder.h darktable-0.8/src/rawspeed/RawSpeed/NefDecoder.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/NefDecoder.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/NefDecoder.h	2011-03-12 13:41:45.339198117 -0500
+diff --git a/src/rawspeed/RawSpeed/NefDecoder.h b/src/rawspeed/RawSpeed/NefDecoder.h
+index b034cb1..a1f7496 100644
+--- a/src/rawspeed/RawSpeed/NefDecoder.h
++++ b/src/rawspeed/RawSpeed/NefDecoder.h
 @@ -1,4 +1,6 @@
 -#pragma once
 +#ifndef NEF_DECODER_H
@@ -684,7 +803,7 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/NefDecoder.h darktable-0.8/src/
  #include "RawDecoder.h"
  #include "LJpegPlain.h"
  #include "TiffIFD.h"
-@@ -55,4 +57,5 @@
+@@ -55,4 +57,5 @@ public:
    uint32 count;
  };
  
@@ -692,9 +811,10 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/NefDecoder.h darktable-0.8/src/
 \ No newline at end of file
 +} // namespace RawSpeed
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/NikonDecompressor.h darktable-0.8/src/rawspeed/RawSpeed/NikonDecompressor.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/NikonDecompressor.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/NikonDecompressor.h	2011-03-12 13:41:45.339533297 -0500
+diff --git a/src/rawspeed/RawSpeed/NikonDecompressor.h b/src/rawspeed/RawSpeed/NikonDecompressor.h
+index adbef86..fdec584 100644
+--- a/src/rawspeed/RawSpeed/NikonDecompressor.h
++++ b/src/rawspeed/RawSpeed/NikonDecompressor.h
 @@ -1,4 +1,6 @@
 -#pragma once
 +#ifndef NIKON_DECOMPRESSOR_H
@@ -703,15 +823,16 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/NikonDecompressor.h darktable-0
  #include "LJpegDecompressor.h"
  #include "BitPumpMSB.h"
  /* 
-@@ -55,3 +57,5 @@
+@@ -55,3 +57,5 @@ static const uchar8 nikon_tree[][32] = {
    7,6,8,5,9,4,10,3,11,12,2,0,1,13,14 } };
    
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/OrfDecoder.h darktable-0.8/src/rawspeed/RawSpeed/OrfDecoder.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/OrfDecoder.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/OrfDecoder.h	2011-03-12 13:41:45.340735160 -0500
+diff --git a/src/rawspeed/RawSpeed/OrfDecoder.h b/src/rawspeed/RawSpeed/OrfDecoder.h
+index d7d8f52..ff7c535 100644
+--- a/src/rawspeed/RawSpeed/OrfDecoder.h
++++ b/src/rawspeed/RawSpeed/OrfDecoder.h
 @@ -1,4 +1,6 @@
 -#pragma once
 +#ifndef ORF_DECODER_H
@@ -720,15 +841,16 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/OrfDecoder.h darktable-0.8/src/
  #include "RawDecoder.h"
  #include "LJpegPlain.h"
  #include "TiffIFD.h"
-@@ -43,3 +45,5 @@
+@@ -43,3 +45,5 @@ private:
  };
  
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/PefDecoder.h darktable-0.8/src/rawspeed/RawSpeed/PefDecoder.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/PefDecoder.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/PefDecoder.h	2011-03-12 13:41:45.341812925 -0500
+diff --git a/src/rawspeed/RawSpeed/PefDecoder.h b/src/rawspeed/RawSpeed/PefDecoder.h
+index 4227ea3..59ca83b 100644
+--- a/src/rawspeed/RawSpeed/PefDecoder.h
++++ b/src/rawspeed/RawSpeed/PefDecoder.h
 @@ -1,4 +1,6 @@
 -#pragma once
 +#ifndef PEF_DECODER_H
@@ -737,15 +859,16 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/PefDecoder.h darktable-0.8/src/
  #include "RawDecoder.h"
  #include "TiffIFD.h"
  #include "PentaxDecompressor.h"
-@@ -39,3 +41,5 @@
+@@ -39,3 +41,5 @@ public:
  };
  
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/PentaxDecompressor.h darktable-0.8/src/rawspeed/RawSpeed/PentaxDecompressor.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/PentaxDecompressor.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/PentaxDecompressor.h	2011-03-12 13:41:45.342654369 -0500
+diff --git a/src/rawspeed/RawSpeed/PentaxDecompressor.h b/src/rawspeed/RawSpeed/PentaxDecompressor.h
+index 2090737..69adc69 100644
+--- a/src/rawspeed/RawSpeed/PentaxDecompressor.h
++++ b/src/rawspeed/RawSpeed/PentaxDecompressor.h
 @@ -1,4 +1,6 @@
 -#pragma once
 +#ifndef PENTAX_DECOMPRESSOR_H
@@ -754,27 +877,16 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/PentaxDecompressor.h darktable-
  #include "LJpegDecompressor.h"
  #include "BitPumpMSB.h"
  #include "TiffIFD.h"
-@@ -39,3 +41,5 @@
+@@ -39,3 +41,5 @@ public:
  };
  
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/Point.h darktable-0.8/src/rawspeed/RawSpeed/Point.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/Point.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/Point.h	2011-03-15 17:51:58.542111850 -0400
-@@ -24,7 +24,7 @@
- #ifndef SS_Point_H
- #define SS_Point_H
- 
--#ifdef __unix
-+#ifdef __unix__
- #include <stdlib.h>
- #endif
- 
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/RawDecoder.h darktable-0.8/src/rawspeed/RawSpeed/RawDecoder.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/RawDecoder.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/RawDecoder.h	2011-03-12 13:41:45.343135195 -0500
+diff --git a/src/rawspeed/RawSpeed/RawDecoder.h b/src/rawspeed/RawSpeed/RawDecoder.h
+index e0302f3..7d44b4d 100644
+--- a/src/rawspeed/RawSpeed/RawDecoder.h
++++ b/src/rawspeed/RawSpeed/RawDecoder.h
 @@ -1,4 +1,6 @@
 -#pragma once
 +#ifndef RAW_DECODER_H
@@ -783,15 +895,16 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/RawDecoder.h darktable-0.8/src/
  #include "RawDecoderException.h"
  #include "FileMap.h"
  #include "BitPumpJPEG.h" // Includes bytestream
-@@ -147,3 +149,5 @@
+@@ -147,3 +149,5 @@ public:
  };
  
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/RawDecoderException.h darktable-0.8/src/rawspeed/RawSpeed/RawDecoderException.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/RawDecoderException.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/RawDecoderException.h	2011-03-12 13:41:45.343461221 -0500
+diff --git a/src/rawspeed/RawSpeed/RawDecoderException.h b/src/rawspeed/RawSpeed/RawDecoderException.h
+index edd9c06..d737c96 100644
+--- a/src/rawspeed/RawSpeed/RawDecoderException.h
++++ b/src/rawspeed/RawSpeed/RawDecoderException.h
 @@ -1,4 +1,6 @@
 -#pragma once
 +#ifndef RAW_DECODER_EXCEPTION_H
@@ -800,15 +913,16 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/RawDecoderException.h darktable
  /* 
      RawSpeed - RAW file decoder.
  
-@@ -34,3 +36,5 @@
+@@ -34,3 +36,5 @@ public:
  };
  
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/RawImage.h darktable-0.8/src/rawspeed/RawSpeed/RawImage.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/RawImage.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/RawImage.h	2011-03-12 13:41:45.343898009 -0500
+diff --git a/src/rawspeed/RawSpeed/RawImage.h b/src/rawspeed/RawSpeed/RawImage.h
+index a0faa32..5a8cf28 100644
+--- a/src/rawspeed/RawSpeed/RawImage.h
++++ b/src/rawspeed/RawSpeed/RawImage.h
 @@ -1,4 +1,6 @@
 -#pragma once
 +#ifndef RAW_IMAGE_H
@@ -817,16 +931,16 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/RawImage.h darktable-0.8/src/ra
  #include "ColorFilterArray.h"
  #include "BlackArea.h"
  
-@@ -86,3 +88,5 @@
+@@ -105,3 +107,5 @@ inline RawImage RawImage::create(iPoint2D dim, uint32 bytesPerPixel, uint32 comp
  { return new RawImageData(dim, bytesPerPixel, componentsPerPixel); }
  
  } // namespace RawSpeed
 +
 +#endif
-Only in darktable-0.8/src/rawspeed/RawSpeed: RawImage.h.orig
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/Rw2Decoder.h darktable-0.8/src/rawspeed/RawSpeed/Rw2Decoder.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/Rw2Decoder.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/Rw2Decoder.h	2011-03-12 13:41:45.344201453 -0500
+diff --git a/src/rawspeed/RawSpeed/Rw2Decoder.h b/src/rawspeed/RawSpeed/Rw2Decoder.h
+index a6cea5b..435b236 100644
+--- a/src/rawspeed/RawSpeed/Rw2Decoder.h
++++ b/src/rawspeed/RawSpeed/Rw2Decoder.h
 @@ -1,4 +1,6 @@
 -#pragma once
 +#ifndef RW2_DECODER_H
@@ -835,27 +949,29 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/Rw2Decoder.h darktable-0.8/src/
  #include "RawDecoder.h"
  #include "TiffIFD.h"
  #include "BitPumpPlain.h"
-@@ -60,3 +62,5 @@
+@@ -60,3 +62,5 @@ private:
  };
  
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/StdAfx.h darktable-0.8/src/rawspeed/RawSpeed/StdAfx.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/StdAfx.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/StdAfx.h	2011-03-15 17:49:54.010284974 -0400
-@@ -39,7 +39,7 @@
- #else
+diff --git a/src/rawspeed/RawSpeed/StdAfx.h b/src/rawspeed/RawSpeed/StdAfx.h
+index abf954b..28abace 100644
+--- a/src/rawspeed/RawSpeed/StdAfx.h
++++ b/src/rawspeed/RawSpeed/StdAfx.h
+@@ -40,7 +40,7 @@
  #include <stdexcept>
  #endif
+ #include <malloc.h>
 -#else // if unix
 +#else // if __unix__
  #ifdef _XOPEN_SOURCE
  #if (_XOPEN_SOURCE < 600)
  #undef _XOPEN_SOURCE
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/TiffEntry.h darktable-0.8/src/rawspeed/RawSpeed/TiffEntry.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/TiffEntry.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/TiffEntry.h	2011-03-12 13:41:45.346159340 -0500
+diff --git a/src/rawspeed/RawSpeed/TiffEntry.h b/src/rawspeed/RawSpeed/TiffEntry.h
+index 69ba86a..58fae2f 100644
+--- a/src/rawspeed/RawSpeed/TiffEntry.h
++++ b/src/rawspeed/RawSpeed/TiffEntry.h
 @@ -1,4 +1,6 @@
 -#pragma once
 +#ifndef TIFF_ENTRY_H
@@ -864,15 +980,16 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/TiffEntry.h darktable-0.8/src/r
  #include "TiffParserException.h"
  #include "FileMap.h"
  
-@@ -92,3 +94,5 @@
+@@ -92,3 +94,5 @@ protected:
  };
  
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/TiffEntryBE.h darktable-0.8/src/rawspeed/RawSpeed/TiffEntryBE.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/TiffEntryBE.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/TiffEntryBE.h	2011-03-12 13:41:45.346487417 -0500
+diff --git a/src/rawspeed/RawSpeed/TiffEntryBE.h b/src/rawspeed/RawSpeed/TiffEntryBE.h
+index 7453bc5..fc1acc1 100644
+--- a/src/rawspeed/RawSpeed/TiffEntryBE.h
++++ b/src/rawspeed/RawSpeed/TiffEntryBE.h
 @@ -1,4 +1,6 @@
 -#pragma once
 +#ifndef TIFF_ENTRY_BE_H
@@ -881,15 +998,16 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/TiffEntryBE.h darktable-0.8/src
  #include "TiffEntry.h"
  
  /* 
-@@ -41,3 +43,5 @@
+@@ -41,3 +43,5 @@ private:
  };
  
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/TiffIFD.h darktable-0.8/src/rawspeed/RawSpeed/TiffIFD.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/TiffIFD.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/TiffIFD.h	2011-03-12 13:41:45.346800349 -0500
+diff --git a/src/rawspeed/RawSpeed/TiffIFD.h b/src/rawspeed/RawSpeed/TiffIFD.h
+index 0b73e4c..4238581 100644
+--- a/src/rawspeed/RawSpeed/TiffIFD.h
++++ b/src/rawspeed/RawSpeed/TiffIFD.h
 @@ -1,4 +1,6 @@
 -#pragma once
 +#ifndef TIFF_IFD_H
@@ -898,15 +1016,16 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/TiffIFD.h darktable-0.8/src/raw
  #include "FileMap.h"
  #include "TiffEntry.h"
  #include "TiffParserException.h"
-@@ -68,3 +70,5 @@
+@@ -68,3 +70,5 @@ inline Endianness getTiffEndianness(const ushort16* tifftag) {
  }
  
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/TiffIFDBE.h darktable-0.8/src/rawspeed/RawSpeed/TiffIFDBE.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/TiffIFDBE.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/TiffIFDBE.h	2011-03-12 13:41:45.347096118 -0500
+diff --git a/src/rawspeed/RawSpeed/TiffIFDBE.h b/src/rawspeed/RawSpeed/TiffIFDBE.h
+index 9579187..a5488c8 100644
+--- a/src/rawspeed/RawSpeed/TiffIFDBE.h
++++ b/src/rawspeed/RawSpeed/TiffIFDBE.h
 @@ -1,4 +1,6 @@
 -#pragma once
 +#ifndef TIFF_IFDBE_H
@@ -915,15 +1034,16 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/TiffIFDBE.h darktable-0.8/src/r
  #include "TiffIFD.h"
  /* 
      RawSpeed - RAW file decoder.
-@@ -34,3 +36,5 @@
+@@ -34,3 +36,5 @@ public:
  };
  
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/TiffParser.h darktable-0.8/src/rawspeed/RawSpeed/TiffParser.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/TiffParser.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/TiffParser.h	2011-03-12 13:41:45.347489903 -0500
+diff --git a/src/rawspeed/RawSpeed/TiffParser.h b/src/rawspeed/RawSpeed/TiffParser.h
+index 890446c..f20ce9c 100644
+--- a/src/rawspeed/RawSpeed/TiffParser.h
++++ b/src/rawspeed/RawSpeed/TiffParser.h
 @@ -20,7 +20,9 @@
      http://www.klauspost.com
  */
@@ -935,15 +1055,16 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/TiffParser.h darktable-0.8/src/
  #include "FileMap.h"
  #include "TiffIFD.h"
  #include "TiffIFDBE.h"
-@@ -54,3 +56,5 @@
+@@ -54,3 +56,5 @@ protected:
  };
  
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/TiffParserException.h darktable-0.8/src/rawspeed/RawSpeed/TiffParserException.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/TiffParserException.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/TiffParserException.h	2011-03-12 13:41:45.348052941 -0500
+diff --git a/src/rawspeed/RawSpeed/TiffParserException.h b/src/rawspeed/RawSpeed/TiffParserException.h
+index 925eab7..c3f3889 100644
+--- a/src/rawspeed/RawSpeed/TiffParserException.h
++++ b/src/rawspeed/RawSpeed/TiffParserException.h
 @@ -19,7 +19,9 @@
  
      http://www.klauspost.com
@@ -955,15 +1076,16 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/TiffParserException.h darktable
  
  namespace RawSpeed {
  
-@@ -32,3 +34,5 @@
+@@ -32,3 +34,5 @@ public:
  };
  
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/TiffParserHeaderless.h darktable-0.8/src/rawspeed/RawSpeed/TiffParserHeaderless.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/TiffParserHeaderless.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/TiffParserHeaderless.h	2011-03-12 13:41:45.348524742 -0500
+diff --git a/src/rawspeed/RawSpeed/TiffParserHeaderless.h b/src/rawspeed/RawSpeed/TiffParserHeaderless.h
+index 1d31c62..867ca7a 100644
+--- a/src/rawspeed/RawSpeed/TiffParserHeaderless.h
++++ b/src/rawspeed/RawSpeed/TiffParserHeaderless.h
 @@ -1,4 +1,6 @@
 -#pragma once
 +#ifndef TIFF_PARSER_HEADERLESS_H
@@ -972,15 +1094,16 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/TiffParserHeaderless.h darktabl
  #include "TiffParser.h"
  /* 
      RawSpeed - RAW file decoder.
-@@ -35,3 +37,5 @@
+@@ -35,3 +37,5 @@ public:
  };
  
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/TiffParserOlympus.h darktable-0.8/src/rawspeed/RawSpeed/TiffParserOlympus.h
---- darktable-0.8.old/src/rawspeed/RawSpeed/TiffParserOlympus.h	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/src/rawspeed/RawSpeed/TiffParserOlympus.h	2011-03-12 13:41:45.348820786 -0500
+diff --git a/src/rawspeed/RawSpeed/TiffParserOlympus.h b/src/rawspeed/RawSpeed/TiffParserOlympus.h
+index f7ba283..ae95698 100644
+--- a/src/rawspeed/RawSpeed/TiffParserOlympus.h
++++ b/src/rawspeed/RawSpeed/TiffParserOlympus.h
 @@ -1,4 +1,6 @@
 -#pragma once
 +#ifndef TIFF_PARSER_OLYMPUS_H
@@ -989,16 +1112,17 @@ diff -ur darktable-0.8.old/src/rawspeed/RawSpeed/TiffParserOlympus.h darktable-0
  #include "TiffParser.h"
  /* 
      RawSpeed - RAW file decoder.
-@@ -34,3 +36,5 @@
+@@ -34,3 +36,5 @@ public:
  };
  
  } // namespace RawSpeed
 +
 +#endif
-diff -ur darktable-0.8.old/tools/create_metadata.sh darktable-0.8/tools/create_metadata.sh
---- darktable-0.8.old/tools/create_metadata.sh	2011-02-15 05:58:16.000000000 -0500
-+++ darktable-0.8/tools/create_metadata.sh	2011-03-12 13:41:45.349150061 -0500
-@@ -5,7 +5,7 @@
+diff --git a/tools/create_metadata.sh b/tools/create_metadata.sh
+index a67138b..96a0b90 100755
+--- a/tools/create_metadata.sh
++++ b/tools/create_metadata.sh
+@@ -5,7 +5,7 @@ outputdir=$2
  outputheader=metadata_gen.h
  outputbody=metadata_gen.c
  
@@ -1007,7 +1131,7 @@ diff -ur darktable-0.8.old/tools/create_metadata.sh darktable-0.8/tools/create_m
  # header of the .h file
  cat > $outputdir/$outputheader << EOF
  /** generated file, do not edit! */
-@@ -31,12 +31,12 @@
+@@ -31,12 +31,12 @@ EOF
  # iterate over the input
  first=0
  for line in $(cat $inputfile | grep -v "^#"); do
@@ -1023,3 +1147,6 @@ diff -ur darktable-0.8.old/tools/create_metadata.sh darktable-0.8/tools/create_m
      first=1
  
      cat >> $outputdir/$outputbody << EOF
+-- 
+1.5.6.5
+

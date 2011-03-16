@@ -86,14 +86,14 @@ and lets you view them through a zoomable lighttable. it also enables you to
 develop raw images and enhance them.
 
 %prep
-#rm -rf darktable
-#git clone git://darktable.git.sf.net/gitroot/darktable/darktable
-#cd darktable
-%setup
+rm -rf darktable
+git clone git://darktable.git.sf.net/gitroot/darktable/darktable
+cd darktable
+#%setup
 %patch0 -p1
 
 %build
-#cd darktable
+cd darktable
 mkdir build
 cd build
 
@@ -103,7 +103,7 @@ gmake
 
 %install
 rm -rf $RPM_BUILD_ROOT
-#cd darktable/build
+cd darktable
 cd build
 
 # Solaris cmake has a bug which defines CMAKE_INSTALL_PREFIX to
