@@ -19,7 +19,7 @@ Url:		http://darktable.sourceforge.net/
 SUNW_Basedir:	/
 SUNW_Copyright: %{name}.copyright
 
-Source0:	http://downloads.sourceforge.net/project/darktable/darktable/%{version}/darktable-%{version}.tar.gz
+#Source0:	http://downloads.sourceforge.net/project/darktable/darktable/%{version}/darktable-%{version}.tar.gz
 Patch0:		darktable-00-sun-studio.diff
 
 %include default-depend.inc
@@ -99,7 +99,7 @@ cd build
 
 export PATH=/usr/perl5/bin:$PATH  # set for pod2man
 cmake -DCMAKE_INSTALL_PREFIX=%{_prefix} -DCMAKE_BUILD_TYPE=Release -DINSTALL_IOP_EXPERIMENTAL=On -DINSTALL_IOP_LEGACY=Off -DOpenMP_C_FLAGS=-xopenmp -DOpenMP_CXX_FLAGS=-xopenmp -DDONT_INSTALL_GCONF_SCHEMAS=On -DUSE_CAMERA_SUPPORT=Off ..
-gmake
+gmake VERBOSE=1
 
 %install
 rm -rf $RPM_BUILD_ROOT

@@ -1,19 +1,20 @@
-From dfd1b3bd2cc553d645a6c78c0bbe7255f12d9607 Mon Sep 17 00:00:00 2001
+From 61a09608225418c3b1cd2392f36a8b2812255dba Mon Sep 17 00:00:00 2001
 From: James Lee <jlee@thestaticvoid.com>
 Date: Fri, 11 Mar 2011 23:01:02 -0500
 Subject: [PATCH] Fixes for Sun Studio compilation.
 
 ---
- src/CMakeLists.txt                              |   60 +++++++++++++---------
+ src/CMakeLists.txt                              |   72 ++++++++++++++--------
  src/LibRaw/CMakeLists.txt                       |    9 +++-
  src/LibRaw/libraw/libraw_datastream.h           |    4 +-
  src/common/darktable.c                          |    4 +-
+ src/common/dtpthread.h                          |    1 +
  src/control/jobs/control_jobs.c                 |    9 ++-
  src/iop/atrous.c                                |    4 +-
  src/iop/bilateral.cc                            |   14 +++--
  src/iop/demosaic.c                              |    6 ++-
  src/iop/temperature.c                           |    2 +-
- src/iop/tonemap.cc                              |    8 ++--
+ src/iop/tonemap.cc                              |    8 +-
  src/rawspeed/CMakeLists.txt                     |    9 +++-
  src/rawspeed/RawSpeed/ArwDecoder.h              |    6 ++-
  src/rawspeed/RawSpeed/BitPumpJPEG.h             |    6 ++-
@@ -55,11 +56,11 @@ Subject: [PATCH] Fixes for Sun Studio compilation.
  src/rawspeed/RawSpeed/TiffParserException.h     |    6 ++-
  src/rawspeed/RawSpeed/TiffParserHeaderless.h    |    6 ++-
  src/rawspeed/RawSpeed/TiffParserOlympus.h       |    6 ++-
- tools/create_metadata.sh                        |    8 ++--
- 52 files changed, 281 insertions(+), 94 deletions(-)
+ tools/create_metadata.sh                        |    8 +-
+ 53 files changed, 293 insertions(+), 95 deletions(-)
 
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 7aa3d68..b6f0033 100644
+index 7aa3d68..c1cd81e 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -65,7 +65,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/LibRaw)
@@ -70,7 +71,7 @@ index 7aa3d68..b6f0033 100644
  
  # Check for openmp
  find_package(OpenMP)
-@@ -195,32 +194,43 @@ endif(GPHOTO2_FOUND)
+@@ -195,32 +194,53 @@ endif(GPHOTO2_FOUND)
  #
  # Set default compile flags for GCC
  #
@@ -123,8 +124,18 @@ index 7aa3d68..b6f0033 100644
 +# Set default compile flags for Sun Studio 
 +#
 +if("${CMAKE_C_COMPILER_ID} ${CMAKE_CXX_COMPILER_ID}" MATCHES SunPro)
-+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -xc99 -features=extensions -fast -xarch=sse2 -D__SSE2__ -D__unix__")
-+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -features=extensions -fast -xarch=sse2 -D__SSE2__ -D__unix__")
++  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -xc99 -features=extensions -xarch=sse2 -D__SSE2__ -D__unix__")
++  set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -fast")
++  set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -D_DEBUG")
++  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -features=extensions -xarch=sse2 -D__SSE2__ -D__unix__")
++  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -fast")
++  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG")
++
++  # -xopenmp normally forces -xO3...disable optimizations for debug
++  if(CMAKE_BUILD_TYPE MATCHES Debug)
++    string(REPLACE "-xopenmp" "-xopenmp=noopt" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}") 
++    string(REPLACE "-xopenmp" "-xopenmp=noopt" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}") 
++  endif(CMAKE_BUILD_TYPE MATCHES Debug)
 +endif("${CMAKE_C_COMPILER_ID} ${CMAKE_CXX_COMPILER_ID}" MATCHES SunPro)
  
 -set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -msse2 -mfpmath=sse ${MARCH} -g")
@@ -137,7 +148,7 @@ index 7aa3d68..b6f0033 100644
  
  #
  # Generate config.h
-@@ -259,7 +269,7 @@ if(APPLE)
+@@ -259,7 +279,7 @@ if(APPLE)
    set_target_properties(lib_darktable PROPERTIES INSTALL_NAME_DIR "@executable_path/../lib/darktable")
  endif(APPLE)
  set_target_properties(lib_darktable PROPERTIES OUTPUT_NAME darktable)
@@ -146,6 +157,15 @@ index 7aa3d68..b6f0033 100644
  
  
  #
+@@ -313,7 +333,7 @@ set_target_properties(darktable PROPERTIES CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+ set_target_properties(darktable PROPERTIES CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
+ set_target_properties(darktable PROPERTIES INSTALL_RPATH $ORIGIN/../${LIB_INSTALL}/darktable)
+ set_target_properties(darktable PROPERTIES LINKER_LANGUAGE C)
+-target_link_libraries(darktable ${LIBS})
++target_link_libraries(darktable ${LIBS} m)
+ install(TARGETS darktable DESTINATION bin)
+ 
+ 
 diff --git a/src/LibRaw/CMakeLists.txt b/src/LibRaw/CMakeLists.txt
 index e5f7e18..1bf327f 100644
 --- a/src/LibRaw/CMakeLists.txt
@@ -203,6 +223,18 @@ index 2d46bc2..c987681 100644
    return 1;
  #endif
    bindtextdomain (GETTEXT_PACKAGE, DARKTABLE_LOCALEDIR);
+diff --git a/src/common/dtpthread.h b/src/common/dtpthread.h
+index aad66ae..a038e6e 100644
+--- a/src/common/dtpthread.h
++++ b/src/common/dtpthread.h
+@@ -24,6 +24,7 @@
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <string.h>
++#include <glib.h>
+ 
+ #ifdef _DEBUG
+ 
 diff --git a/src/control/jobs/control_jobs.c b/src/control/jobs/control_jobs.c
 index 9396b62..9f52862 100644
 --- a/src/control/jobs/control_jobs.c
