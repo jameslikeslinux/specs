@@ -1,0 +1,35 @@
+From 65056769f75ebd996415dc7d7d252aa92288fece Mon Sep 17 00:00:00 2001
+From: James Lee <jlee@thestaticvoid.com>
+Date: Thu, 17 Mar 2011 15:14:10 -0400
+Subject: [PATCH] Do not destroy window in delete_event callback.
+
+---
+ src/gui/gtk.c |    5 ++++-
+ 1 files changed, 4 insertions(+), 1 deletions(-)
+
+diff --git a/src/gui/gtk.c b/src/gui/gtk.c
+index 244406a..7b6fd83 100644
+--- a/src/gui/gtk.c
++++ b/src/gui/gtk.c
+@@ -840,7 +840,7 @@ borders_scrolled (GtkWidget *widget, GdkEventScroll *event, gpointer user_data)
+   return TRUE;
+ }
+ 
+-void quit()
++gboolean quit()
+ {
+   // thread safe quit, 1st pass:
+   GtkWindow *win = GTK_WINDOW(glade_xml_get_widget (darktable.gui->main_window, "main_window"));
+@@ -863,6 +863,9 @@ void quit()
+   dt_pthread_mutex_unlock(&darktable.control->cond_mutex);
+   widget = glade_xml_get_widget (darktable.gui->main_window, "center");
+   gtk_widget_queue_draw(widget);
++
++  // do not destroy window on 'delete_event'
++  return TRUE;
+ }
+ 
+ static void _gui_switch_view_key_accel_callback(void *p)
+-- 
+1.5.6.5
+

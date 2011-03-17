@@ -22,6 +22,7 @@ SUNW_Copyright: %{name}.copyright
 #Source0:	http://downloads.sourceforge.net/project/darktable/darktable/%{version}/darktable-%{version}.tar.gz
 Source1:	darktable
 Patch0:		darktable-00-sun-studio.diff
+Patch1:		darktable-01-gtk-window-close.diff
 
 %include default-depend.inc
 BuildRequires:	SUNWgit
@@ -92,6 +93,7 @@ git clone git://darktable.git.sf.net/gitroot/darktable/darktable
 cd darktable
 #%setup
 %patch0 -p1
+%patch1 -p1
 
 %build
 cd darktable
