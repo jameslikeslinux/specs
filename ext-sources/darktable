@@ -1,0 +1,12 @@
+#!/bin/sh
+
+if [ "x$OMP_NUM_THREADS" = "x" ]; then
+	CPUS=`/usr/sbin/psrinfo | grep on-line | wc -l`
+	if [ "x$CPUS" = "x" -o $CPUS = 0 ]; then
+	        CPUS=1
+	fi
+
+	export OMP_NUM_THREADS=$CPUS
+fi
+
+exec /usr/bin/darktable-bin

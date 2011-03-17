@@ -20,6 +20,7 @@ SUNW_Basedir:	/
 SUNW_Copyright: %{name}.copyright
 
 #Source0:	http://downloads.sourceforge.net/project/darktable/darktable/%{version}/darktable-%{version}.tar.gz
+Source1:	darktable
 Patch0:		darktable-00-sun-studio.diff
 
 %include default-depend.inc
@@ -117,6 +118,10 @@ gmake DESTDIR=$RPM_BUILD_ROOT install
 # Solaris doesn't support SHM
 rm -f $RPM_BUILD_ROOT%{_bindir}/darktable-faster
 
+mv $RPM_BUILD_ROOT%{_bindir}/darktable $RPM_BUILD_ROOT%{_bindir}/darktable-bin
+cp %{SOURCE1} $RPM_BUILD_ROOT%{_bindir}/darktable
+chmod 755 $RPM_BUILD_ROOT%{_bindir}/darktable
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -124,6 +129,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,bin)
 %attr(755,root,sys) %dir %{_prefix}
 %{_bindir}/darktable
+%{_bindir}/darktable-bin
 %{_libdir}/darktable
 %attr(755,root,sys) %dir %{_datadir}
 %{_datadir}/darktable

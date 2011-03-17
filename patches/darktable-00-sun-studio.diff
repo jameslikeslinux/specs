@@ -1,8 +1,67 @@
-From 2fb7f79ac9dd008f51233f6415eb4cb5712cc70c Mon Sep 17 00:00:00 2001
+From 2bb904b7f49d86952b4c66863c3860f7cda65e61 Mon Sep 17 00:00:00 2001
 From: James Lee <jlee@thestaticvoid.com>
 Date: Fri, 11 Mar 2011 23:01:02 -0500
 Subject: [PATCH] Fixes for Sun Studio compilation.
 
+This commit makes several changes to allow the program to compile under
+Sun Studio (on Solaris).  Sun Studio is the de facto C++ compiler on
+Solaris and presents several challenges compared to GCC.  For example,
+it has different command line switches, more strict support for the
+standards (including fewer language extensions), and incomplete support
+for the C++ standard library using the libCrun and libCstd libraries.
+
+Here is a summary of the changes:
+
+src/CMakeLists.txt:
+- Conditionally set command line flags based on compiler (GCC or Sun
+  Studio)
+- Link libdarktable.so as a C++ library (it contains C++ objects exif.o
+  and imageio_exr.o whose exception handling fails to work when linked
+  as a C library).
+- Link darktable against libm as it contains calls to logf.
+
+src/LibRaw/CMakeLists.txt:
+src/rawspeed/CMakeLists.txt:
+- Set PIC flag based on compiler (-fPIC for GCC, -Kpic for Sun Studio)
+
+src/LibRaw/libraw/libraw_datastream.h:
+- libCstd auto_ptr doesn't have assignment operator...see:
+  http://developers.sun.com/solaris/articles/cmp_stlport_libCstd.html
+
+src/common/darktable.c:
+- Fix invalid call to fprintf.
+
+src/common/dtpthread.h:
+- Include glib.h for call to g_strlcpy.
+
+src/control/jobs/control_jobs.c:
+- Sun Studio doesn't like 'stderr' in OpenMP directives, so temporarily
+  reassign it.
+
+src/iop/atrous.c:
+- Include emmintrin.h instead of xmmentrin.h, fixing implicit definition
+  of _mm_set1_epi32.
+- Add missing variable to OpenMP directive.
+
+src/iop/bilateral.cc:
+- Struct initialization is a C99ism that isn't supported under C++.
+
+src/iop/demosaic.c:
+- Add missing variable to OpenMP directive.
+- __builtin_expect is a GCC extension.
+
+src/iop/temperature.c:
+- Add missing variable to OpenMP directive.
+
+src/iop/tonemap.cc:
+- Struct initialization is a C99ism that isn't supported under C++.
+
+src/rawspeed/RawSpeed/*.h:
+- Replace non-standard "#pragma once" with normal header guards.  This
+  change needs to be pushed upstream.
+
+tools/create_metadata.sh:
+- Solaris 'echo' doesn't have '-n' flag.  Use 'printf' instead.
 ---
  src/CMakeLists.txt                              |   72 ++++++++++++++--------
  src/LibRaw/CMakeLists.txt                       |    9 +++-
