@@ -9,4 +9,7 @@ if [ "x$OMP_NUM_THREADS" = "x" ]; then
 	export OMP_NUM_THREADS=$CPUS
 fi
 
+# Do not dynamically control the number of threads
+export OMP_DYNAMIC=0
+
 exec /usr/bin/darktable-bin
