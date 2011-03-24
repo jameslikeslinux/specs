@@ -3,6 +3,7 @@
 . /lib/svc/share/smf_include.sh
 
 io_pipe_name=$(svcprop -p options/io_pipe_name $SMF_FMRI)
+mnesia_dir=$(svcprop -p options/mnesia_dir $SMF_FMRI)
 
 case "$1" in
     "start")
@@ -12,7 +13,9 @@ case "$1" in
             args="--daemon "
         fi
 
-        TERM=vt100 /usr/bin/yaws $args
+        [ "$mnesia_dir" != '""' ] && args="${args}--mnesiadir $mnesia_dir"
+
+        TERM=vt100 /usr/bin/yaws $args --sname yaws
         ;;
 
     "stop")
