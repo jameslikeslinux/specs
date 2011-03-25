@@ -1,11 +1,11 @@
-From 2bb904b7f49d86952b4c66863c3860f7cda65e61 Mon Sep 17 00:00:00 2001
+From 4dc7c3f5b9eb8582d6342ae3e88098b555faa667 Mon Sep 17 00:00:00 2001
 From: James Lee <jlee@thestaticvoid.com>
-Date: Fri, 11 Mar 2011 23:01:02 -0500
+Date: Fri, 25 Mar 2011 10:36:53 -0400
 Subject: [PATCH] Fixes for Sun Studio compilation.
 
 This commit makes several changes to allow the program to compile under
-Sun Studio (on Solaris).  Sun Studio is the de facto C++ compiler on
-Solaris and presents several challenges compared to GCC.  For example,
+Sun Studio (on Solaris). Sun Studio is the de facto C++ compiler on
+Solaris and presents several challenges compared to GCC. For example,
 it has different command line switches, more strict support for the
 standards (including fewer language extensions), and incomplete support
 for the C++ standard library using the libCrun and libCstd libraries.
@@ -57,11 +57,11 @@ src/iop/tonemap.cc:
 - Struct initialization is a C99ism that isn't supported under C++.
 
 src/rawspeed/RawSpeed/*.h:
-- Replace non-standard "#pragma once" with normal header guards.  This
+- Replace non-standard "#pragma once" with normal header guards. This
   change needs to be pushed upstream.
 
 tools/create_metadata.sh:
-- Solaris 'echo' doesn't have '-n' flag.  Use 'printf' instead.
+- Solaris 'echo' doesn't have '-n' flag. Use 'printf' instead.
 ---
  src/CMakeLists.txt                              |   72 ++++++++++++++--------
  src/LibRaw/CMakeLists.txt                       |    9 +++-
@@ -118,7 +118,7 @@ tools/create_metadata.sh:
  52 files changed, 292 insertions(+), 94 deletions(-)
 
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 7aa3d68..c1cd81e 100644
+index 87faedc..a51184a 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -65,7 +65,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/LibRaw)
@@ -129,7 +129,7 @@ index 7aa3d68..c1cd81e 100644
  
  # Check for openmp
  find_package(OpenMP)
-@@ -195,32 +194,53 @@ endif(GPHOTO2_FOUND)
+@@ -202,32 +201,53 @@ endif(GPHOTO2_FOUND)
  #
  # Set default compile flags for GCC
  #
@@ -206,7 +206,7 @@ index 7aa3d68..c1cd81e 100644
  
  #
  # Generate config.h
-@@ -259,7 +279,7 @@ if(APPLE)
+@@ -266,7 +286,7 @@ if(APPLE)
    set_target_properties(lib_darktable PROPERTIES INSTALL_NAME_DIR "@executable_path/../lib/darktable")
  endif(APPLE)
  set_target_properties(lib_darktable PROPERTIES OUTPUT_NAME darktable)
@@ -215,7 +215,7 @@ index 7aa3d68..c1cd81e 100644
  
  
  #
-@@ -313,7 +333,7 @@ set_target_properties(darktable PROPERTIES CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+@@ -320,7 +340,7 @@ set_target_properties(darktable PROPERTIES CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
  set_target_properties(darktable PROPERTIES CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
  set_target_properties(darktable PROPERTIES INSTALL_RPATH $ORIGIN/../${LIB_INSTALL}/darktable)
  set_target_properties(darktable PROPERTIES LINKER_LANGUAGE C)
@@ -267,11 +267,11 @@ index 00b370e..2ca2efb 100644
  
          return 0;
 diff --git a/src/common/darktable.c b/src/common/darktable.c
-index 2d46bc2..c987681 100644
+index fa26f57..81ccb53 100644
 --- a/src/common/darktable.c
 +++ b/src/common/darktable.c
 @@ -65,8 +65,8 @@ static int usage(const char *argv0)
- int dt_init(int argc, char *argv[])
+ int dt_init(int argc, char *argv[], const int init_gui)
  {
  #ifndef __SSE2__
 -  fprintf("[dt_init] unfortunately we depend on SSE2 instructions at this time.\n");
@@ -294,26 +294,20 @@ index aad66ae..a038e6e 100644
  #ifdef _DEBUG
  
 diff --git a/src/control/jobs/control_jobs.c b/src/control/jobs/control_jobs.c
-index 9396b62..9f52862 100644
+index c697b49..7390999 100644
 --- a/src/control/jobs/control_jobs.c
 +++ b/src/control/jobs/control_jobs.c
-@@ -448,14 +448,17 @@ int32_t dt_control_export_job_run(dt_job_t *job)
-   dt_gui_background_jobs_can_cancel (j,job);
- 
-   double fraction=0;
-+
-+  // Sun Studio won't accpet 'stderr' in openmp directive, so redefine it
-+  FILE *tmp_stderr = stderr;
- #ifdef _OPENMP
-   // limit this to num threads = num full buffers - 1 (keep one for darkroom mode)
-   // use min of user request and mipmap cache entries
+@@ -454,8 +454,11 @@ int32_t dt_control_export_job_run(dt_job_t *job)
    const int full_entries = dt_conf_get_int ("mipmap_cache_full_images");
    // GCC won't accept that this variable is used in a macro, considers
    // it set but not used, which makes for instance Fedora break.
 -  const __attribute__((__unused__)) int num_threads = MAX(1, MIN(full_entries, darktable.mipmap_cache->num_entries[DT_IMAGE_FULL]) - 1);
--#pragma omp parallel default(none) private(imgid, size) shared(j, fraction, stderr, w, h, mformat, mstorage, t, sdata, job) num_threads(num_threads)
+-  #pragma omp parallel default(none) private(imgid, size) shared(j, fraction, stderr, w, h, mformat, mstorage, t, sdata, job) num_threads(num_threads)
 +  __attribute__((__unused__)) int num_threads = MAX(1, MIN(full_entries, darktable.mipmap_cache->num_entries[DT_IMAGE_FULL]) - 1);
-+#pragma omp parallel default(none) private(imgid, size) shared(j, fraction, tmp_stderr, w, h, mformat, mstorage, t, sdata, job) num_threads(num_threads)
++
++  // Sun Studio won't accpet 'stderr' in openmp directive, so redefine it
++  FILE *tmp_stderr = stderr;
++  #pragma omp parallel default(none) private(imgid, size) shared(j, fraction, tmp_stderr, w, h, mformat, mstorage, t, sdata, job) num_threads(num_threads)
    {
  #endif
      // get a thread-safe fdata struct (one jpeg struct per thread etc):
@@ -327,7 +321,7 @@ index 9396b62..9f52862 100644
            dt_image_cache_release(image, 'r');
          }
 diff --git a/src/iop/atrous.c b/src/iop/atrous.c
-index 471400b..4a9226f 100644
+index f626668..541ac93 100644
 --- a/src/iop/atrous.c
 +++ b/src/iop/atrous.c
 @@ -26,7 +26,7 @@
@@ -343,16 +337,16 @@ index 471400b..4a9226f 100644
    const float filter[5] = {1.0f/16.0f, 4.0f/16.0f, 6.0f/16.0f, 4.0f/16.0f, 1.0f/16.0f};
  
  #ifdef _OPENMP
--#pragma omp parallel for default(none) schedule(static)
-+#pragma omp parallel for default(none) schedule(static) shared(filter)
+-  #pragma omp parallel for default(none) schedule(static)
++  #pragma omp parallel for default(none) schedule(static) shared(filter)
  #endif
    for(int j=0; j<height; j++)
    {
 diff --git a/src/iop/bilateral.cc b/src/iop/bilateral.cc
-index f4b5509..3089d93 100644
+index fbf57fb..2c8c041 100644
 --- a/src/iop/bilateral.cc
 +++ b/src/iop/bilateral.cc
-@@ -269,12 +269,14 @@ int flags()
+@@ -269,12 +269,14 @@ extern "C"
      module->priority = 270;
      module->params_size = sizeof(dt_iop_bilateral_params_t);
      module->gui_data = NULL;
@@ -374,15 +368,15 @@ index f4b5509..3089d93 100644
      memcpy(module->default_params, &tmp, sizeof(dt_iop_bilateral_params_t));
    }
 diff --git a/src/iop/demosaic.c b/src/iop/demosaic.c
-index 4b92263..197e986 100644
+index 4aaccef..0ab2478 100644
 --- a/src/iop/demosaic.c
 +++ b/src/iop/demosaic.c
 @@ -175,7 +175,7 @@ pre_median_b(float *out, const float *const in, const dt_iop_roi_t *const roi, c
    for (int pass=0; pass < num_passes; pass++)
    {
  #ifdef _OPENMP
--#pragma omp parallel for default(none) shared(out) schedule(static)
-+#pragma omp parallel for default(none) shared(out,lim) schedule(static)
+-    #pragma omp parallel for default(none) shared(out) schedule(static)
++    #pragma omp parallel for default(none) shared(out,lim) schedule(static)
  #endif
      for (int row=3; row<roi->height-3; row++)
      {
@@ -399,20 +393,20 @@ index 4b92263..197e986 100644
          // calculate red and blue for green pixels:
          // need 4-nbhood:
 diff --git a/src/iop/temperature.c b/src/iop/temperature.c
-index 8610637..62a7dad 100644
+index 6752847..ca3a0ec 100644
 --- a/src/iop/temperature.c
 +++ b/src/iop/temperature.c
 @@ -169,7 +169,7 @@ void process (struct dt_iop_module_t *self, dt_dev_pixelpipe_iop_t *piece, void
    {
      const float coeffsi[3] = {d->coeffs[0]/65535.0f, d->coeffs[1]/65535.0f, d->coeffs[2]/65535.0f};
  #ifdef _OPENMP
--#pragma omp parallel for default(none) shared(roi_out, ivoid, ovoid, d) schedule(static)
-+#pragma omp parallel for default(none) shared(roi_out, ivoid, ovoid, d, coeffsi) schedule(static)
+-    #pragma omp parallel for default(none) shared(roi_out, ivoid, ovoid, d) schedule(static)
++    #pragma omp parallel for default(none) shared(roi_out, ivoid, ovoid, d, coeffsi) schedule(static)
  #endif
      for(int j=0; j<roi_out->height; j++)
      {
 diff --git a/src/iop/tonemap.cc b/src/iop/tonemap.cc
-index 4c58d23..53ce612 100644
+index cd426af..10cd91f 100644
 --- a/src/iop/tonemap.cc
 +++ b/src/iop/tonemap.cc
 @@ -219,10 +219,10 @@ extern "C"
