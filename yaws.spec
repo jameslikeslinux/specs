@@ -72,8 +72,10 @@ mv -f $RPM_BUILD_ROOT%{_sysconfdir}/yaws/yaws.conf.new $RPM_BUILD_ROOT%{_sysconf
 # move epam to correct directory
 mv -f $RPM_BUILD_ROOT%{_libdir}/yaws/priv/lib/epam $RPM_BUILD_ROOT%{_libdir}/yaws/priv/
 
-# create empty directory for erlang pipes
-mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/yaws
+# set pipe dir to /tmp because /var/run is only writable by root
+sed 's@PIPE_DIR=.*@PIPE_DIR="/tmp/yaws/pipe/$1"@' $RPM_BUILD_ROOT%{_bindir}/yaws > $RPM_BUILD_ROOT%{_bindir}/yaws.new
+mv -f $RPM_BUILD_ROOT%{_bindir}/yaws.new $RPM_BUILD_ROOT%{_bindir}/yaws
+chmod +x $RPM_BUILD_ROOT%{_bindir}/yaws
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -170,8 +172,6 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_localstatedir}/log
 %attr(755,webservd,webservd) %dir %{_localstatedir}/log/yaws
 %{_localstatedir}/yaws
-%dir %{_localstatedir}/run
-%attr(755,webservd,webservd) %dir %{_localstatedir}/run/yaws
 %dir %{_localstatedir}/svc
 %dir %{_localstatedir}/svc/manifest
 %dir %{_localstatedir}/svc/manifest/network
