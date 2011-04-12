@@ -10,7 +10,7 @@
 %include Solaris.inc
 
 Name:		vpnc
-Version:	0.5.3
+Version:	0.5.3.457
 Summary:	Client for Cisco VPN Concentrator
 License:	GPLv2/BSD
 Distribution:   OpenSolaris
@@ -26,7 +26,7 @@ Patch1:		vpnc-01-sysdep.diff
 Patch2:		vpnc-02-vpnc-script.diff
 
 %include default-depend.inc
-BuildRequires:	SUNWgcc
+BuildRequires:	SUNWgcc432
 BuildRequires:	SUNWgmake
 BuildRequires:	SUNWgnu-coreutils
 BuildRequires:	SUNWopenssl-include
@@ -65,7 +65,7 @@ sed 's/^#\(OPENSSL.*\)/\1/; s/install/ginstall/g' Makefile > Makefile.new
 mv -f Makefile.new Makefile
 
 %build
-gmake PREFIX=%{_prefix}
+gmake PREFIX=%{_prefix} CC=gcc-4.3.2
 
 %install
 rm -rf $RPM_BUILD_ROOT

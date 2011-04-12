@@ -1,5 +1,5 @@
---- sysdep.c.old	2010-07-18 15:48:45.979535334 -0400
-+++ sysdep.c	2010-07-23 15:13:43.771346889 -0400
+--- sysdep.c.old	2011-04-11 20:17:29.753118888 -0400
++++ sysdep.c	2011-04-11 20:18:54.600759001 -0400
 @@ -76,7 +76,8 @@
  
  #if defined(__sun__)
@@ -260,7 +260,7 @@
  #elif defined(__CYGWIN__)
 @@ -666,7 +793,14 @@
  	}
- 	
+ 
  	return 0;
 -#elif defined(SIOCGIFHWADDR)
 +#elif defined(SIOCGIFHWADDR) || defined(__sun__)
@@ -272,19 +272,19 @@
 +#define IFR_ADDR_DATA &ifr.ifr_hwaddr.sa_data
 +#endif
  	struct ifreq ifr;
- 	
+ 
  	/* Use a new socket fd! */
 @@ -677,11 +811,11 @@
  	memset(&ifr, 0, sizeof(struct ifreq));
  	strncpy(ifr.ifr_name, dev, IFNAMSIZ);
- 	
+ 
 -	if (ioctl(fd, SIOCGIFHWADDR, &ifr) < 0) {
 +	if (ioctl(fd, HWADDRIOCNUM, &ifr) < 0) {
  		return -1;
  	}
- 	
+ 
 -	memcpy(hwaddr, &ifr.ifr_hwaddr.sa_data, ETH_ALEN);
 +	memcpy(hwaddr, IFR_ADDR_DATA, ETH_ALEN);
- 	
+ 
  	return 0;
  #else
