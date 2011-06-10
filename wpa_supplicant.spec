@@ -21,7 +21,7 @@ SUNW_Basedir:	%{_basedir}
 SUNW_Copyright: %{name}.copyright
 SUNW_Pkg:	wpasupplicant
 
-Source0:	https://download.github.com/MrStaticVoid-hostap-solaris-1-0-g1aab580.tar.gz
+Source0:	https://download.github.com/MrStaticVoid-hostap-solaris-1-0-g1f0faba.tar.gz
 
 %include default-depend.inc
 BuildRequires:	SUNWgmake
@@ -43,10 +43,11 @@ controls the roaming and IEEE 802.11 authentication/association of the wlan
 driver.
 
 %prep
-%setup -q -n MrStaticVoid-hostap-10c1efb
+%setup -q -n MrStaticVoid-hostap-9d398db
 cd wpa_supplicant
 cat > .config << EOF
 CONFIG_DRIVER_SOLARIS=y
+CONFIG_DRIVER_WIRED=y
 CC=cc
 CFLAGS=-features=extensions -g -I../src -I../src/utils
 LIBS += -lsocket -ldlpi -lnsl
