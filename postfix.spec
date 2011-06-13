@@ -10,7 +10,7 @@
 %include Solaris.inc
 
 Name:		postfix
-Version:	2.6.2
+Version:	2.8.3
 Summary:	Postfix MTA
 License:	IBM Public License v1.0
 Distribution:	OpenSolaris
@@ -21,13 +21,17 @@ SUNW_Copyright: %{name}.copyright
 
 Source0:	ftp://postfix.cloud9.net/official/%{name}-%{version}.tar.gz
 Source1:	smtp-postfix.xml
+Source2:	aliases
+Patch0:		postfix-00-nisplus.diff
 
 %include default-depend.inc
+BuildRequires:	bdb
 BuildRequires:	cyrus-sasl
 BuildRequires:	SUNWopenssl-include
 BuildRequires:	SUNWopenssl-libraries
-Requires:	SUNWopenssl-libraries
+Requires:	bdb
 Requires:	cyrus-sasl
+Requires:	SUNWopenssl-libraries
 Conflicts:	SUNWsndm
 
 Meta(info.maintainer):          James Lee <jlee@thestaticvoid.com>
@@ -44,7 +48,8 @@ sendmail-ish flavor, but the inside is completely different.
 
 %prep
 %setup -q
-make makefiles CCARGS='-DDEF_COMMAND_DIR=\"%{_sbindir}\" -DDEF_CONFIG_DIR=\"%{_sysconfdir}/postfix\" -DDEF_DAEMON_DIR=\"%{_libdir}/postfix\" -DDEF_DATA_DIR=\"%{_localstatedir}/lib/postfix\" -DDEF_MAILQ_PATH=\"%{_bindir}/mailq\" -DDEF_HTML_DIR=\"no\" -DDEF_MANPAGE_DIR=\"%{_mandir}\" -DDEF_NEWALIAS_PATH=\"%{_bindir}/newaliases\" -DDEF_QUEUE_DIR=\"%{_localstatedir}/spool/postfix\" -DDEF_README_DIR=\"no\" -DDEF_SENDMAIL_PATH=\"%{_sbindir}/sendmail\" -DUSE_SASL_AUTH -DUSE_CYRUS_SASL -I/usr/include/sasl -DUSE_TLS' AUXLIBS="-lsasl2 -lssl -lcrypto"
+%patch0
+make makefiles CC=cc CCARGS='-DDEF_COMMAND_DIR=\"%{_sbindir}\" -DDEF_CONFIG_DIR=\"%{_sysconfdir}/postfix\" -DDEF_DAEMON_DIR=\"%{_libdir}/postfix\" -DDEF_DATA_DIR=\"%{_localstatedir}/lib/postfix\" -DDEF_MAILQ_PATH=\"%{_bindir}/mailq\" -DDEF_HTML_DIR=\"no\" -DDEF_MANPAGE_DIR=\"%{_mandir}\" -DDEF_NEWALIAS_PATH=\"%{_sbindir}/newaliases\" -DDEF_QUEUE_DIR=\"%{_localstatedir}/spool/postfix\" -DDEF_README_DIR=\"no\" -DUSE_SASL_AUTH -DUSE_CYRUS_SASL -I/usr/include/sasl -DUSE_TLS -DHAS_DB' AUXLIBS="-lsasl2 -lssl -lcrypto -ldb"
 
 %build
 make
@@ -54,6 +59,14 @@ rm -rf $RPM_BUILD_ROOT
 make non-interactive-package install_root=$RPM_BUILD_ROOT mail_owner=smmsp setgid_group=mail
 mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/svc/manifest/network
 cp %{SOURCE1} $RPM_BUILD_ROOT%{_localstatedir}/svc/manifest/network/smtp-postfix.xml
+
+cd $RPM_BUILD_ROOT%{_sbindir}
+ln -s ../lib/sendmail .
+
+cd $RPM_BUILD_ROOT%{_sysconfdir}
+mkdir mail
+cp %{SOURCE2} mail/aliases
+ln -s mail/aliases aliases
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -67,8 +80,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,sys) %dir %{_prefix}
 %dir %{_bindir}
 %{_bindir}/mailq
-%{_bindir}/newaliases
 %dir %{_libdir}
+%{_libdir}/sendmail
 %dir %{_libdir}/postfix
 %{_libdir}/postfix/anvil
 %{_libdir}/postfix/bounce
@@ -102,20 +115,24 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/postfix/master.cf
 %{_libdir}/postfix/postfix-script
 %{_libdir}/postfix/main.cf
+%{_libdir}/postfix/dnsblog
+%{_libdir}/postfix/tlsproxy
+%{_libdir}/postfix/postscreen
 %dir %{_sbindir}
+%{_sbindir}/newaliases
 %{_sbindir}/postalias
 %{_sbindir}/postcat
 %{_sbindir}/postconf
-%{_sbindir}/postdrop
+%attr(2755,root,mail) %{_sbindir}/postdrop
 %{_sbindir}/postfix
 %{_sbindir}/postkick
 %{_sbindir}/postlock
 %{_sbindir}/postlog
 %{_sbindir}/postmap
 %{_sbindir}/postmulti
-%{_sbindir}/postqueue
+%attr(2755,root,mail) %{_sbindir}/postqueue
 %{_sbindir}/postsuper
-%{_sbindir}/sendmail
+%hard %{_sbindir}/sendmail
 %attr(755,root,sys) %dir %{_datadir}
 %dir %{_mandir}
 %dir %{_mandir}/man1
@@ -156,6 +173,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man5/tcp_table.5
 %{_mandir}/man5/transport.5
 %{_mandir}/man5/virtual.5
+%{_mandir}/man5/sqlite_table.5
 %dir %{_mandir}/man8
 %{_mandir}/man8/anvil.8
 %{_mandir}/man8/bounce.8
@@ -183,8 +201,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/trivial-rewrite.8
 %{_mandir}/man8/verify.8
 %{_mandir}/man8/virtual.8
+%{_mandir}/man8/postscreen.8
+%{_mandir}/man8/tlsproxy.8
+%{_mandir}/man8/dnsblog.8
 %defattr(-,root,sys)
 %dir %{_sysconfdir}
+%{_sysconfdir}/aliases
+%config %{_sysconfdir}/mail/aliases
 %dir %{_sysconfdir}/postfix
 %{_sysconfdir}/postfix/LICENSE
 %{_sysconfdir}/postfix/TLS_LICENSE
@@ -226,5 +249,7 @@ rm -rf $RPM_BUILD_ROOT
 %class(manifest) %attr(444,root,sys) %{_localstatedir}/svc/manifest/network/smtp-postfix.xml
 
 %changelog
+* Thu May 26 2011 - jlee@thestaticvoid.com
+- Bump to 2.8.3
 * Fri Jun 19 2009 - jlee@thestaticvoid.com
 - Initial version

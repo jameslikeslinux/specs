@@ -1,0 +1,10 @@
+--- src/util/sys_defs.h	2010-06-02 01:56:57.000000000 +0200
++++ src/util/sys_defs.h	2010-06-14 22:08:35.596113543 +0200
+@@ -400,7 +400,6 @@
+ #define DEF_DB_TYPE	"dbm"
+ #define ALIAS_DB_MAP	"dbm:/etc/mail/aliases"
+ #define HAS_NIS
+-#define HAS_NISPLUS
+ #define USE_SYS_SOCKIO_H		/* Solaris 2.5, changed sys/ioctl.h */
+ #define GETTIMEOFDAY(t)	gettimeofday(t)
+ #define ROOT_PATH	"/bin:/usr/bin:/sbin:/usr/sbin:/usr/ucb"
