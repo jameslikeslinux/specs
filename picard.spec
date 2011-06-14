@@ -12,7 +12,7 @@
 %define python_version 2.6
 
 Name:		picard
-Version:	0.12.1
+Version:	0.14
 Summary:	MusicBrainz Picard
 License:	GPLv2
 Distribution:   OpenSolaris

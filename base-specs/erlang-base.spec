@@ -8,14 +8,14 @@
 #
 
 Name:		erlang
-Version:	14.2.1
-Source0:	http://www.erlang.org/download/otp_src_R14B01.tar.gz
+Version:	14.2.3
+Source0:	http://www.erlang.org/download/otp_src_R14B03.tar.gz
 Patch0:		erlang-00-hwaddr.diff
 Patch1:		erlang-01-wx-sunstudio.diff
 Patch2:		erlang-02-_T-to-wxT.diff
 
 %prep
-%setup -q -n otp_src_R14B01
+%setup -q -n otp_src_R14B03
 %patch0
 %patch2
 

@@ -1,0 +1,11 @@
+--- src/dbus/qdbusintegrator.cpp.old	2011-05-27 11:51:35.114308476 -0400
++++ src/dbus/qdbusintegrator.cpp	2011-05-26 18:10:34.284758193 -0400
+@@ -71,7 +71,7 @@
+ static bool isDebugging;
+ #define qDBusDebug              if (!::isDebugging); else qDebug
+ 
+-Q_GLOBAL_STATIC_WITH_ARGS(const QString, orgFreedesktopDBusString, (QLatin1String(DBUS_SERVICE_DBUS)))
++Q_GLOBAL_STATIC_WITH_ARGS(QString, orgFreedesktopDBusString, (QLatin1String(DBUS_SERVICE_DBUS)))
+ 
+ static inline QString dbusServiceString()
+ { return *orgFreedesktopDBusString(); }

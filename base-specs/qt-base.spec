@@ -8,15 +8,17 @@
 #
 
 Name:		qt
-Version:	4.6.1
+Version:	4.7.3
 Source0:	http://get.qt.nokia.com/qt/source/%{name}-everywhere-opensource-src-%{version}.tar.gz
 Patch0:		qt-00-qtconcurrent-map-explicit-type.diff
 #Patch1:	qt-00-sunstudio-gstreamer.diff
+Patch2:		qt-02-dbus-constness.diff
 
 %prep
 %setup -q -n %{name}-everywhere-opensource-src-%{version}
 %patch0
 #%patch1 -p1
+%patch2
 
 %build
 CPUS=`/usr/sbin/psrinfo | grep on-line | wc -l | tr -d ' '`
@@ -27,6 +29,7 @@ fi
 # phonon disabled for lack of 64-bit gtstreamer
 echo "yes" | ./configure -platform %{platform} \
 			 -opensource \
+		 	 -confirm-license \
 			 -prefix %{_prefix} \
 			 -bindir %{_bindir} \
 			 -libdir %{_libdir} \
@@ -41,7 +44,8 @@ echo "yes" | ./configure -platform %{platform} \
 			 -no-phonon \
 			 -no-gstreamer \
 			 -lCrun
-gmake -j$CPUS
+#gmake -j$CPUS
+gmake
 
 %install
 gmake INSTALL_ROOT=$RPM_BUILD_ROOT install

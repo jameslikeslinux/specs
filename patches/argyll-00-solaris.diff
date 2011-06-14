@@ -11,7 +11,7 @@ diff -ur Argyll_V1.3.2.old/Jamfile Argyll_V1.3.2/Jamfile
 -	if $(NT) {
 -		SubInclude libusbw ;
 -	}
--	if $(UNIX) {
+-	if $(UNIX) && $(OS) != FREEBSD {
 -		SubInclude libusb ;
 -	}
 -}

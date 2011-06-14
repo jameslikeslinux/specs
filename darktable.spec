@@ -10,7 +10,7 @@
 %include Solaris.inc
 
 Name:		darktable
-Version:	0.8
+Version:	0.8.20110613
 Summary:	Darktable Photo Workflow Software
 License:	GPLv3
 Distribution:   OpenSolaris
